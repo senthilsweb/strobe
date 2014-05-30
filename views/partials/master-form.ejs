@@ -1,0 +1,28 @@
+<%- console.log(title)%>
+<div class="box widget">	
+    <h3><i class="fa fa-plus vm-fa-white"></i>&nbsp;<%=title%></h3>
+	<form class="form-vertical" id="<%=fnPrefix%>frmMstCreate" action="#" method="post">
+        <div class="form-group">
+		    <div class="controls">
+			    <input type="text" id="<%=fnPrefix%>inputName" name="<%=fnPrefix%>inputName" placeholder="Name" class="span12">
+		    </div>
+	    </div>
+        <div class="form-group">
+            <div class="controls">                
+                <button type="submit" class="btn btn-success btn-block" id="<%=fnPrefix%>btnSave">Save</button>
+                <button type="reset" class="btn btn-default btn-block" id="<%=fnPrefix%>btnClear">Clear</button>
+            </div>
+        </div>        
+    </form>
+</div>
+<script type="text/javascript">
+    console.log("MasterForm");   
+    <%=fnPrefix%>MasterForm = function() { 
+        var promiseMasterForm = $.ajax({ url: location.origin + "/businessplan/find" });
+        promiseMasterForm.done(function (data) {         
+        $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#pc-master-list");
+        });
+        promiseMasterForm.fail(function () { alert("Something went wrong....."); });
+    }
+    //addLoadEvent(<%=fnPrefix%>MasterForm);
+</script>

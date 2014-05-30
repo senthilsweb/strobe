@@ -1,0 +1,64 @@
+<%
+var menus =	[
+             {'name' : 'Dashboard', 'url' : '/'}
+            ,{'name' : 'Business Plan', 'url' : '/businessplan'}
+            ,{'name' : 'Case Study', 'url' : '/casestudy'}
+            ,{'name' : 'Administration', 'url' : '#', 
+              'menus' : [
+                     {'name' : 'Bangalore', 'url' : '#'}
+                    ,{'name' : 'Singapore', 'url' : '#'}
+              ]
+            }
+            ]
+
+%>
+<%- console.log("host =>" + req.host)%>
+<div class="navbar-wrapper">
+    <div class="container top-nav">
+        <div class="row-fluid">
+             <div class="span3 pull-left">
+            <a class="brand" href="http://themes.wpeden.com/luminus/">
+                <img src="/linker/img/logo/Strobe-Logo-04.png" title="Strobe" alt="Strobe">
+            </a>
+            </div>
+            <div class="span9">   
+            <div class="navbar">
+                <div class="navbar-inner">
+                <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <div class="nav-collapse collapse pull-right">
+                    <ul class="nav">                       
+                        <% _.each(menus, function(menu) { %>                            
+                                <%if (menu.menus ==undefined) {%>
+                                <li class="menu-item" id="<%- menu.url %>"><a href="<%- menu.url %>"><%- menu.name %></a></li>
+                                <% } %>
+                                <%if (menu.menus !=undefined) {%>                                
+                                <li class="menu-item dropdown"><a href="<%- menu.url %>" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"><%- menu.name %> <b class="caret"></b></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <% _.each(menu.menus, function(menu) { %>
+                                            <li class="menu-item"><a href="<%- menu.url %>"><%- menu.name %></a></li>
+                                        <% }) %>
+                                    </ul>
+                                </li> 
+                                <% } %>
+                        <% }) %>
+                    </ul>            
+                </div><!--/.nav-collapse -->
+                </div><!-- /.navbar-inner -->
+            </div><!-- /.navbar -->
+            </div>
+           
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    console.log("Navbar");
+    function checkNav() {
+        //Note: #\\ - > the id starts with "\" we need to escape it with "\\"             
+        $("#\\" + location.pathname).addClass( "active" );        
+    }
+    addLoadEvent(checkNav);
+</script>

@@ -104,17 +104,7 @@ Luminus - WordPress Theme is distributed under the terms of the GNU GPL
   -o-transition: all 500ms ease-in-out;
   transition: all 500ms ease-in-out;
     }
-    
-    .navbar .nav li.dropdown.open > .dropdown-toggle, 
-    .navbar .nav li.dropdown.active > .dropdown-toggle, 
-    .navbar .nav li.dropdown.open.active > .dropdown-toggle,
-    .navbar .nav > li.active > a,
-    .navbar .nav > li.active > a:hover,
-    .navbar .nav > li > a:hover{
-      background: #2A353C;
-      color: #ffffff;   
-      
-    }
+
     
     
 .navbar .nav li.dropdown.active > .dropdown-toggle .caret,
@@ -807,14 +797,7 @@ p.attachment img.alignleft{}
 
 }
 
-.box.widget h3{
-    color:#ffffff;
-    text-shadow:1px 1px 10px #ffffff;
-    font-size: 12pt;
-    background: #2A353C;
-    padding: 5px 10px;
-    border-radius:4px;
-}
+
 .box.widget ul{
     margin-left:4px;
 }
@@ -837,15 +820,7 @@ p.attachment img.alignleft{}
     margin-top: 8px !important;
 }
    
-.dropdown-menu li > a:hover,
-.dropdown-menu li > a:focus,
-.dropdown-submenu:hover > a,   
-.current-menu-item a, 
-.dropdown-menu a:active,
-.dropdown-menu a:focus,
-.dropdown-menu a:hover{
-    background: #2A353C !important;     
-}
+
 .dropdown-menu a{
      font-size: 11pt;
      font-weight: 300 !important;
@@ -856,17 +831,7 @@ p.attachment img.alignleft{}
      margin-left: 0px;     
       
  }
- .arc-header h1{
-    color: #fff;
-    border-radius:5px;
-    margin-bottom: 10px;
-    padding:5px;
-    background: #2A353C;   
-    text-align: right;
-    padding-right: 20px;
-    font-weight: 700;
-    font-size:16pt;
- }
+
  
  .mx_comments .commentlist {
      margin: 0px;
@@ -897,10 +862,7 @@ p.attachment img.alignleft{}
      margin-bottom: 10px;
      font-size: 10pt;
  }
- .home .about.well:hover{
-     padding:0px;
-     border:1px solid #2A353C;
- }
+
  .home-cat-single:hover img,
  .home .about.well:hover img{
      opacity:1;
@@ -1399,23 +1361,9 @@ input#s{
     font-weight: 700;
     margin-top:55px;
 }
-.service-icon .icon{
-    color: #2A353C;
-    font-size:30pt;
-}
-.service-icon{
-    background: #FFFFFF;
-    border: 5px solid #2A353C;
-    border-radius: 50% 50% 50% 50%;
-    padding: 60px 40px 40px ;
-}
-blockquote{
-    border-left-color: #2A353C !important;
-}
 
-.fps-services {
-    background:#2A353C;
-}
+
+
 .fps-portfolio {
     background:#607988;
 }
@@ -1510,9 +1458,7 @@ blockquote h3{
   transition: all 500ms ease-in-out;
 }
 
-.edenfresh-portfolio .span3:hover{
-    background: #2A353C;
-}
+
 
 iframe,
 embed,
@@ -1546,9 +1492,7 @@ object {
 }
 .single .top-nav,
 .single-post .top-nav,
-.page .top-nav{
-    border-bottom:5px solid #2A353C; 
-}
+
 .top-nav .navbar{
     margin-bottom:0px;
 }
@@ -1559,23 +1503,7 @@ object {
     margin-bottom: 0px;
 }
 
-.carousel-control {
-    background: #2A353C;
-    color: #FFFFFF;
-    border-radius:0px;
-    border:0px;
-    font-size: 60px;
-    font-weight: 100;
-    height: 60px;
-    left: 0px;
-    line-height: 45px;
-    margin-top: -20px;
-    opacity: 0.8;
-    position: absolute;
-    text-align: center;
-    top: 45%;
-    width: 40px;
-}
+
 .carousel-control.right{
     right:0px;
 }

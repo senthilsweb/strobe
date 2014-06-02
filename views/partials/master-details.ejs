@@ -1,0 +1,27 @@
+<%- console.log(title)%>
+<div class="box widget">	
+    <h3><i class="fa fa-list vm-fa-white"></i>&nbsp;<%=title%></h3>
+    <table class="table-condensed" id="pc-master-details">
+    </table>	
+</div>
+<script id="tpl-master-list" type="text/x-jquery-tmpl">
+    <tr>
+        <td>
+            <a href="#" title="${name}">
+                <i class="fa fa-pencil-square-o"></i>&nbsp;
+                <i class="fa fa-trash-o vm-fa-red"></i>&nbsp;${name}
+            </a>
+        </td>
+    </tr>
+</script>
+<script type="text/javascript">
+    console.log("Master List");   
+    <%=fnPrefix%>MasterDetails = function() { 
+        var promiseMasterDetails = $.ajax({ url: location.origin + "/businessplan/find" });
+        promiseMasterDetails.done(function (data) {         
+        $("#tpl-master-details").tmpl(_.sortBy(data, "name")).appendTo("#pc-master-list");
+        });
+        promiseMasterList.fail(function () { alert("Something went wrong....."); });
+    }
+    addLoadEvent(<%=fnPrefix%>MasterDetails);   
+</script>

@@ -1,26 +1,35 @@
 <%- console.log(title)%>
-<div class="box widget">	
-    <h3><i class="fa fa-list vm-fa-white"></i>&nbsp;<%=title%></h3>
-	<ul id="pc-master-list">
-	</ul>
+<div class="box widget">    
+    <h3><i class="fa fa-list vm-fa-white"></i>&nbsp;<%=title%></h3>    
+    <table class="table-condensed" id="<%=fnPrefix%>pc-master-list">        
+    </table>
 </div>
 <script id="tpl-master-list" type="text/x-jquery-tmpl">
-    <li>        
-		<a href="#" title="${name}">
-            <i class="icon-edit"></i>&nbsp;
-            <i class="icon-remove"></i>&nbsp;
-            ${name}
-        </a>
-	</li>
+    <tr>
+        <td>
+            <a href="#" title="${name}">
+                <i class="fa fa-pencil-square-o"></i>&nbsp;
+                <i class="fa fa-trash-o vm-fa-red"></i>&nbsp;${name}
+            </a>
+        </td>
+    </tr>
 </script>
 <script type="text/javascript">
     console.log("Master List");   
-    <%=fnPrefix%>MasterList = function() { 
-        var promiseMasterList = $.ajax({ url: location.origin + "/businessplan/find" });
-        promiseMasterList.done(function (data) {         
-        $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#pc-master-list");
-        });
-        promiseMasterList.fail(function () { alert("Something went wrong....."); });
+    <%=fnPrefix%>MasterList = function() {        
+        $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-list" });
+            setTimeout(function () {
+                var promiseMasterList = $.ajax({ url: location.origin + "/businessplan/find" });
+                promiseMasterList.done(function (data) {         
+                $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#<%=fnPrefix%>pc-master-list");
+                $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
+                });
+                promiseMasterList.fail(function () { alert("Something went wrong....."); });    
+            },1000);
+        
     }
-    addLoadEvent(<%=fnPrefix%>MasterList);
+
+    
+
+    addLoadEvent(<%=fnPrefix%>MasterList);   
 </script>

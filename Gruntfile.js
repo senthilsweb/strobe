@@ -44,6 +44,10 @@ module.exports = function (grunt) {
   var jsFilesToInject = [
      'linker/js/jquery.js',
      'linker/js/jquery.tmpl.js',
+     'linker/js/underscore-min.js',
+     'linker/js/underscore.string.min.js',
+     'linker/js/jquery.dataTables.min.js',
+     
     // Below, as a demonstration, you'll see the built-in dependencies 
     // linked in the proper order order
 

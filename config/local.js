@@ -58,8 +58,9 @@ module.exports = {
    'default' : 'mongo',
    'mongo' : {
     module: 'sails-mongo',
-    url: 'mongodb://finpulse-usr:finpulse-pwd@oceanic.mongohq.com:10068/finpulse'    
-    /*,user: 'finpulse-usr',   
+     url: 'mongodb://strobe_user:strobe_pwd@ashoka.vmoksha.com/strobe-dev'   
+    /*url: 'mongodb://finpulse-usr:finpulse-pwd@oceanic.mongohq.com:10068/finpulse'    
+    ,user: 'finpulse-usr',   
     password: 'finpulse-pwd', 
     database: 'finpulse'*/
    }   

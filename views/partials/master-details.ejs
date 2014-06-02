@@ -1,27 +1,33 @@
 <%- console.log(title)%>
 <div class="box widget">	
     <h3><i class="fa fa-list vm-fa-white"></i>&nbsp;<%=title%></h3>
-    <table class="table-condensed" id="pc-master-details">
-    </table>	
+    <div id="<%=fnPrefix%>pc-master-details">
+        <table class="table-condensed">
+            <tr><td>Code</td><td><i class="ion-code"></i>&nbsp;BC10023</td></tr>
+            <tr><td>Name</td><td><i class="ion-card"></i>&nbsp;Human Resource</td></tr>
+            <tr><td>Status</td><td><i class="ion-thumbsup"></i>&nbsp;Active</td></tr>
+            <tr><td>Date Updated</td><td><i class="ion-ios7-calendar-outline"></i>&nbsp;28-Mar-2014</td></tr>
+        </table>
+    </div>
 </div>
 <script id="tpl-master-list" type="text/x-jquery-tmpl">
-    <tr>
-        <td>
-            <a href="#" title="${name}">
-                <i class="fa fa-pencil-square-o"></i>&nbsp;
-                <i class="fa fa-trash-o vm-fa-red"></i>&nbsp;${name}
-            </a>
-        </td>
-    </tr>
+    <table class="table-condensed">
+        <tr><td>Code</td><td>BC10023</td></tr>
+        <tr><td>Name</td><td>Human Resource</td></tr>
+        <tr><td>Status</td><td>Active</td></tr>
+        <tr><td>Date Updated</td><td>28-Mar-2014</td></tr>
+    </table>
 </script>
 <script type="text/javascript">
     console.log("Master List");   
     <%=fnPrefix%>MasterDetails = function() { 
-        var promiseMasterDetails = $.ajax({ url: location.origin + "/businessplan/find" });
-        promiseMasterDetails.done(function (data) {         
-        $("#tpl-master-details").tmpl(_.sortBy(data, "name")).appendTo("#pc-master-list");
-        });
-        promiseMasterList.fail(function () { alert("Something went wrong....."); });
+        /*
+            var promiseMasterDetails = $.ajax({ url: location.origin + "/businessplan/find" });
+            promiseMasterDetails.done(function (data) {         
+            $("#tpl-master-details").tmpl(_.sortBy(data, "name")).appendTo("#pc-master-list");
+            });
+            promiseMasterList.fail(function () { alert("Something went wrong....."); });
+        */
     }
     addLoadEvent(<%=fnPrefix%>MasterDetails);   
 </script>

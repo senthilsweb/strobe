@@ -120,6 +120,7 @@ function addLoadEvent(func) {
     <script src="/linker/js/jquery.tmpl.js"></script>
     <script src="/linker/js/underscore-min.js"></script>
     <script src="/linker/js/underscore.string.min.js"></script>
+    <script src="/linker/js/strobe-custom.js"></script>
     <script src="/linker/js/socket.io.js"></script>
     <script src="/linker/js/sails.io.js"></script>
     <script src="/linker/js/app.js"></script>
@@ -139,13 +140,13 @@ function addLoadEvent(func) {
     <script src="/linker/js/lib/trunk8.js"></script>
     <script src="/linker/js/lib/vm-custom.js"></script>
     <script src="/linker/js/lib/vm-plugins.js"></script>
-    <script src="/linker/js/strobe-custom.js"></script>
     <!--SCRIPTS END-->
   </body>
 </html>
 <script type="text/javascript">
 $(document).ready(function () {
-    console.log("Layout");   
-    
+    console.log("Layout"); 
+    $.Topic("LoadingImage").subscribe(HandleLoadingImage);
+    $.Topic("ModalAction").subscribe(HandleModalProgress);  
 });
 </script>

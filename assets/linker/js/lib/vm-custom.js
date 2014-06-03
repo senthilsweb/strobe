@@ -5,7 +5,7 @@
 (function (f) {
     window.setTimeout = f(window.setTimeout);   // overwrites the global function!
     window.setInterval = f(window.setInterval); // overwrites the global function!
-})(function (f) {.subscribe
+})(function (f) {
     return function (c, t) {
         var a = [].slice.call(arguments, 2);    // gathers the extra args
         return f(function () {

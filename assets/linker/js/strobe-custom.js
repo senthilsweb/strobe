@@ -1,9 +1,5 @@
 $(function () {
-    //To implement Progress bar in layout
-    //inline progressbar-Comment by asha(step2)
-    $.Topic("LoadingImage").subscribe(HandleLoadingImage);
-    //to implement progress bar in modal
-    $.Topic("ModalAction").subscribe(HandleModalProgress);
+  
 });
 //---------------------------------------------------------------------------------------------------------------------------------------
 //------ validate the controls in the given form(id padded as variable) diaplys the erroe alert and hignlights the controls which false data

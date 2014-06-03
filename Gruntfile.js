@@ -47,6 +47,8 @@ module.exports = function (grunt) {
      'linker/js/underscore-min.js',
      'linker/js/underscore.string.min.js',
      'linker/js/jquery.dataTables.min.js',
+     'linker/js/vm-custom.js',
+     'linker/js/strobe-custom.js',
      
     // Below, as a demonstration, you'll see the built-in dependencies 
     // linked in the proper order order

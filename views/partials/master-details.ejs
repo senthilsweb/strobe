@@ -1,33 +1,48 @@
 <%- console.log(title)%>
-<div class="box widget">	
-    <h3><i class="fa fa-list vm-fa-white"></i>&nbsp;<%=title%></h3>
-    <div id="<%=fnPrefix%>pc-master-details">
-        <table class="table-condensed">
-            <tr><td>Code</td><td><i class="ion-code"></i>&nbsp;BC10023</td></tr>
-            <tr><td>Name</td><td><i class="ion-card"></i>&nbsp;Human Resource</td></tr>
-            <tr><td>Status</td><td><i class="ion-thumbsup"></i>&nbsp;Active</td></tr>
-            <tr><td>Date Updated</td><td><i class="ion-ios7-calendar-outline"></i>&nbsp;28-Mar-2014</td></tr>
-        </table>
+
+    <div id="<%=fnPrefix%>pc-master-details"></div>
+
+<script id="tpl-master-details" type="text/x-jquery-tmpl">
+   <div class="box widget">	
+        <h3><i class="fa fa-list vm-fa-white"></i>&nbsp;Details</h3>
     </div>
-</div>
-<script id="tpl-master-list" type="text/x-jquery-tmpl">
-    <table class="table-condensed">
-        <tr><td>Code</td><td>BC10023</td></tr>
-        <tr><td>Name</td><td>Human Resource</td></tr>
-        <tr><td>Status</td><td>Active</td></tr>
-        <tr><td>Date Updated</td><td>28-Mar-2014</td></tr>
-    </table>
+   <table class="table-condensed">
+            <tr><td>Code</td><td><i class="ion-code"></i>&nbsp;${code}</td></tr>
+            <tr><td>Name</td><td><i class="ion-card"></i>&nbsp;${name}</td></tr>
+            <tr><td>Status</td><td><i class="ion-thumbsup"></i>&nbsp;${status}</td></tr>
+            <tr><td>Date Updated</td><td><i class="ion-ios7-calendar-outline"></i>&nbsp;${updatedAt}</td></tr>
+        </table>
+
 </script>
 <script type="text/javascript">
-    console.log("Master List");   
+    console.log("Master List");
+     //For row click event
+   
+  
     <%=fnPrefix%>MasterDetails = function() { 
-        /*
-            var promiseMasterDetails = $.ajax({ url: location.origin + "/businessplan/find" });
-            promiseMasterDetails.done(function (data) {         
-            $("#tpl-master-details").tmpl(_.sortBy(data, "name")).appendTo("#pc-master-list");
-            });
-            promiseMasterList.fail(function () { alert("Something went wrong....."); });
-        */
+            //For click handle
+            $.Topic("master-list-row-click").subscribe(<%=fnPrefix%>MasterDetailsShow);                  
     }
-    addLoadEvent(<%=fnPrefix%>MasterDetails);   
+
+    addLoadEvent(<%=fnPrefix%>MasterDetails); 
+      
+    <%=fnPrefix%>MasterDetailsShow=function(args){
+            console.log("id = " + args.id)
+             //For Progress bar during ajax call      
+             $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-details" });  
+             setTimeout(function () {
+                    var promiseMasterDetails = $.ajax({ url: location.origin +  '<%=api%>'  + args.id });
+                    promiseMasterDetails.done(function (data) { 
+                        $("#<%=fnPrefix%>pc-master-details").html("");
+                        $("#tpl-master-details").tmpl(data).appendTo("#<%=fnPrefix%>pc-master-details"); 
+                        //hide the progress bar
+                        $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-details" });              
+                    });
+                    promiseMasterDetails.fail(function () { 
+                            //hide the progress bar
+                            $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-details" });
+                            console.log("Something went wrong in <%=fnPrefix%>pc-master-details")
+                    });        
+          },100);//End of setTimeout
+    }
 </script>

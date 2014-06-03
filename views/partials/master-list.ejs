@@ -14,27 +14,38 @@
     </tr>
 </script>
 <script type="text/javascript">
-    console.log("Master List");   
-    <%=fnPrefix%>MasterList = function() {        
-        $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-list" });
-            setTimeout(function () {
-                var promiseMasterList = $.ajax({ url: location.origin + "/businessplan/find" });
-                promiseMasterList.done(function (data) {         
-                $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#<%=fnPrefix%>pc-master-list");
-                $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
-                //Attach event handlers
-                $("#<%=fnPrefix%>pc-master-list").on("click", 'i, a', function (args) {
-                        console.log($(this).data( "id" ) + ' ' + $(this).data( "action" ));
-                    })
-
-                
-                });
-                promiseMasterList.fail(function () { alert("Something went wrong....."); });    
-            },1000);
+    console.log("Master List");     
+    <%=fnPrefix%>MasterList = function() {  
+        //For Progress bar during ajax call      
+         $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-list" });        
+        //Ajax call in settimeout to show the progress bar otherwise in local the data will come very quick and one may not see the progressbar
+        setTimeout(function () {
+                    //Initiate ajax
+                    var promiseMasterList = $.ajax({ url: location.origin + '<%=api%>' });
+                    //callback success
+                    promiseMasterList.done(function (data) {         
+                    $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#<%=fnPrefix%>pc-master-list");
+                    //hide the progress bar
+                    $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
+                    //Attach event handlers
+                    $("#<%=fnPrefix%>pc-master-list").on("click", 'i, a', function (args) {
+                            args.action = $(this).data( "action" );
+                            args.id = $(this).data( "id" );
+                            $.Topic("master-list-row-click").publish(args);
+                            //console.log($(this).data( "id" ) + ' ' + $(this).data( "action" ));
+                        })
+                    });
+                    //callback failure
+                    promiseMasterList.fail(function () { 
+                     //hide the progress bar
+                     $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
+                    console.log("Something went wrong in <%=fnPrefix%>pc-master-list")
+                    //TODO: Show noty
+                    });    
+         },100);//End of setTimeout
         
     }
-
-    
+  
 
     addLoadEvent(<%=fnPrefix%>MasterList);   
 </script>

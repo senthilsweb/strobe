@@ -7,10 +7,9 @@
 <script id="tpl-master-list" type="text/x-jquery-tmpl">
     <tr>
         <td>
-            <a href="#" title="${name}">
-                <i class="fa fa-pencil-square-o"></i>&nbsp;
-                <i class="fa fa-trash-o vm-fa-red"></i>&nbsp;${name}
-            </a>
+            <i class="fa fa-pencil-square-o" data-id="${id}" data-action="edit"></i>
+            <i class="fa fa-trash-o vm-fa-red" data-id="${id}" data-action="delete"></i>
+            <a href="#" data-id="${id}" data-action="view">${name}
         </td>
     </tr>
 </script>
@@ -23,6 +22,12 @@
                 promiseMasterList.done(function (data) {         
                 $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#<%=fnPrefix%>pc-master-list");
                 $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
+                //Attach event handlers
+                $("#<%=fnPrefix%>pc-master-list").on("click", 'i, a', function (args) {
+                        console.log($(this).data( "id" ) + ' ' + $(this).data( "action" ));
+                    })
+
+                
                 });
                 promiseMasterList.fail(function () { alert("Something went wrong....."); });    
             },1000);

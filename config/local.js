@@ -55,7 +55,7 @@ module.exports = {
   environment: 'development',
 
   adapters: { 
-   'default' : 'mongo',
+   'default' : 'mongo', 
    'mongo' : {
     module: 'sails-mongo',
     url: 'mongodb://strobe_user:strobe_pwd@ashoka.vmoksha.com/strobe-dev'   

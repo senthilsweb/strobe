@@ -1,51 +1,48 @@
 <%- console.log(title)%>
-<div class="box widget">    
-    <h3><i class="fa fa-list vm-fa-white"></i>&nbsp;<%=title%></h3>    
-    <table class="table-condensed table-hover" id="<%=fnPrefix%>pc-master-list">        
-    </table>
-</div>
-<script id="tpl-master-list" type="text/x-jquery-tmpl">
-    <tr>
-        <td>
-            <i class="fa fa-pencil-square-o" data-id="${id}" data-action="edit"></i>
-            <i class="fa fa-trash-o vm-fa-red" data-id="${id}" data-action="delete"></i>
-            <a href="#" data-id="${id}" data-action="view">${name}
-        </td>
-    </tr>
-</script>
+
+<select class="dropdown-width" id="cbo<%=fnPrefix%>" name="cbo<%=fnPrefix%>"  placeholder="<%=ph%>" multiple>
+    <option></option>
+</select>
+
 <script type="text/javascript">
-    console.log("Master List");     
-    <%=fnPrefix%>MasterList = function() {  
-        //For Progress bar during ajax call      
-         $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-list" });        
+    console.log("Master Combo Multi");     
+    <%=fnPrefix%>MasterCombo_Multi = function() {         
         //Ajax call in settimeout to show the progress bar otherwise in local the data will come very quick and one may not see the progressbar
         setTimeout(function () {
                     //Initiate ajax
-                    var promiseMasterList = $.ajax({ url: location.origin + '<%=api%>' });
+                    var promiseMasterMulti = $.ajax({ url: location.origin + '<%=api%>' });
                     //callback success
-                    promiseMasterList.done(function (data) {         
-                    $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#<%=fnPrefix%>pc-master-list");
-                    //hide the progress bar
-                    $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
-                    //Attach event handlers
-                    $("#<%=fnPrefix%>pc-master-list").on("click", 'i, a', function (args) {
-                            args.action = $(this).data( "action" );
-                            args.id = $(this).data( "id" );
-                            $.Topic("master-list-row-click").publish(args);
-                            //console.log($(this).data( "id" ) + ' ' + $(this).data( "action" ));
-                        })
+                    promiseMasterMulti.done(function (data) {
+                            var options = $("#cbo<%=fnPrefix%>");
+                            //empty the previous Options
+                            options.empty().append($("<option />"));
+                            options.select2({
+                                placeholder: '',
+                                allowClear: true //resets the value of the select box back to the placeholder
+                            });
+                            
+                             var sortedRes = _.sortBy(data, "name");
+                            _.each(data, function (item, i) {
+                                            //this is to specify only add active items to dropdown                     
+                                            if(item.status === undefined || item.status ) 
+                                            {  
+                                                options.append($("<option id="+ item.id + "/>").val(item.code).text(item.name));
+                                            }
+                                });
+                                //Attach change event            
+                                $("#cbo<%=fnPrefix%>").change(function () {
+                                    $.Topic("<%=fnPrefix%>ComboChange").publish(this);
+                                });
+                    
                     });
                     //callback failure
-                    promiseMasterList.fail(function () { 
-                     //hide the progress bar
-                     $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
-                    console.log("Something went wrong in <%=fnPrefix%>pc-master-list")
+                    promiseMasterMulti.fail(function () {                      
+                    console.log("Something went wrong in <%=fnPrefix%>")
                     //TODO: Show noty
                     });    
-         },100);//End of setTimeout
-        
+         },0);//End of setTimeout
     }
   
+    addLoadEvent(<%=fnPrefix%>MasterCombo_Multi);
 
-    addLoadEvent(<%=fnPrefix%>MasterList);   
 </script>

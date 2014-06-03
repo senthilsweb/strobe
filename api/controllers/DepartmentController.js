@@ -26,7 +26,13 @@ module.exports = {
    * Overrides for the settings in `config/controllers.js`
    * (specific to CasestudyController)
    */
-  _config: {}
+  _config: {
+      blueprints: {
+            actions: true,
+            rest: true,
+            shortcuts: true
+        }
+  }
 
   
 };

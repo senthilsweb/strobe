@@ -8,12 +8,15 @@
 
 module.exports = {
 
-  attributes: {
-  	
-  	/* e.g.
-  	nickname: 'string'
-  	*/
-    
-  }
+    attributes: {
+
+        /* e.g.
+        nickname: 'string'
+        */
+
+    },
+    afterFind: function (values, next) {
+        console.log("value = " + values);
+    }
 
 };

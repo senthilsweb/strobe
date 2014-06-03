@@ -12,19 +12,14 @@
             <tr><td>Status</td><td><i class="ion-thumbsup"></i>&nbsp;${status}</td></tr>
             <tr><td>Date Updated</td><td><i class="ion-ios7-calendar-outline"></i>&nbsp;${updatedAt}</td></tr>
         </table>
-
 </script>
 <script type="text/javascript">
     console.log("Master List");
-     //For row click event
-   
-  
+    
     <%=fnPrefix%>MasterDetails = function() { 
             //For click handle
             $.Topic("master-list-row-click").subscribe(<%=fnPrefix%>MasterDetailsShow);                  
     }
-
-    addLoadEvent(<%=fnPrefix%>MasterDetails); 
       
     <%=fnPrefix%>MasterDetailsShow=function(args){
             console.log("id = " + args.id)
@@ -45,4 +40,6 @@
                     });        
           },100);//End of setTimeout
     }
+
+    addLoadEvent(<%=fnPrefix%>MasterDetails); 
 </script>

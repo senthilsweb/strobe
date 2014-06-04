@@ -33,7 +33,7 @@
                                 });
 
                      //Attach change event of combo           
-                    $("#cbo<%=fnPrefix%>").change(function () {debugger;
+                    $("#cbo<%=fnPrefix%>").change(function () {
                         $.Topic("<%=fnPrefix%>ComboChange").publish(this);
                     });
                     

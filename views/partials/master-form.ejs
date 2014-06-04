@@ -13,7 +13,7 @@
                   <div id="modal<%=fnPrefix%>Body" class="modal<%=fnPrefix%>Body validate">
                       <div class="row-fluid">
                           <div class="span12">
-                           <label for="txt<%=fnPrefix%>Name"></label>
+                           <label for="txt<%=fnPrefix%>Name">Name</label>
                             <input type="text" class="required" id="txt<%=fnPrefix%>Name" name="txt<%=fnPrefix%>Name" placeholder="Name">
                          </div>
                         </div>
@@ -34,10 +34,29 @@
     </div>
     <!-- Modal for dept ends-->
 </div>
+<!--Confirmation Pop up dialogs (Start)-->
+<div class="modal fade" role="dialog" id="confirm-dialog-<%=fnPrefix%>">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="frm_<%=fnPrefix%>-dialog" action="#">
+            <div class="modal-body">
+                Are you sure you want to delete the record?
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-danger" id="btnConfirmOk">Ok</a> <a href="#"
+                    class="btn btn-cancel btn-default" data-dismiss="modal">Cancel</a>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Confirmation Pop up dialogs (end)-->
 <script type="text/javascript">
    console.log("MasterForm");   
     <%=fnPrefix%>MasterForm = function() { 
-       $.Topic("btnShowMasterFormClick").subscribe(function () {debugger;
+        $.Topic("master-list-row-click_edit").subscribe(UpdateMasterData);
+        $.Topic("master-list-row-click_delete").subscribe(DeleteMasterData);
+        $.Topic("btnShowMasterFormClick").subscribe(function () {
 
             $('#modal<%=fnPrefix%>').modal('show');
         });
@@ -53,8 +72,8 @@
               else{ 
               request.status = 1;}; //Status//$('#divIsdeptStatus').swatch('setState', true);
 
-        var promiseAdd<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=api%>', data: request });
-        promiseAdd<%=fnPrefix%>.done(function () {debugger;
+        var promiseAdd<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=apicreate%>', data: request });
+        promiseAdd<%=fnPrefix%>.done(function () {
              setTimeout(function () {
                 $.Topic("ModalAction").publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "CompletedSuccess" });
                 $('#modal<%=fnPrefix%>').modal('hide');
@@ -62,7 +81,7 @@
             }, 1000);
             return false;
         })
-        promiseAdd<%=fnPrefix%>.fail(function(){debugger;
+        promiseAdd<%=fnPrefix%>.fail(function(){
             $('#modal<%=fnPrefix%>').modal('hide');
             noty({ "text": "Failed", "layout": "top", "type": "error" });
             console.log("from master api fail")
@@ -70,5 +89,43 @@
     }
     }
     addLoadEvent(<%=fnPrefix%>MasterForm);
+
+    function UpdateMasterData(args)
+    {
+           var promiseMasterUpdate = $.ajax({ url: location.origin + '<%=apiupdate%>/' + args.id });
+            promiseMasterUpdate.done(function(data){debugger;
+             $('#modal<%=fnPrefix%>').modal('show');
+             $('#txt<%=fnPrefix%>Name').val(data.name);
+             $("#chkStatus<%=fnPrefix%>").val(data.status);
+            });
+
+            promiseMasterUpdate.fail(function(){
+            console.log("update master fail");
+            });
+
+      }
+      function DeleteMasterData(args)
+      {
+           $('#confirm-dialog-<%=fnPrefix%>').modal('show');
+            $("#btnConfirmOk").click(function (e) { <%=fnPrefix%>_PerformDelete(args); });
+      }
+      function <%=fnPrefix%>_PerformDelete(args)
+      {
+        var request = {};
+        request.Id = args.Id;
+        var promiseMasterDelete = $.ajax({ url: location.origin + '<%=apidelete%>/' + args.id });
+            promiseMasterDelete.done(function(data){debugger;
+               setTimeout(function () {
+                    $("#confirm-dialog-<%=fnPrefix%>").modal('hide');
+                    noty({ "text": "Deleted Successfully", "layout": "top", "type": "success" });
+                }, 1000);
+                return false;
+            });
+
+            promiseMasterDelete.fail(function(){
+                console.log("master delete fail");
+            });
+
+        }
       
 </script>

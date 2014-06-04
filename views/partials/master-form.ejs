@@ -57,7 +57,10 @@
         $.Topic("master-list-row-click_edit").subscribe(UpdateMasterData);
         $.Topic("master-list-row-click_delete").subscribe(DeleteMasterData);
         $.Topic("btnShowMasterFormClick").subscribe(function () {
-
+            //clear the previous values
+            ResetControls("modal<%=fnPrefix%>"); 
+            //Reset Form
+            ResetForm("frmAdd<%=fnPrefix%>");
             $('#modal<%=fnPrefix%>').modal('show');
         });
         FormValidation();
@@ -79,6 +82,7 @@
                 $('#modal<%=fnPrefix%>').modal('hide');
                 noty({ "text": "<%=fnPrefix%> saved successfully", "layout": "top", "type": "success" });
             }, 1000);
+
             return false;
         })
         promiseAddEdit<%=fnPrefix%>.fail(function(){
@@ -93,7 +97,7 @@
     function UpdateMasterData(args)
     {
            var promiseMasterUpdate = $.ajax({ url: location.origin + '<%=apiupdate%>/' + args.id });
-            promiseMasterUpdate.done(function(data){debugger;
+            promiseMasterUpdate.done(function(data){            
              $('#modal<%=fnPrefix%>').modal('show');
              $('#txt<%=fnPrefix%>Name').val(data.name);
              $("#chkStatus<%=fnPrefix%>").val(data.status);

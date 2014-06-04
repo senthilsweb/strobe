@@ -65,7 +65,7 @@
             ResetControls("modal<%=fnPrefix%>"); 
             //Reset Form
             ResetForm("frmAdd<%=fnPrefix%>");
-            $("#btnSave<%=fnPrefix%>").removeAttr("disabled");
+            $("#btnSave<%=fnPrefix%>").removeAttr("disabled");   
             $('#modal<%=fnPrefix%>').modal('show');
         });
         FormValidation();
@@ -110,8 +110,9 @@
     function UpdateMasterData(args)
     {
            var promiseMasterUpdate = $.ajax({ url: location.origin + '<%=apiupdate%>/' + args.id });
-            promiseMasterUpdate.done(function(data){ debugger;
-             $("#btnSave<%=fnPrefix%>").removeAttr("disabled");           
+            promiseMasterUpdate.done(function(data){ 
+             $("#btnSave<%=fnPrefix%>").removeAttr("disabled"); 
+             $('#modal<%=fnPrefix%>Label').text("Edit "+"<%=fnPrefix%>")          
              $('#modal<%=fnPrefix%>').modal('show');
              $('#txt<%=fnPrefix%>Name').val(data.name);
              $('#divIs<%=fnPrefix%>Status').swatch('setState', data.status=="0" ? false : true);
@@ -132,22 +133,22 @@
       }
       function <%=fnPrefix%>_PerformDelete(args)
       {
-        
-        var request = {};
-        request.Id = args.Id;
-        var promiseMasterDelete = $.ajax({ url: location.origin + '<%=apidelete%>/' + args.id });
+      var promiseMasterDelete = $.ajax({ url: location.origin + '<%=apidelete%>/' + args.id });
             promiseMasterDelete.done(function(data){
                setTimeout(function () {
                     $("#confirm-dialog-<%=fnPrefix%>").modal('hide');
                     noty({ "text": "Deleted Successfully", "layout": "top", "type": "success" });
                 }, 0);
                  setTimeout(<%=fnPrefix%>ListMasterList, 0);
-             return false 
+             return false;
+     
             });
-
+    
             promiseMasterDelete.fail(function(){
                 console.log("master delete fail");
             });
+    
+    a
 
         }
       

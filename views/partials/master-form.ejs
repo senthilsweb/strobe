@@ -1,28 +1,70 @@
 <%- console.log(title)%>
-<div class="box widget">	
-    <h3><i class="ion-person-stalker"></i>&nbsp;<%=title%></h3>
-	<form class="form-vertical" id="<%=fnPrefix%>frmMstCreate" action="#" method="post">
-        <div class="form-group">
-		    <div class="controls">
-			    <input type="text" id="<%=fnPrefix%>inputName" name="<%=fnPrefix%>inputName" placeholder="Name" class="span12">
-		    </div>
-	    </div>
-        <div class="form-group">
-            <div class="controls">                
-                <button type="submit" class="btn btn-success btn-block" id="<%=fnPrefix%>btnSave">Save</button>
-                <button type="reset" class="btn btn-default btn-block" id="<%=fnPrefix%>btnClear">Clear</button>
-            </div>
-        </div>        
-    </form>
+<div class="row-fluid">
+    <!-- Modal for departmet add starts -->
+    <div  class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="modal<%=fnPrefix%>Label" aria-hidden="true" id="modal<%=fnPrefix%>">
+         <form id="frmAdd<%=fnPrefix%>" class="validate" action="#">
+               <div class="error validate">
+               </div>
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="modal<%=fnPrefix%>Label">Add Department</h3>
+              </div>
+              <div class="modal-body">
+                  <div id="modal<%=fnPrefix%>Body" class="modal<%=fnPrefix%>Body validate">
+                      <div class="row-fluid">
+                          <div class="span12">
+                           <label for="txt<%=fnPrefix%>Name"></label>
+                            <input type="text" class="required" id="txt<%=fnPrefix%>Name" name="txt<%=fnPrefix%>Name" placeholder="Name">
+                         </div>
+                        </div>
+                       <div class="row-fluid">
+                          <div class="span3">
+                              <div id="divIs<%=fnPrefix%>Status"class="but-switch vm-dummy-swith-button">
+                                <input id="chkStatus<%=fnPrefix%>" type="checkbox" class="vm-dummy-swith-button">
+                              </div>
+                           </div>
+                      </div>
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
+                <button type="submit" class="btn btn-primary">Save</button>
+              </div>
+           </form>
+    </div>
+    <!-- Modal for dept ends-->
 </div>
 <script type="text/javascript">
-    console.log("MasterForm");   
+   console.log("MasterForm");   
     <%=fnPrefix%>MasterForm = function() { 
-        var promiseMasterForm = $.ajax({ url: location.origin + "/businessplan/find" });
-        promiseMasterForm.done(function (data) {         
-        $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#pc-master-list");
+       $.Topic("btnShowMasterFormClick").subscribe(function () {debugger;
+
+            $('#modal<%=fnPrefix%>').modal('show');
         });
-        promiseMasterForm.fail(function () { alert("Something went wrong....."); });
+        FormValidation();
+        $.Topic(vm_ui_events.FormSubmitClick + "_frmAdd<%=fnPrefix%>").subscribe(frmAdd<%=fnPrefix%>_Handler);
+
+     function frmAdd<%=fnPrefix%>_Handler() {
+        var request = {};
+        request.name = $('#txt<%=fnPrefix%>Name').val();
+          if($("#chkStatus<%=fnPrefix%>").is(":checked")== false){
+              request.status = 0; } 
+              else{ 
+              request.status = 1;}; //Status//$('#divIsdeptStatus').swatch('setState', true);
+
+        var promiseAdd<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=api%>', data: request });
+        promiseAdd<%=fnPrefix%>.done(function () {
+             setTimeout(function () {
+                $.Topic(vm_ui_events.ModalAction).publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "CompletedSuccess" });
+                $('#modal<%=fnPrefix%>').modal('hide');
+                noty({ "text": "<%=fnPrefix%> Added Successfully", "layout": "top", "type": "success" });
+            }, 1000);
+            return false;
+        })
+    promiseAdd<%=fnPrefix%>.fail(function(){
+    console.log("from master api fail")});
     }
-    //addLoadEvent(<%=fnPrefix%>MasterForm);
+    }
+    addLoadEvent(<%=fnPrefix%>MasterForm);
+      
 </script>

@@ -25,6 +25,9 @@
     <%- partial('../partials/master-combo-multi', {'fnPrefix' : 'Departmentmulti','api':'/department/find', 'ph' : 'Department'})%>
     </div>
 </div>
+<div class="row-fluid">
+    <%- partial('../partials/master-form', {'title': 'Add Departments','fnPrefix' : 'Department','api':'/department/create'})%>
+</div>
 <script type="text/javascript">
     console.log("Department");
     function Department() {
@@ -32,7 +35,7 @@
             $.Topic("btnShowMasterFormClick").publish();
             return false;
         });
-        $.Topic("btnShowMasterFormClick").subscribe(function () { alert("btnShowMasterFormClick") });
+        $.Topic("btnShowMasterFormClick").subscribe(function () { });
     }
     addLoadEvent(Department);
 </script>

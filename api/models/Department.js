@@ -14,12 +14,12 @@ module.exports = {
 
     },
     beforeCreate: function (values, next) {
-        console.log("value = " + values.code);
-        var easycrypto = require('easycrypto').getInstance();
-        var encrypted = easycrypto.encrypt(values.code, 'plasma'); //plasma - > some random password       
-        console.log("encrypted code for [ "  + values.code + "] = " + encrypted);
+         console.log("value = " + values.code);        
+        //var easycrypto = require('easycrypto').getInstance();
+        //var encrypted = easycrypto.encrypt(values.code, 'plasma'); //plasma - > some random password       
+        //console.log("encrypted code for [ "  + values.code + "] = " + encrypted);
         var randomString = require('random-string');
-        console.log("Random = " + randomString({ length: 6 }));
+        values.code = randomString({ length: 6 })        
         next();
     }
 

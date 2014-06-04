@@ -7,7 +7,7 @@
 <script type="text/javascript">
     console.log("Master Combo Multi");     
     <%=fnPrefix%>MasterCombo_Multi = function() {         
-        //Ajax call in settimeout to show the progress bar otherwise in local the data will come very quick and one may not see the progressbar
+        //Ajax call in settimeout to get the combo data
         setTimeout(function () {
                     //Initiate ajax
                     var promiseMasterMulti = $.ajax({ url: location.origin + '<%=api%>' });
@@ -29,7 +29,7 @@
                                                 options.append($("<option id="+ item.id + "/>").val(item.code).text(item.name));
                                             }
                                 });
-                                //Attach change event            
+                                //Attach change event of combo            
                                 $("#cbo<%=fnPrefix%>").change(function () {
                                     $.Topic("<%=fnPrefix%>ComboChange").publish(this);
                                 });

@@ -9,7 +9,7 @@
     //On page load    
     <%=fnPrefix%>MasterCombo_Single = function() {     
             
-        //Ajax call in settimeout to show the progress bar otherwise in local the data will come very quick and one may not see the progressbar
+        //Ajax call in settimeout to get the combo data
         setTimeout(function () {
                     //Initiate ajax
                     var promiseMasterSingle = $.ajax({ url: location.origin + '<%=api%>' });
@@ -32,7 +32,7 @@
                                             }
                                 });
 
-                     //Attach change event            
+                     //Attach change event of combo           
                     $("#cbo<%=fnPrefix%>").change(function () {debugger;
                         $.Topic("<%=fnPrefix%>ComboChange").publish(this);
                     });

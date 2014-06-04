@@ -5,6 +5,7 @@
          <form id="frmAdd<%=fnPrefix%>" class="validate" action="#">
                <div class="error validate">
                </div>
+             <input type="hidden" id="hiddentxt<%=fnPrefix%>"value="0"/>
               <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3 id="modal<%=fnPrefix%>Label">Add Department</h3>
@@ -31,7 +32,7 @@
               </div>
               <div class="modal-footer">
                 <button class="btn" data-dismiss="modal" aria-hidden="true">Close</button>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn btn-primary" id="btnSave<%=fnPrefix%>">Save</button>
               </div>
            </form>
     </div>
@@ -64,6 +65,7 @@
             ResetControls("modal<%=fnPrefix%>"); 
             //Reset Form
             ResetForm("frmAdd<%=fnPrefix%>");
+            $("#btnSave<%=fnPrefix%>").removeAttr("disabled");
             $('#modal<%=fnPrefix%>').modal('show');
         });
         FormValidation();
@@ -77,8 +79,16 @@
               request.status = 0; } 
               else{ 
               request.status = 1;}; //Status//$('#divIsdeptStatus').swatch('setState', true);
-
-        var promiseAddEdit<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=apicreate%>', data: request });
+                var id=$('#hiddentxt<%=fnPrefix%>').val();
+                if($('#hiddentxt<%=fnPrefix%>').val() != 0)
+                {
+                request.id=id;
+                var promiseAddEdit<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=apiupdate%>',data: request });
+                }
+                else
+                {
+                var promiseAddEdit<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=apicreate%>', data: request });
+                }
         promiseAddEdit<%=fnPrefix%>.done(function () {
              setTimeout(function () {
                 $.Topic("ModalAction").publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "CompletedSuccess" });
@@ -100,10 +110,12 @@
     function UpdateMasterData(args)
     {
            var promiseMasterUpdate = $.ajax({ url: location.origin + '<%=apiupdate%>/' + args.id });
-            promiseMasterUpdate.done(function(data){ debugger;           
+            promiseMasterUpdate.done(function(data){ debugger;
+             $("#btnSave<%=fnPrefix%>").removeAttr("disabled");           
              $('#modal<%=fnPrefix%>').modal('show');
              $('#txt<%=fnPrefix%>Name').val(data.name);
-             $("#chkStatus<%=fnPrefix%>").val(data.status);
+             $('#divIs<%=fnPrefix%>Status').swatch('setState', data.status=="0" ? false : true);
+             $('#hiddentxt<%=fnPrefix%>').val(args.id);
              setTimeout(<%=fnPrefix%>ListMasterList, 0);
              return false        
             });
@@ -120,14 +132,15 @@
       }
       function <%=fnPrefix%>_PerformDelete(args)
       {
+        
         var request = {};
         request.Id = args.Id;
         var promiseMasterDelete = $.ajax({ url: location.origin + '<%=apidelete%>/' + args.id });
-            promiseMasterDelete.done(function(data){debugger;
+            promiseMasterDelete.done(function(data){
                setTimeout(function () {
                     $("#confirm-dialog-<%=fnPrefix%>").modal('hide');
                     noty({ "text": "Deleted Successfully", "layout": "top", "type": "success" });
-                }, 1000);
+                }, 0);
                  setTimeout(<%=fnPrefix%>ListMasterList, 0);
              return false 
             });

@@ -37,6 +37,7 @@
                             args.id = $(this).data("id");
                             $.Topic("master-list-row-click_"+args.action).publish(args);
                             //console.log($(this).data( "id" ) + ' ' + $(this).data( "action" ));
+    console.log("delete published");
                         })
                     }); 
                     //callback failure

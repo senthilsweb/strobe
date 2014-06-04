@@ -82,7 +82,7 @@
                 $('#modal<%=fnPrefix%>').modal('hide');
                 noty({ "text": "<%=fnPrefix%> saved successfully", "layout": "top", "type": "success" });
             }, 1000);
-
+            setTimeout(<%=fnPrefix%>ListMasterList, 0);        
             return false;
         })
         promiseAddEdit<%=fnPrefix%>.fail(function(){
@@ -101,8 +101,10 @@
              $('#modal<%=fnPrefix%>').modal('show');
              $('#txt<%=fnPrefix%>Name').val(data.name);
              $("#chkStatus<%=fnPrefix%>").val(data.status);
+             setTimeout(<%=fnPrefix%>ListMasterList, 0);
+             return false        
             });
-
+            
             promiseMasterUpdate.fail(function(){
             console.log("update master fail");
             });
@@ -123,7 +125,8 @@
                     $("#confirm-dialog-<%=fnPrefix%>").modal('hide');
                     noty({ "text": "Deleted Successfully", "layout": "top", "type": "success" });
                 }, 1000);
-                return false;
+                 setTimeout(<%=fnPrefix%>ListMasterList, 0);
+             return false 
             });
 
             promiseMasterDelete.fail(function(){

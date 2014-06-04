@@ -15,15 +15,19 @@
 </script>
 <script type="text/javascript">
     console.log("Master List");     
-    <%=fnPrefix%>MasterList = function() {  
+    <%=fnPrefix%>MasterList = function() {  debugger;
         //For Progress bar during ajax call      
          $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-list" });        
         //Ajax call in settimeout to show the progress bar otherwise in local the data will come very quick and one may not see the progressbar
         setTimeout(function () {
                     //Initiate ajax
                     var promiseMasterList = $.ajax({ url: location.origin + '<%=api%>' });
+
                     //callback success
-                    promiseMasterList.done(function (data) {         
+                    promiseMasterList.done(function (data) { 
+
+                    //before appending the template empty it
+                    $("#<%=fnPrefix%>pc-master-list").empty();        
                     $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#<%=fnPrefix%>pc-master-list");
                     //hide the progress bar
                     $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });

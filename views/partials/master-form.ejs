@@ -61,9 +61,9 @@
             $('#modal<%=fnPrefix%>').modal('show');
         });
         FormValidation();
-        $.Topic(vm_ui_events.FormSubmitClick + "_frmAdd<%=fnPrefix%>").subscribe(frmAdd<%=fnPrefix%>_Handler);
+        $.Topic(vm_ui_events.FormSubmitClick + "_frmAdd<%=fnPrefix%>").subscribe(frmAddEdit<%=fnPrefix%>_Handler);
 
-     function frmAdd<%=fnPrefix%>_Handler() {
+     function frmAddEdit<%=fnPrefix%>_Handler() {
         $.Topic(vm_ui_events.ModalAction).publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "Initiated" });
         var request = {};
         request.name = $('#txt<%=fnPrefix%>Name').val();
@@ -72,16 +72,16 @@
               else{ 
               request.status = 1;}; //Status//$('#divIsdeptStatus').swatch('setState', true);
 
-        var promiseAdd<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=apicreate%>', data: request });
-        promiseAdd<%=fnPrefix%>.done(function () {
+        var promiseAddEdit<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=apicreate%>', data: request });
+        promiseAddEdit<%=fnPrefix%>.done(function () {
              setTimeout(function () {
                 $.Topic("ModalAction").publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "CompletedSuccess" });
                 $('#modal<%=fnPrefix%>').modal('hide');
-                noty({ "text": "<%=fnPrefix%> added successfully", "layout": "top", "type": "success" });
+                noty({ "text": "<%=fnPrefix%> saved successfully", "layout": "top", "type": "success" });
             }, 1000);
             return false;
         })
-        promiseAdd<%=fnPrefix%>.fail(function(){
+        promiseAddEdit<%=fnPrefix%>.fail(function(){
             $('#modal<%=fnPrefix%>').modal('hide');
             noty({ "text": "Failed", "layout": "top", "type": "error" });
             console.log("from master api fail")

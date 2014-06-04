@@ -45,6 +45,7 @@
         $.Topic(vm_ui_events.FormSubmitClick + "_frmAdd<%=fnPrefix%>").subscribe(frmAdd<%=fnPrefix%>_Handler);
 
      function frmAdd<%=fnPrefix%>_Handler() {
+        $.Topic(vm_ui_events.ModalAction).publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "Initiated" });
         var request = {};
         request.name = $('#txt<%=fnPrefix%>Name').val();
           if($("#chkStatus<%=fnPrefix%>").is(":checked")== false){
@@ -53,16 +54,19 @@
               request.status = 1;}; //Status//$('#divIsdeptStatus').swatch('setState', true);
 
         var promiseAdd<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=api%>', data: request });
-        promiseAdd<%=fnPrefix%>.done(function () {
+        promiseAdd<%=fnPrefix%>.done(function () {debugger;
              setTimeout(function () {
-                $.Topic(vm_ui_events.ModalAction).publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "CompletedSuccess" });
+                $.Topic("ModalAction").publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "CompletedSuccess" });
                 $('#modal<%=fnPrefix%>').modal('hide');
-                noty({ "text": "<%=fnPrefix%> Added Successfully", "layout": "top", "type": "success" });
+                noty({ "text": "<%=fnPrefix%> added successfully", "layout": "top", "type": "success" });
             }, 1000);
             return false;
         })
-    promiseAdd<%=fnPrefix%>.fail(function(){
-    console.log("from master api fail")});
+        promiseAdd<%=fnPrefix%>.fail(function(){debugger;
+            $('#modal<%=fnPrefix%>').modal('hide');
+            noty({ "text": "Failed", "layout": "top", "type": "error" });
+            console.log("from master api fail")
+        });    
     }
     }
     addLoadEvent(<%=fnPrefix%>MasterForm);

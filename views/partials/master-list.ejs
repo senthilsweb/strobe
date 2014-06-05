@@ -83,10 +83,13 @@
 
                     //callback success
                     promiseMasterList.done(function (data) { 
-
+                    //Data filtered by status "Active"
+                    var filtered_<%=fnPrefix%>_Active = _.filter(data, function (objData){			
+			                return objData.status == "1";
+	                });
                     //before appending the template empty it
                     $("#<%=fnPrefix%>pc-master-list").empty();        
-                    $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#<%=fnPrefix%>pc-master-list");
+                    $("#tpl-master-list").tmpl(_.sortBy(filtered_<%=fnPrefix%>_Active, "name")).appendTo("#<%=fnPrefix%>pc-master-list");
                     //hide the progress bar
                     $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
                     //Attach event handlers

@@ -60,6 +60,9 @@
     <%=fnPrefix%>MasterForm = function() { 
         $.Topic("master-list-row-click_edit").subscribe(UpdateMasterData);
         $.Topic("master-list-row-click_delete").subscribe(DeleteMasterData);
+
+        $("#btnConfirmOk").click(function (e) { <%=fnPrefix%>_PerformDelete($("#confirm-dialog-<%=fnPrefix%>").data('modal').options.args); });
+
         $.Topic("btnShowMasterFormClick").subscribe(function () {
             //clear the previous values
             ResetControls("modal<%=fnPrefix%>"); 
@@ -126,10 +129,16 @@
             });
 
       }
-      function DeleteMasterData(args)
+      function DeleteMasterData(request)
       {
-           $('#confirm-dialog-<%=fnPrefix%>').modal('show');
-            $("#btnConfirmOk").click(function (e) { <%=fnPrefix%>_PerformDelete(args); });
+             if ($("#confirm-dialog-<%=fnPrefix%>").data('modal') != undefined) {
+                    $("#confirm-dialog-<%=fnPrefix%>").data('modal').options.args = request;
+                    //Opens Confirmation Dialog
+                    $("#confirm-dialog-<%=fnPrefix%>").modal({ show: true });
+                    return false;
+              }
+              $("#confirm-dialog-<%=fnPrefix%>").modal({ "args": request, show: true });
+              return false;           
       }
       function <%=fnPrefix%>_PerformDelete(args)
       {
@@ -137,7 +146,7 @@
             promiseMasterDelete.done(function(data){
                setTimeout(function () {
                     $("#confirm-dialog-<%=fnPrefix%>").modal('hide');
-                    noty({ "text": "Deleted Successfully", "layout": "top", "type": "success" });
+                    noty({ "text": "<%=fnPrefix%> deleted successfully", "layout": "top", "type": "success" });
                 }, 0);
                  setTimeout(<%=fnPrefix%>ListMasterList, 0);
              return false;
@@ -147,9 +156,7 @@
             promiseMasterDelete.fail(function(){
                 console.log("master delete fail");
             });
-    
-    a
-
+   
         }
       
 </script>

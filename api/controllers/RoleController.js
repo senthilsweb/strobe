@@ -23,7 +23,8 @@ module.exports = {
    *    `/role/index`
    *    `/role`
    */
-   'index': function (req, res) {    
+   'index': function (req, res) { 
+
     res.view();
   },
  /**

@@ -3,30 +3,12 @@
 <div class="box widget">    
     <h3><i class="fa fa-list vm-fa-white"></i>&nbsp;<%=title%></h3>  
     <!--Search panel(start)-->
-<!--<div class="row-fluid">
-    <form class="form-inline">
-    <div class="form-group">
-        <input type="text" class="form-control input-small" id="txt<%=fnPrefix%>Name"/></div>
-        <button type="submit" class="btn btn-small btn-danger" id="btn-glpv-search_<%=fnPrefix%>">
-        Search</button>
-    </form>
-</div>-->
-
-    <div class="row-fluid">
-                            <div class="span9">
-                                <input type="text" class="span12" id="txt<%=fnPrefix%>Name" name="txt<%=fnPrefix%>Name" placeholder="Select"></div>
-                            <div class="span3">
-                                <!--<button type="submit" id="btn-glpv-search_<%=fnPrefix%>" class="btn btn-medium btn-danger vm-search-button span12" style="width:30px; padding-left:9px;" disabled="disabled">
-                                    <i class="icon-search icon-white"></i>
-                                </button>-->
-                                <button type="submit" style="padding-top: 3px;padding-bottom: 2px;" class="btn btn-mini btn-danger vm-search-button" id="btn-glpv-search_<%=fnPrefix%>">
-                                    Search</button>
-                            </div>
-                        </div>
+    <div class="row-fluid" id="<%=fnPrefix%>_Search">
+        <%- partial('../partials/subpartials/master-search', {'fnPrefix' : fnPrefix, 'showComponent':'true'}) %>                   
+   </div>
 <!--Search panel(End)-->
     <!--Master List table(start)--> 
-    <div class="row-fluid"></div> 
-    <table class="table table-condensed" id="<%=fnPrefix%>pc-master-list">    
+    <table class="table table-condensed" id="<%=fnPrefix%>pc-master-list">   
           
     </table>
     <!--Master List table(end)-->
@@ -46,30 +28,7 @@
     console.log("Master List");     
     <%=fnPrefix%>MasterList = function() {
     //1) Subscribes for Events Search Button Click Event to clear the existing deatils
-   // $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").subscribe(<%=fnPrefix%>_LoadImage);
-
-
-        //To make the search button generic below code is added.If we have multiple generic lookup partial view in the 
-        //ui,it loops through the form and  Finds the button with the name starting with "btn-glpv-search"/ 
-        //For this id , view name will be appended to it  to make it unique
-        $('.vm-search-button').each(function (index) {
-            //get the id of the button
-            var buttonId = $(this).attr('id');
-            //Check for the button id
-            if (buttonId != undefined && buttonId.search("btn-glpv-search") == 0) {
-                //Get the model name from the button Id(Button Id will be appended with the Model name )
-                //modelName = buttonId.substring(buttonId.indexOf("_") + 1, buttonId.length);
-                $("#btn-glpv-search_<%=fnPrefix%>").click(function (e) {
-                    //default action of the event will not be triggered.
-                    e.preventDefault();
-                    //Publish  Search button click event so that the partialview(details, etc) is cleared and rebinded
-                    $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").publish('<%=fnPrefix%>');
-                    //Bind the data to the datatable depending on the criteria
-                    //Format of setTimeout is (functionname,delay,parameters if any)  
-                    setTimeout(<%=fnPrefix%>Master_List_BindData, 0);
-                });
-            }
-        });
+    //$.Topic("<%=fnPrefix%>_Master_SearchButtonClick").subscribe(<%=fnPrefix%>_LoadImage);                
 
         //Function to load master table on page load           
         eval('<%=fnPrefix%>Master_List_BindData'+'()');

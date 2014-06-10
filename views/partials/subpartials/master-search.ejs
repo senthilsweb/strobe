@@ -1,0 +1,39 @@
+<%- console.log(title)%>
+ 
+ <div class="span9">
+                                <input type="text" class="span12" id="txt<%=fnPrefix%>Name" name="txt<%=fnPrefix%>Name" placeholder="Select"></div>
+                            <div class="span3">
+                                <button type="submit" style="padding-top: 3px;padding-bottom: 2px;" class="btn btn-mini btn-danger vm-search-button" id="btn-glpv-search_<%=fnPrefix%>">
+                                    Search</button>
+                            </div>
+<script type="text/javascript">
+     console.log("Master Search");     
+    <%=fnPrefix%>MasterSearch = function() {
+
+    //To make the search button generic below code is added.If we have multiple generic lookup partial view in the 
+        //ui,it loops through the form and  Finds the button with the name starting with "btn-glpv-search"/ 
+        //For this id , view name will be appended to it  to make it unique
+        $('.vm-search-button').each(function (index) {
+            //get the id of the button
+            var buttonId = $(this).attr('id');
+            //Check for the button id
+            if (buttonId != undefined && buttonId.search("btn-glpv-search") == 0) {
+                //Get the model name from the button Id(Button Id will be appended with the Model name )
+                //modelName = buttonId.substring(buttonId.indexOf("_") + 1, buttonId.length);
+                $("#btn-glpv-search_<%=fnPrefix%>").click(function (e) {
+                    //default action of the event will not be triggered.
+                    e.preventDefault();
+                    //Publish  Search button click event so that the partialview(details, etc) is cleared and rebinded
+                    $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").publish();
+                    //Bind the data to the datatable depending on the criteria
+                    //Format of setTimeout is (functionname,delay,parameters if any)  
+                    //setTimeout(<%=fnPrefix%>Master_List_BindData, 0);
+                });
+            }
+        });
+
+      }
+
+    addLoadEvent(<%=fnPrefix%>MasterSearch); 
+</script>
+

@@ -1,7 +1,7 @@
 <div class="row-fluid">
     <div class="span3">
         <div class="row-fluid">
-            <%- partial('../partials/master-list', {'title': 'Departments','fnPrefix' : 'DepartmentList','api':'/department/find'})%>
+            <%- partial('../partials/master-list', {'title': 'Departments','fnPrefix' : 'DepartmentList','api':'/department/find', 'showComponent':'true'})%>
         </div>
         <div class="row-fluid">
             <button type="submit" class="btn btn-success btn-block" id="btnShowMasterForm"><i class="ion-plus"></i>&nbsp;Add New</button>
@@ -9,24 +9,24 @@
     </div>
     <div class="span9">        
         <div class="row-fluid">
-            <%- partial('../partials/master-details', {'title': 'Department Details','fnPrefix' : 'DepartmentDetails','api':'/department/find/'})%>
+            <%- partial('../partials/master-details', {'title': 'Department Details','fnPrefix' : 'DepartmentDetails','api':'/department/find/', 'showComponent':'true'})%>
         </div>
     </div>
 </div>
 <div>&nbsp;</div>
 <div class="row-fluid">
     <div class="span3">
-    <%- partial('../partials/master-combo-single', {'fnPrefix' : 'Department','api':'/department/find', 'ph': 'Department'})%>
+    <%- partial('../partials/master-combo-single', {'fnPrefix' : 'Department','api':'/department/find', 'ph': 'Department', 'showComponent':'true'})%>
     </div>
 </div>
 <div>&nbsp;</div>
 <div class="row-fluid">
     <div class="span3">
-    <%- partial('../partials/master-combo-multi', {'fnPrefix' : 'Departmentmulti','api':'/department/find', 'ph' : 'Department'})%>
+    <%- partial('../partials/master-combo-multi', {'fnPrefix' : 'Departmentmulti','api':'/department/find', 'ph' : 'Department', 'showComponent':'true'})%>
     </div>
 </div>
 <div class="row-fluid">
-    <%- partial('../partials/master-form', {'title': 'Add Departments','fnPrefix' : 'Department','apicreate':'/department/create', 'apifind':'/department/find' , 'apidelete':'/department/destroy','apiupdate':'/department/update'})%>
+    <%- partial('../partials/master-form', {'title': 'Add Departments','fnPrefix' : 'Department','apicreate':'/department/create', 'apifind':'/department/find' , 'apidelete':'/department/destroy','apiupdate':'/department/update', 'showComponent':'true'})%>
 </div>
 <script type="text/javascript">
     console.log("Department");

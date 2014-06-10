@@ -9,7 +9,7 @@
    <table class="table-condensed">
             <tr><td>Code</td><td><i class="ion-code"></i>&nbsp;${code}</td></tr>
             <tr><td>Name</td><td><i class="ion-card"></i>&nbsp;${name}</td></tr>
-            <tr><td>Status</td><td><i class="ion-thumbsup"></i>&nbsp;${status}</td></tr>
+            <tr><td>Status</td><td><i class="${statusClass}"></i>&nbsp;${status}</td></tr>
             <tr><td>Date Updated</td><td><i class="ion-ios7-calendar-outline"></i>&nbsp;${updatedAt}</td></tr>
         </table>
 </script>
@@ -29,9 +29,16 @@
                     var promiseMasterDetails = $.ajax({ url: location.origin +  '<%=api%>'  + args.id });
                     promiseMasterDetails.done(function (data) { 
                         $("#<%=fnPrefix%>pc-master-details").html("");
+                        //Add class for status dynamically                        
+                        data.statusClass = data.status == "1" 
+                                                    ? "ion-thumbsup vm-fa-green" 
+                                                    : "ion-thumbsdown vm-fa-grey";
+			
+                       
                         data.status=data.status == "1" ? "Active" : "Disable";
                         data.createdAt = moment(data.updatedAt).format('DD-MMM-YYYY');
                         data.updatedAt = moment(data.updatedAt).format('DD-MMM-YYYY');
+                            
                         $("#tpl-master-details").tmpl(data).appendTo("#<%=fnPrefix%>pc-master-details"); 
                         //hide the progress bar
                         $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-details" });              

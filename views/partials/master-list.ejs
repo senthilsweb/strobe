@@ -37,7 +37,8 @@
         <td data-column-name="masterList">
             <i class="fa fa-pencil-square-o" data-id="${id}" data-action="edit"></i>
             <i class="fa fa-trash-o vm-fa-red" data-id="${id}" data-action="delete"></i>
-            <a href="#" data-id="${id}" data-action="view">${name}
+            <a href="#" data-id="${id}" data-action="view">${name} &nbsp;</a>
+            <i class="${statusClass}" title="${title}" data-id="${id}"></i>
         </td>
     </tr>
 </script>
@@ -90,11 +91,22 @@
                     var filtered_<%=fnPrefix%>_Active = _.filter(data, function (objData){			
 			                return objData.status == "1";
 	                });
+                    //Add class for status dynamically
+                    _.each( data, function ( item )
+                    {
+                        item.statusClass = item.status == "1" 
+                                                    ? "fa fa-circle vm-fa-green" 
+                                                    : "fa fa-circle vm-fa-grey";
+                        item.title= item.status == "1" 
+                                                    ? "Active" 
+                                                    : "Disabled";
+			
+                    });
                     //before appending the template empty it
                     $("#<%=fnPrefix%>pc-master-list").empty();   
-                   // $("#<%=fnPrefix%>pc-master-list > tbody tr").remove();     
-                    $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#<%=fnPrefix%>pc-master-list");
-                     //AttachDatatablePagination("<%=fnPrefix%>pc-master-list");
+                    // $("#<%=fnPrefix%>pc-master-list > tbody tr").remove();     
+                    $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#<%=fnPrefix%>pc-master-list");   
+                    //AttachDatatablePagination("<%=fnPrefix%>pc-master-list");
                     //hide the progress bar
                     $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
                     //Attach event handlers

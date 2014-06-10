@@ -21,7 +21,7 @@
             strbc += (!flgChildEmpty ? '<li class="active">' +' / '+ args.child + '</li>' : '');
             strbc += '</ul>';
             $("#breadcrumb").html(strbc);
-        } catch (e) {debugger; }
+        } catch (e) { }
     }
     addLoadEvent(BuildAndBindBreadcrumb);
 </script>

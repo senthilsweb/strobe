@@ -1,14 +1,27 @@
-<div class="container">
-    <ul class="breadcrumb vm-protected" id="breadcrumb">
+<div id="breadcrumb" class="container">
+    <!--<ul class="breadcrumb vm-protected" id="breadcrumb">
       <li><a href="#">Administration</a> <span class="divider">/</span></li> 
       <li class="active">Case Study</li>
-    </ul>
+    </ul>-->
 </div>
 
 <script type="text/javascript">
     console.log("Breadcrumb");
-    function Breadcrumb() {
-               
+    function BuildAndBindBreadcrumb() {
+        try {
+            var args = {};
+            args.parent = $("li.dropdown.active-menu > a").text().trim();
+            args.child = $("li.dropdown > ul > li.active-menu > a").text().trim();
+            args.parentLink = $("li.dropdown.active-menu > a").attr('href');
+            args.childLink = $("li.dropdown > ul > li.active-menu > a").attr('href');
+            var flgChildEmpty = (args.child == '' || args.child == null || args.child == undefined);
+            var styleSuffix = "color:#ffffff;font-weight:bold;padding:2px 4px;text-shadow:none;";
+            var strbc = '<ul class="breadcrumb vm-protected" style="background-color:#FFFFFF">';
+            strbc += (!flgChildEmpty ? '<li><a href="' + '#' + '">' : '<li class="active-menu">') + args.parent + '</a>';
+            strbc += (!flgChildEmpty ? '<li class="active">' +' / '+ args.child + '</li>' : '');
+            strbc += '</ul>';
+            $("#breadcrumb").html(strbc);
+        } catch (e) {debugger; }
     }
-    addLoadEvent(Breadcrumb);
+    addLoadEvent(BuildAndBindBreadcrumb);
 </script>

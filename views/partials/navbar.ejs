@@ -57,9 +57,15 @@ var menus =	[
 </div>
 <script type="text/javascript">
     console.log("Navbar");
-    function checkNav() {
-        //Note: #\\ - > the id starts with "\" we need to escape it with "\\"             
-        $("#\\" + location.pathname).addClass( "active" );        
+    var userinfo = {};
+    console.log("userinfo as global variable");
+    function hignLightMenu() {
+        //capture the location in the url 
+        //find the anchor element with href equal to this name
+        //find out the parent ul and li for thos nachor and add the class
+        //Get_UserInfoFromLocalStorage();
+        $('a[href$="' + location.pathname + '"]').closest('li').addClass('active-menu');
+        $('a[href$="' + location.pathname + '"]').closest('ul').closest('li').addClass('active-menu');
     }
-    addLoadEvent(checkNav);
+    addLoadEvent(hignLightMenu);
 </script>

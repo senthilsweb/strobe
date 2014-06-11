@@ -1,7 +1,10 @@
 <%- console.log(title)%>
 
 <div class="box widget">    
-    <h3><i class="fa fa-list vm-fa-white"></i>&nbsp;<%=title%></h3>  
+    <h3>
+        <i class="fa fa-list vm-fa-white"></i>&nbsp;<%=title%>
+        <button type="submit" class="btn btn-mini pull-right" style="margin-top: 1px;" id="<%=fnPrefix%>_Add_master"><i class="ion-plus"></i>&nbsp;Add</button>
+    </h3>  
     <!--Search panel(start)-->
     <div class="row-fluid" id="<%=fnPrefix%>_Search">
         <%- partial('../partials/subpartials/master-search', {'fnPrefix' : fnPrefix, 'showComponent':'true'}) %>                   
@@ -27,8 +30,13 @@
 <script type="text/javascript">
     console.log("Master List");     
     <%=fnPrefix%>MasterList = function() {
-    //1) Subscribes for Events Search Button Click Event to clear the existing deatils
-    $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").subscribe(<%=fnPrefix%>Master_List_BindData);                
+    //1) Click of Add new master
+     $("#<%=fnPrefix%>_Add_master").click(function () {
+            $.Topic("master-list-add-click").publish();
+            return false;
+    });
+    //2) Subscribes for Events Search Button Click Event to clear the existing deatils
+    $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").subscribe(<%=fnPrefix%>Master_List_BindData);               
 
         //Function to load master table on page load           
         eval('<%=fnPrefix%>Master_List_BindData'+'()');
@@ -40,7 +48,7 @@
          //For Progress bar during ajax call      
          $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-list" });        
         //Ajax call in settimeout to show the progress bar otherwise in local the data will come very quick and one may not see the progressbar
-        setTimeout(function () {debugger;
+        setTimeout(function () {
 
         var txtSearch = $("#txt<%=fnPrefix%>SearchName").val();
         var where = {};

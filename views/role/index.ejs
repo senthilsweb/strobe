@@ -3,9 +3,7 @@
         <div class="row-fluid">
             <%- partial('../partials/master-list', {'title': 'Roles','fnPrefix' : 'RoleList','api':'/role/find'})%>
         </div>
-        <div class="row-fluid">
-            <button type="submit" class="btn btn-success btn-block" id="btnShowMasterForm"><i class="ion-plus"></i>&nbsp;Add New</button>
-        </div>
+       
     </div>
     <div class="span9">        
         <div class="row-fluid">
@@ -31,11 +29,7 @@
 <script type="text/javascript">
     console.log("Role");
     function Role() {
-        $("#btnShowMasterForm").click(function () {
-            $.Topic("btnShowMasterFormClick").publish();
-            return false;
-        });
-        $.Topic("btnShowMasterFormClick").subscribe(function () { });
+      
     }
     addLoadEvent(Role);
 </script>

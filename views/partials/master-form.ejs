@@ -56,10 +56,10 @@
 <!--Confirmation Pop up dialogs (end)-->
 <script type="text/javascript">
    console.log("MasterForm");   
-    <%=fnPrefix%>MasterForm = function() { 
+    <%=fnPrefix%>MasterForm = function() {debugger; 
         $.Topic("master-list-row-click_edit").subscribe(UpdateMasterData);
         $.Topic("master-list-row-click_delete").subscribe(DeleteMasterData);
-        $.Topic("btnShowMasterFormClick").subscribe(function () {
+        $.Topic("master-list-add-click").subscribe(function () {
             //clear the previous values
             ResetControls("modal<%=fnPrefix%>"); 
             //Reset Form

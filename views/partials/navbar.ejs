@@ -60,8 +60,8 @@
             }
         });
         $('#navMenu').append(buildmenu);
-        $('a[href$="' + location.pathname + '"]').closest('li').addClass('active-menu');
-        $('a[href$="' + location.pathname + '"]').closest('ul').closest('li').addClass('active-menu');
+        $('a[href$="' + location.pathname + '"]').closest('li').addClass('active');
+        $('a[href$="' + location.pathname + '"]').closest('ul').closest('li').addClass('active');
     }
     addLoadEvent(hignLightMenu);
 </script>

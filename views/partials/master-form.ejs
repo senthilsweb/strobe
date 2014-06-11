@@ -56,7 +56,7 @@
 <!--Confirmation Pop up dialogs (end)-->
 <script type="text/javascript">
    console.log("MasterForm");   
-    <%=fnPrefix%>MasterForm = function() {debugger; 
+    <%=fnPrefix%>MasterForm = function() { 
         $.Topic("master-list-row-click_edit").subscribe(UpdateMasterData);
         $.Topic("master-list-row-click_delete").subscribe(DeleteMasterData);
         $.Topic("master-list-add-click").subscribe(function () {
@@ -64,7 +64,8 @@
             ResetControls("modal<%=fnPrefix%>"); 
             //Reset Form
             ResetForm("frmAdd<%=fnPrefix%>");
-            $("#btnSave<%=fnPrefix%>").removeAttr("disabled");   
+            $("#btnSave<%=fnPrefix%>").removeAttr("disabled"); 
+            $('#modal<%=fnPrefix%>Label').text("Add "+"<%=fnPrefix%>")   
             $('#modal<%=fnPrefix%>').modal('show');
         });
         FormValidation();

@@ -47,7 +47,6 @@
             }];
         var buildmenu = '';
         $.each(allmenus, function (index, menu) {
-            debugger;
             if (menu.menus != undefined) {
                 buildmenu += '<li class="menu-item dropdown"><a href="' + menu.url + '" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">' + menu.name + '<b class="caret"></b></a>';
                 buildmenu += '<ul class="dropdown-menu" role="menu">';
@@ -61,7 +60,6 @@
             }
         });
         $('#navMenu').append(buildmenu);
-        debugger;
         $('a[href$="' + location.pathname + '"]').closest('li').addClass('active-menu');
         $('a[href$="' + location.pathname + '"]').closest('ul').closest('li').addClass('active-menu');
     }

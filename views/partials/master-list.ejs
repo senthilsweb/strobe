@@ -23,7 +23,7 @@
             <i class="fa fa-pencil-square-o" data-id="${id}" data-action="edit" style="cursor:pointer"></i>
             <i class="fa fa-trash-o vm-fa-red" data-id="${id}" data-action="delete" style="cursor:pointer"></i>
             <a href="#" data-id="${id}" data-action="view">${name} &nbsp;</a>
-            <i class="${statusClass}" title="${title}" data-id="${id}"></i>
+            <i class="${statusClass} vm-dummy-trunk8" title="${title}" data-id="${id}"></i>
         </td>
     </tr>
 </script>
@@ -84,6 +84,8 @@
                     //AttachDatatablePagination("<%=fnPrefix%>pc-master-list");
                     //hide the progress bar
                     $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
+                    //To display tool tip
+                    $(".vm-dummy-trunk8").tooltip();
                     //Attach event handlers
                     $("#<%=fnPrefix%>pc-master-list").on("click", 'i, a', function (args) {
                             args.action = $(this).data( "action" );
@@ -92,6 +94,7 @@
                             //console.log($(this).data( "id" ) + ' ' + $(this).data( "action" ));  
                         })
                     }); 
+                    
                     //callback failure
                     promiseMasterList.fail(function () { 
                      //hide the progress bar

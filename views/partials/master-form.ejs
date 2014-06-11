@@ -94,7 +94,11 @@
                 $('#modal<%=fnPrefix%>').modal('hide');
                 noty({ "text": "<%=fnPrefix%> saved successfully", "layout": "top", "type": "success" });
             }, 1000);
-            setTimeout(<%=fnPrefix%>ListMasterList, 0);        
+
+             setTimeout(<%=fnPrefix%>ListMasterList, 0);
+             //On Edit, if search is done reBind filtered list, otherwise the usual list of data
+             //$("#txt<%=fnPrefix%>SearchName").val() == "" ? setTimeout(<%=fnPrefix%>Master_List_BindData, 0) 
+                                                   // : setTimeout(<%=fnPrefix%>_BindOn_SearchResult, 0);      
             return false;
         })
         promiseAddEdit<%=fnPrefix%>.fail(function(){
@@ -116,7 +120,6 @@
              $('#txt<%=fnPrefix%>Name').val(data.name);
              $('#divIs<%=fnPrefix%>Status').swatch('setState', data.status=="0" ? false : true);
              $('#hiddentxt<%=fnPrefix%>').val(args.id);
-             setTimeout(<%=fnPrefix%>ListMasterList, 0);
              return false        
             });
             

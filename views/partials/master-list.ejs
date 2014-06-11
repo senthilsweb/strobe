@@ -28,7 +28,7 @@
     console.log("Master List");     
     <%=fnPrefix%>MasterList = function() {
     //1) Subscribes for Events Search Button Click Event to clear the existing deatils
-    $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").subscribe(<%=fnPrefix%>_BindOn_SearchResult);                
+    $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").subscribe(<%=fnPrefix%>Master_List_BindData);                
 
         //Function to load master table on page load           
         eval('<%=fnPrefix%>Master_List_BindData'+'()');
@@ -40,9 +40,17 @@
          //For Progress bar during ajax call      
          $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-list" });        
         //Ajax call in settimeout to show the progress bar otherwise in local the data will come very quick and one may not see the progressbar
-        setTimeout(function () {
+        setTimeout(function () {debugger;
+
+        var txtSearch = $("#txt<%=fnPrefix%>SearchName").val();
+        var where = {};
+        where.name = {};
+        where.name.contains = txtSearch;
+        console.log(JSON.stringify(where));
+        var urlwithCriteria = location.origin + "<%=api%>?where=" + JSON.stringify(where);
+        var urlapi = $("#txt<%=fnPrefix%>SearchName").val() == "" ? location.origin + '<%=api%>' : urlwithCriteria;
                     //Initiate ajax
-                    var promiseMasterList = $.ajax({ url: location.origin + '<%=api%>' });
+                    var promiseMasterList = $.ajax({ url: urlapi });
 
                     //callback success
                     promiseMasterList.done(function (data) { 
@@ -85,48 +93,5 @@
                     });    
          },100);//End of setTimeout
     } 
-
-
-
-
-    var <%=fnPrefix%>_BindOn_SearchResult = function <%=fnPrefix%>_BindOn_SearchResult(){
     
-        //For Progress bar during ajax call      
-         $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-list" });        
-        //Ajax call in settimeout to show the progress bar otherwise in local the data will come very quick and one may not see the progressbar
-        setTimeout(function () {
-
-                        var txtSearch = $("#txt<%=fnPrefix%>Name").val();
-                        var where = {};
-                        where.name = {};
-                        where.name.contains = txtSearch;
-                        console.log(JSON.stringify(where));
-                        var urlwithCriteria = location.origin + "<%=api%>?where=" + JSON.stringify(where);
-   
-                    //Initiate ajax
-                    var promiseMasterList = $.ajax({ url: urlwithCriteria});    
-                    //callback success
-                    promiseMasterList.done(function (data) {                    
-                    //before appending the template empty it
-                    $("#<%=fnPrefix%>pc-master-list").empty(); 
-                    $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#<%=fnPrefix%>pc-master-list");
-                    //hide the progress bar
-                    $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
-                    //Attach event handlers
-                    $("#<%=fnPrefix%>pc-master-list").on("click", 'i, a', function (args) {
-                            args.action = $(this).data( "action" );
-                            args.id = $(this).data("id");
-                            $.Topic("master-list-row-click_"+args.action).publish(args);
-                            //console.log($(this).data( "id" ) + ' ' + $(this).data( "action" ));  
-                        })     
-                    }); 
-                    //callback failure
-                    promiseMasterList.fail(function () { 
-                     //hide the progress bar
-                     $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
-                    console.log("Something went wrong in <%=fnPrefix%>pc-master-list")
-                    //TODO: Show noty
-                    });    
-         },100);//End of setTimeout
-    }
 </script>

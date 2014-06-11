@@ -1,14 +1,22 @@
 <%- console.log(title)%>
  
- <div class="span9">
+ <div class="span12">
                                 <input type="text" class="span12" id="txt<%=fnPrefix%>SearchName" name="txt<%=fnPrefix%>SearchName" placeholder="Search"></div>
-                            <div class="span3">
+                            <!--<div class="span3">
                                 <button type="submit" style="padding-top: 3px;padding-bottom: 2px;" class="btn btn-mini btn-danger vm-search-button" id="btn-glpv-search_<%=fnPrefix%>">
                                     Search</button>
-                            </div>
+                            </div>-->
 <script type="text/javascript">
      console.log("Master Search");     
     <%=fnPrefix%>MasterSearch = function() {
+
+    //On change of the Search text bind the master list
+    $( "#txt<%=fnPrefix%>SearchName" )
+        .change(function() {
+        //Publish  Search button click event so that the partialview(details, etc) is cleared and rebinded
+        $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").publish();
+  })
+
 
     //To make the search button generic below code is added.If we have multiple generic lookup partial view in the 
         //ui,it loops through the form and  Finds the button with the name starting with "btn-glpv-search"/ 

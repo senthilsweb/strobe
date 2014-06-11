@@ -29,22 +29,9 @@ var menus =	[
                     <span class="icon-bar"></span>
                 </a>
                 <div class="nav-collapse collapse pull-right">
-                    <ul class="nav">                       
-                        <% _.each(menus, function(menu) { %>                            
-                                <%if (menu.menus ==undefined) {%>
-                                <li class="menu-item" id="<%- menu.url %>"><a href="<%- menu.url %>"><%- menu.name %></a></li>
-                                <% } %>
-                                <%if (menu.menus !=undefined) {%>                                
-                                <li class="menu-item dropdown"><a href="<%- menu.url %>" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown"><%- menu.name %> <b class="caret"></b></a>
-                                    <ul class="dropdown-menu" role="menu">
-                                        <% _.each(menu.menus, function(menu) { %>
-                                            <li class="menu-item"><a href="<%- menu.url %>"><%- menu.name %></a></li>
-                                        <% }) %>
-                                    </ul>
-                                </li> 
-                                <% } %>
-                        <% }) %>
-                    </ul>            
+                    <ul class="nav" id="navMenu">                       
+                       
+                    </ul>
                 </div><!--/.nav-collapse -->
                 </div><!-- /.navbar-inner -->
             </div><!-- /.navbar -->
@@ -62,6 +49,32 @@ var menus =	[
         //find the anchor element with href equal to this name
         //find out the parent ul and li for thos nachor and add the class
         //Get_UserInfoFromLocalStorage();
+        var allmenus = [
+            { 'name': 'Dashboard', 'url': '/dashboard' },
+            { 'name': 'Administration', 'url': '#',
+                'menus': [
+                     { 'name': 'Department', 'url': '/department' }
+                    , { 'name': 'Role', 'url': '/role' }
+                    , { 'name': 'Location', 'url': '#' }
+                    ]
+            }];
+        var buildmenu = '';
+        $.each(allmenus, function (index, menu) {
+            debugger;
+            if (menu.menus != undefined) {
+                buildmenu += '<li class="menu-item dropdown"><a href="' + menu.url + '" class="dropdown-toggle" data-toggle="dropdown" data-hover="dropdown">' + menu.name + '<b class="caret"></b></a>';
+                buildmenu += '<ul class="dropdown-menu" role="menu">';
+                $.each(menu.menus, function (i, submenus) {
+                    buildmenu += '<li class="menu-item" id="' + submenus.name + '"><a href="' + submenus.url + '">' + submenus.name + '</a></li>';
+                });
+                buildmenu += '</ul></li>';
+            }
+            else if (menu.menus == undefined) {
+                buildmenu += '<li class="menu-item" id="' + menu.name + '"><a href="' + menu.url + '">' + menu.name + '</a></li>';
+            }
+        });
+        $('#navMenu').append(buildmenu);
+        debugger;
         $('a[href$="' + location.pathname + '"]').closest('li').addClass('active-menu');
         $('a[href$="' + location.pathname + '"]').closest('ul').closest('li').addClass('active-menu');
     }

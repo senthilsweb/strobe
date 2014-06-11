@@ -20,8 +20,8 @@
 <script id="tpl-master-list" type="text/x-jquery-tmpl">
     <tr>
         <td data-column-name="masterList">
-            <i class="fa fa-pencil-square-o" data-id="${id}" data-action="edit"></i>
-            <i class="fa fa-trash-o vm-fa-red" data-id="${id}" data-action="delete"></i>
+            <i class="fa fa-pencil-square-o" data-id="${id}" data-action="edit" style="cursor:pointer"></i>
+            <i class="fa fa-trash-o vm-fa-red" data-id="${id}" data-action="delete" style="cursor:pointer"></i>
             <a href="#" data-id="${id}" data-action="view">${name} &nbsp;</a>
             <i class="${statusClass}" title="${title}" data-id="${id}"></i>
         </td>

@@ -14,3 +14,4 @@ background-color: #DFDFDB;
 }
 /*Z-index is for the popup */
 .datepicker {z-index:1051 !important}
+.controls label.error {}

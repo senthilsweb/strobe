@@ -18,7 +18,7 @@
                                     <label class="control-label label-bold" for="txtEmployeeFirstName">
                                         First Name</label>
                                     <div class="controls">
-                                        <input type="text" class="span12" id="txtEmployeeFirstName" name="txtEmployeeFirstName" placeholder="First Name"></div>
+                                        <input type="text" class="span12 required" id="txtEmployeeFirstName" name="txtEmployeeFirstName" placeholder="First Name"></div>
                                 </div>
                             </div>
                           <div class="span4">
@@ -34,7 +34,7 @@
                                     <label class="control-label label-bold" for="txtEmployeeLastName">
                                         Last Name</label>
                                     <div class="controls">
-                                        <input type="text" class="span12" id="txtEmployeeLastName" name="txtEmployeeLastName" placeholder="Last Name"></div>
+                                        <input type="text" class="span12 required" id="txtEmployeeLastName" name="txtEmployeeLastName" placeholder="Last Name"></div>
                                 </div>
                             </div>
                        </div>
@@ -46,7 +46,7 @@
                                             Gender
                                        </label>
                                     <div class="controls">
-                                      <select class="dropdown-width" id="cboEmployeeGender" name="cboEmployeeGender"  placeholder="Gender" >
+                                      <select class="dropdown-width required" id="cboEmployeeGender" name="cboEmployeeGender"  placeholder="Gender" >
                                         <option></option>
                                       </select>
                                     </div>
@@ -86,7 +86,7 @@
                                     <label class="control-label label-bold" for="txtEmployeeEmail">
                                        Email</label>
                                     <div class="controls">
-                                        <input type="text" class="span12" id="txtEmployeeEmail" name="txtEmployeeEmail" placeholder="Email"></div>
+                                        <input type="text" class="span12 required" id="txtEmployeeEmail" name="txtEmployeeEmail" placeholder="Email"></div>
                                 </div>
                             </div>
                           
@@ -130,7 +130,7 @@
                                     <label class="control-label label-bold" for="txtEmployeePassword">
                                         Password</label>
                                     <div class="controls">
-                                        <input type="text" class="span12" id="txtEmployeePassword" name="txtEmployeePassword" placeholder="Password"></div>
+                                        <input type="text" class="span12 required" id="txtEmployeePassword" name="txtEmployeePassword" placeholder="Password"></div>
                                 </div>
                             </div>
                           <div class="span4">
@@ -138,7 +138,7 @@
                                     <label class="control-label label-bold" for="txtEmployeeConPassword">
                                        Confirm Password</label>
                                     <div class="controls">
-                                        <input type="text" class="span12" id="txtEmployeeConPassword" name="txtEmployeeConPassword" placeholder="Confirm Password"></div>
+                                        <input type="text" class="span12 required" id="txtEmployeeConPassword" name="txtEmployeeConPassword" placeholder="Confirm Password"></div>
                                 </div>
                             </div>
                           
@@ -152,7 +152,7 @@
                   </div>
               </div>
               <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="btnSaveEmployeeSave"></button>
+                <button type="submit" class="btn btn-primary" id="btnSaveEmployeeSave">Save</button>
               </div>
            </form>
     </div>
@@ -176,32 +176,52 @@
 </div>
 <!--Confirmation Pop up dialogs (end)-->
 <script type="text/javascript">
-   console.log("EmployeeForm");   
-    EmployeeForm = function() { 
-     //attach datepicket
-    $(".vm-date").datepicker({ "format": "mm/dd/yyyy", "autoclose": true });
-     // Fill Event Type dropdown
-    var Gender = [
-            { "Id": "Male", "Code": "Male" },
-            { "Id": "Female", "Code": "Female" }
-            ];
-    $("#cboEmployeeGender").empty().append($("<option/>"));
-    $.each(Gender, function (i, item) {
-        $("#cboEmployeeGender").append($("<option value='" + item.Id + "'>" + item.Code + "</option>"));
-        $("#cboEmployeeGender").select2({ placeholder: 'Gender', allowClear: true });
-    });
-
-     $.Topic("master-list-add-click").subscribe(function () {
-            //clear the previous values
-            ResetControls("modalEmployee"); 
-            //Reset Form
-            ResetForm("frmAddEmployee");
-            $("#btnSaveEmployee").removeAttr("disabled"); 
-            $('#modalEmployeeLabel').text("Add "+"Employee")   
-            $('#modalEmployee').modal('show');
+    console.log("EmployeeForm");
+    EmployeeForm = function () {
+        //attach datepicket
+        $(".vm-date").datepicker({ "format": "mm/dd/yyyy", "autoclose": true });
+        // Fill Event Type dropdown
+        var Gender = [
+             { "Id": "Male", "Code": "Male" },
+             { "Id": "Female", "Code": "Female" }
+             ];
+        $("#cboEmployeeGender").empty().append($("<option/>"));
+        $.each(Gender, function (i, item) {
+            $("#cboEmployeeGender").append($("<option value='" + item.Id + "'>" + item.Code + "</option>"));
+            $("#cboEmployeeGender").select2({ placeholder: 'Gender', allowClear: true });
         });
-      
-    }      
-    
+
+        //Subscribe on Add
+        $.Topic("master-list-add-click").subscribe(EmployeeFormPartialView_Add);
+
+
+        FormValidation();
+        $.Topic(vm_ui_events.FormSubmitClick + "_frmAddEmployee").subscribe(frmAddEditEmployee_Handler);
+
+    }
+
+    function EmployeeFormPartialView_Add() {
+        debugger;
+        //clear the previous values
+        ResetControls("modalEmployee");
+        //Reset Form
+        ResetForm("frmAddEmployee");
+        
+        $("#btnSaveEmployee").removeAttr("disabled");
+        $("#txtHiddenEmployeeId").val("0");
+        $("#btnEmployeeSave").show();
+        $("#btnEmployeeSave").html("Add");
+        $('#modalEmployeeLabel').text("Add " + "Employee");
+        //reset all role checkbox
+        $.each($(".vm-dummy-Role"), function () {
+            $(this).prop('checked', false);
+        });
+        $('#modalEmployee').modal('show');
+    }
+
+    function frmAddEditEmployee_Handler() {
+        alert("save on validation");
+    }
+
     addLoadEvent(EmployeeForm);
 </script>

@@ -1,0 +1,207 @@
+<%- console.log(title)%>
+<div class="row-fluid">
+    <!-- Modal for Employee add starts -->
+    <div  class="modal hide fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-labelledby="modalEmployeeLabel" aria-hidden="false" id="modalEmployee">
+         <form id="frmAddEmployee" class="validate" action="#" style="margin-bottom:0px">
+               <div class="error validate">
+               </div>
+             <input type="hidden" id="hiddentxtEmployee"value="0"/>
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h3 id="modalEmployeeLabel">Add Employee</h3>
+              </div>
+              <div class="modal-body">
+                  <div id="modalEmployeeBody" class="modalEmployeeBody validate">
+                      <div class="row-fluid">
+                          <div class="span4">
+                                <div class="control-group">
+                                    <label class="control-label label-bold" for="txtEmployeeFirstName">
+                                        First Name</label>
+                                    <div class="controls">
+                                        <input type="text" class="span12" id="txtEmployeeFirstName" name="txtEmployeeFirstName" placeholder="First Name"></div>
+                                </div>
+                            </div>
+                          <div class="span4">
+                                <div class="control-group">
+                                    <label class="control-label label-bold" for="txtEmployeeMiddleName">
+                                        Middle Name</label>
+                                    <div class="controls">
+                                        <input type="text" class="span12" id="txtEmployeeMiddleName" name="txtEmployeeMiddleName" placeholder="Middle Name"></div>
+                                </div>
+                            </div>
+                          <div class="span4">
+                                <div class="control-group">
+                                    <label class="control-label label-bold" for="txtEmployeeLastName">
+                                        Last Name</label>
+                                    <div class="controls">
+                                        <input type="text" class="span12" id="txtEmployeeLastName" name="txtEmployeeLastName" placeholder="Last Name"></div>
+                                </div>
+                            </div>
+                       </div>
+
+                      <div class="row-fluid">
+                          <div class="span4">
+                                <div class="control-group">
+                                     <label class="control-label label-bold" for="cboEmployeeGender">
+                                            Gender
+                                       </label>
+                                    <div class="controls">
+                                      <select class="dropdown-width" id="cboEmployeeGender" name="cboEmployeeGender"  placeholder="Gender" >
+                                        <option></option>
+                                      </select>
+                                    </div>
+                                </div>
+                            </div>
+                          <div class="span4">
+                                <div class="input-append date">
+                                    <label class="control-label label-bold">
+                                        Date of Birth</label>
+                                    <input type="text" class="input-small vm-date" id="txtDateofBirth" placeholder="">
+                                    <span class="add-on"><i class="icon-th"></i></span>
+                                </div>
+                            </div>
+                          <div class="span4">
+                                <div class="control-group">
+                                    <label class="control-label label-bold" for="txtEmployeeMobileNumber">
+                                        Mobile
+                                    </label>
+                                    <div class="controls">
+                                        <input class="input-medium span12" type="text" id="txtEmployeeMobileNumber" name="txtEmployeeMobileNumber"
+                                            placeholder="Mobile" /></div>
+                                </div>
+                            </div>
+                        </div>
+                      
+                      <div class="row-fluid">
+                          <div class="span4">
+                                <div class="control-group">
+                                    <label class="control-label label-bold" for="txtEmployeePhoneNumber">
+                                        Phone</label>
+                                    <div class="controls">
+                                        <input type="text" class="span12" id="txtEmployeePhoneNumber" name="txtEmployeePhoneNumber" placeholder="Phone"></div>
+                                </div>
+                            </div>
+                          <div class="span8">
+                                <div class="control-group">
+                                    <label class="control-label label-bold" for="txtEmployeeEmail">
+                                       Email</label>
+                                    <div class="controls">
+                                        <input type="text" class="span12" id="txtEmployeeEmail" name="txtEmployeeEmail" placeholder="Email"></div>
+                                </div>
+                            </div>
+                          
+                        </div>
+
+                      <div class="row-fluid">
+                          
+
+                          <div class="span4">
+                                <div class="control-group">
+                                    <label class="control-label label-bold" for="cboEmployeeManager">
+                                        Manager</label>
+                                    <div class="controls">                                        
+                                        <%- partial('../partials/master-combo-single', {'fnPrefix' : 'Employee','api':'/employee/find', 'ph': 'Manager', 'showComponent':'true'})%>
+                                    </div>
+                                </div>
+                            </div>
+                          <div class="span4" id="divIsActive">
+                                    <div class="span12">
+                                        <div class="row-fluid">
+                                            <label class="label-bold">
+                                                Status</label>
+                                        </div>
+                                        <div class="row-fluid">
+                                            <div class="lightblue">
+                                                <div id="divIsActiveStatus" class="but-switch vm-dummy-swith-button">
+                                                    <!-- switch-large, switch-small or switch-mini -->
+                                                    <input type="checkbox" id="statusSwitch" class="vm-dummy-swith-button">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                          
+                        </div>
+
+                      <div class="row-fluid">                        
+
+                          <div class="span4">
+                                <div class="control-group">
+                                    <label class="control-label label-bold" for="txtEmployeePassword">
+                                        Password</label>
+                                    <div class="controls">
+                                        <input type="text" class="span12" id="txtEmployeePassword" name="txtEmployeePassword" placeholder="Password"></div>
+                                </div>
+                            </div>
+                          <div class="span4">
+                                <div class="control-group">
+                                    <label class="control-label label-bold" for="txtEmployeeConPassword">
+                                       Confirm Password</label>
+                                    <div class="controls">
+                                        <input type="text" class="span12" id="txtEmployeeConPassword" name="txtEmployeeConPassword" placeholder="Confirm Password"></div>
+                                </div>
+                            </div>
+                          
+                        </div>
+                      
+
+                      <div class="row-fluid">
+                          <%- partial('../partials/master-checkbox', {'fnPrefix' : 'Role','api':'/role/find'})%>
+                      </div>
+                       
+                  </div>
+              </div>
+              <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="btnSaveEmployeeSave"></button>
+              </div>
+           </form>
+    </div>
+    <!-- Modal for dept ends-->
+</div>
+<!--Confirmation Pop up dialogs (Start)-->
+<div class="modal fade" role="dialog" id="confirm-dialog-Employee">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="frm_Employee-dialog" action="#" style="margin-bottom:0px">
+            <div class="modal-body">
+                Are you sure you want to delete the record?
+            </div>
+            <div class="modal-footer">
+                <a href="#" class="btn btn-danger" id="btnConfirmOk">Ok</a> <a href="#"
+                    class="btn btn-cancel btn-default" data-dismiss="modal">Cancel</a>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--Confirmation Pop up dialogs (end)-->
+<script type="text/javascript">
+   console.log("EmployeeForm");   
+    EmployeeForm = function() { 
+     //attach datepicket
+    $(".vm-date").datepicker({ "format": "mm/dd/yyyy", "autoclose": true });
+     // Fill Event Type dropdown
+    var Gender = [
+            { "Id": "Male", "Code": "Male" },
+            { "Id": "Female", "Code": "Female" }
+            ];
+    $("#cboEmployeeGender").empty().append($("<option/>"));
+    $.each(Gender, function (i, item) {
+        $("#cboEmployeeGender").append($("<option value='" + item.Id + "'>" + item.Code + "</option>"));
+        $("#cboEmployeeGender").select2({ placeholder: 'Gender', allowClear: true });
+    });
+
+     $.Topic("master-list-add-click").subscribe(function () {
+            //clear the previous values
+            ResetControls("modalEmployee"); 
+            //Reset Form
+            ResetForm("frmAddEmployee");
+            $("#btnSaveEmployee").removeAttr("disabled"); 
+            $('#modalEmployeeLabel').text("Add "+"Employee")   
+            $('#modalEmployee').modal('show');
+        });
+      
+    }      
+    
+    addLoadEvent(EmployeeForm);
+</script>

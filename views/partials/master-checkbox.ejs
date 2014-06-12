@@ -1,0 +1,48 @@
+ <table id="<%=fnPrefix%>tbl-master-checkbox">   
+          
+</table>
+
+<script id="tpl-master-checkbox" type="text/x-jquery-tmpl">
+    {{each(i, cell) Items}} {{if (i % 2 == 0)}}<tr>
+        {{/if}}
+<td style="padding: 0px;border-bottom: none;">
+        <input type="checkbox" class="vm-dummy-<%=fnPrefix%>" id="<%=fnPrefix%>_${code}" value="<%=fnPrefix%>_${name}"
+        data-key="${code}" data-value="${name}" />
+</td>
+<td style="padding: 0px;border-bottom: none;">
+        <label style="margin-top:1px; margin-bottom:0px; font-weight:normal; padding-top: 5px;" class="checkbox control-label" for="<%=fnPrefix%>_${code}">
+        ${name}</label>
+</td>
+        {{if (i % 2 == 1) || (i == Items.length-1)}}</tr>
+    {{/if}} {{/each}}
+
+    
+</script>
+<script type="text/javascript">
+    <%=fnPrefix%>_Master_CheckBox = function() { 
+        
+        //Function to load master checkbox on page load           
+        eval('<%=fnPrefix%>Master_CheckBox_BindData'+'()');
+    }
+    addLoadEvent(<%=fnPrefix%>_Master_CheckBox);
+
+
+    var <%=fnPrefix%>Master_CheckBox_BindData = function <%=fnPrefix%>Master_CheckBox_BindData(){debugger;
+                var tplData = {};
+                var promiseMastercheckboxData = $.ajax({ url: location.origin +  '<%=api%>'});
+                promiseMastercheckboxData.done(function (data) { debugger;
+                tplData.Items = data;
+                //Before appending the template empty it
+                $("#<%=fnPrefix%>tbl-master-checkbox").empty();
+                //Render the specified HTML content as a template, using the specified data.           
+                $("#tpl-master-checkbox").tmpl(tplData).appendTo("#<%=fnPrefix%>tbl-master-checkbox"); 
+
+
+                       
+                });
+                promiseMastercheckboxData.fail(function () {                 
+                console.log("Something went wrong in <%=fnPrefix%>-master-checkbox")
+                });     
+
+    }
+</script>

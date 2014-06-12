@@ -1,0 +1,25 @@
+<div class="row-fluid">
+     <div class="span3">
+        <div class="row-fluid">
+            <%- partial('../partials/master-list', {'title': 'Employees','fnPrefix' : 'EmployeeList','api':'/employee/find'})%>
+        </div>
+       
+    </div>
+    <div class="span9">        
+        <div class="row-fluid">
+            <%- partial('../partials/master-details', {'title': 'Employee Details','fnPrefix' : 'EmployeeDetails','api':'/employee/find/'})%>
+        </div>
+    </div>
+</div>
+<div>&nbsp;</div>
+
+<div class="row-fluid">
+    <%- partial('../partials/employee-form', {'title': 'Add Employee','fnPrefix' : 'Employee','apicreate':'/employee/create', 'apifind':'/employee/find' , 'apidelete':'/employee/destroy','apiupdate':'/employee/update'})%>
+</div>
+<script type="text/javascript">
+    console.log("Employees");
+    function Employees() {
+      
+    }
+    addLoadEvent(Employees);
+</script>

@@ -61,7 +61,7 @@
                     var promiseMasterList = $.ajax({ url: urlapi });
 
                     //callback success
-                    promiseMasterList.done(function (data) { 
+                    promiseMasterList.done(function (data) { debugger
                     //Data filtered by status "Active"
                     var filtered_<%=fnPrefix%>_Active = _.filter(data, function (objData){			
 			                return objData.status == "1";

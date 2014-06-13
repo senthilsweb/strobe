@@ -70,8 +70,6 @@
                         }
                         data.OtherRoles = otherRoles.substring(0, otherRoles.length - 1);
 
-
-
                         $("#tpl-employee-details").tmpl(data).appendTo("#Employee-details");
                         //hide the progress bar
                         $.Topic("LoadingImage").publish({ progress: "hide", container: "Employee-details" });              

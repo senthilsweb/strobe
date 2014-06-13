@@ -113,7 +113,7 @@
 
     function UpdateMasterData(args)
     {
-           var promiseMasterUpdate = $.ajax({ url: location.origin + '<%=apiupdate%>/' + args.id });
+           var promiseMasterUpdate = $.ajax({ url: location.origin + '<%=apifind%>/' + args.id });
             promiseMasterUpdate.done(function(data){ 
              $("#btnSave<%=fnPrefix%>").removeAttr("disabled"); 
              $('#modal<%=fnPrefix%>Label').text("Edit "+"<%=fnPrefix%>")          

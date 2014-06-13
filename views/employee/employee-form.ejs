@@ -203,6 +203,7 @@
 
     }
 
+    //function to setup popup on Add New Employee
     function EmployeeFormPartialView_Add() {
         //clear the previous values
         ResetControls("modalEmployee");
@@ -219,17 +220,35 @@
         });
         $('#modalEmployee').modal('show');
     }
-
+    //function to setup popup on Edit an Employee
     function EmployeeFormPartialView_Update(args)
-    {
-             $("#btnSaveEmployee").removeAttr("disabled"); 
-             $('#modalEmployeeLabel').text("Edit "+"Employee")          
-             $('#modalEmployee').modal('show');
-             $('#txtHiddenEmployeeId').val(args.id);
-             //$('#txt<%=fnPrefix%>Name').val(data.name);
-             //$('#divIs<%=fnPrefix%>Status').swatch('setState', data.status=="0" ? false : true);
-             
-             return false  
+    {          
+            var promiseEmployeeFind = $.ajax({ url: location.origin + '<%=apifind%>/' + args.id });
+            promiseEmployeeFind.done(function(data){ debugger;
+            $("#btnSaveEmployee").removeAttr("disabled"); 
+            $('#modalEmployeeLabel').text("Edit "+"Employee")          
+            $('#modalEmployee').modal('show');
+            $('#txtHiddenEmployeeId').val(args.id);
+            $("#btnSaveEmployee").show();
+            $("#btnSaveEmployee").html("Edit");
+            $('#txtEmployeeFirstName').val(data.firstname);
+            $('#txtEmployeeMiddleName').val(data.middlename);
+            $('#txtEmployeeLastName').val(data.lastname);
+            $('#cboGender').select2("val", data.gender);
+            $('#txtDateofBirth').val(data.dob);
+            $('#txtEmployeeMobileNumber').val(data.mobile);
+            $('#txtEmployeePhoneNumber').val(data.phone);
+            $('#txtEmployeeEmail').val(data.email);
+            $('#cboEmployeeManager').select2("val", data.manager);
+            $('#chkstatusEmployee').swatch('setState', data.status=="0" ? false : true);
+            $('#txtEmployeePassword').val(data.password);
+            $('#txtEmployeeConPassword').val(data.ConfirmPassword);
+             return false        
+            });
+            
+            promiseEmployeeFind.fail(function(){
+            console.log("employee find by id fail");
+            }); 
     }
 
     //Function on Add/Edit

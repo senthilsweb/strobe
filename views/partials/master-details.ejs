@@ -18,16 +18,16 @@
     
     <%=fnPrefix%>MasterDetails = function() { 
             //For click handle
-            //$.Topic("master-list-row-click_view").subscribe(<%=fnPrefix%>MasterDetailsShow);                            
+            $.Topic("master-list-row-click_view").subscribe(<%=fnPrefix%>MasterDetailsShow);                            
     }
       
-    <%=fnPrefix%>MasterDetailsShow=function(args){
+    <%=fnPrefix%>MasterDetailsShow=function(args){debugger;
             console.log("id = " + args.id)
              //For Progress bar during ajax call      
              $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-details" });  
              setTimeout(function () {
                     var promiseMasterDetails = $.ajax({ url: location.origin +  '<%=api%>'  + args.id });
-                    promiseMasterDetails.done(function (data) { 
+                    promiseMasterDetails.done(function (data) { debugger;
                         $("#<%=fnPrefix%>pc-master-details").html("");
                         //Add class for status dynamically                        
                         data.statusClass = data.status == "1" 
@@ -38,7 +38,7 @@
                         data.status=data.status == "1" ? "Active" : "Disable";
                         data.createdAt = moment(data.updatedAt).format('DD-MMM-YYYY');
                         data.updatedAt = moment(data.updatedAt).format('DD-MMM-YYYY');
-                            
+                          debugger;  
                         $("#tpl-master-details").tmpl(data).appendTo("#<%=fnPrefix%>pc-master-details"); 
                         //hide the progress bar
                         $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-details" });              

@@ -246,6 +246,28 @@
             $('#chkstatusEmployee').swatch('setState', data.status=="0" ? false : true);
             $('#txtEmployeePassword').val(data.password);
             $('#txtEmployeeConPassword').val(data.ConfirmPassword);
+   
+            var employeeRole=[];
+            if (data.roles != "")
+            {
+            var Roles = (data.roles).split(",");
+            $.each(Roles, function (i,item) {
+                var roleCode=item.split("|")[0];
+                employeeRole.push(roleCode);
+            });
+            }
+            if (employeeRole.length > 0)
+            {
+            $.each($(".vm-dummy-Role"), function () {
+                $.each(employeeRole, function (i, item) {
+                    if($("#Role_"+item).attr('id').split("_")[1]==item)
+                    {
+                        $("#Role_"+item).prop('checked', true);
+                    }                
+                });            
+            });
+            }
+
              return false        
             });
             
@@ -280,8 +302,8 @@
          $.each($('.vm-dummy-Role'), function(i,o){ 
                 if ($(this).is(':checked'))
                 {
-                    //arr.push($(this).data('key') + "|" + $(this).data('value'));
-                    arr.push($(this).data('key'));
+                    arr.push($(this).data('key') + "|" + $(this).data('value'));
+                    //arr.push($(this).data('key'));
                 }
             });
 

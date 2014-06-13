@@ -22,15 +22,8 @@
             <tr><td>Email</td><td><i class="fa fa-envelope"></i>&nbsp;${email}</td></tr>
             <tr><td>Status</td><td><i class="${statusClass}"></i>&nbsp;${status}</td></tr>
             {{if OtherRoles!=""}}
-                    <tr>
-                        <td>
-                            Secondary Role(s)
-                        </td>
-                        <td>
-                            <i class="fa fa-star"></i>&nbsp;${OtherRoles}
-                        </td>
-                    </tr>
-                    {{/if}}
+              <tr><td>Secondary Role(s)</td><td><i class="fa fa-star"></i>&nbsp;${OtherRoles}</td></tr>
+            {{/if}}
    </table>
     </div>
 </script>
@@ -41,13 +34,14 @@
     }
     addLoadEvent(EmployeeDetailsLoad);
 
+    //function to show the Semployee details
     function EmployeeDetailsShow(args) {
         //For Progress bar during ajax call      
              $.Topic("LoadingImage").publish({ progress: "show", container: "Employee-details" });  
              setTimeout(function () {
                     var promiseEmployeeDetails = $.ajax({ url: location.origin +  '<%=api%>'+ args.id});
                     promiseEmployeeDetails.done(function (data) { 
-                        //$("#Employee-details").html(""); 
+                        $("#Employee-details").html(""); 
                         //Add class for status dynamically                        
                         data.statusClass = data.status == "1" 
                                                     ? "ion-thumbsup vm-fa-green" 
@@ -83,6 +77,7 @@
                             console.log("Something went wrong in Employee-details")
                     });        
           },100);//End of setTimeout
+    return false;
 
     }
 </script>

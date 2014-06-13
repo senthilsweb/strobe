@@ -16,7 +16,6 @@ module.exports = {
 
     },
     beforeCreate: function (values, next) {
-        debugger;
         console.log("rolevalue = " + values.code);
         var randomString = require('random-string');
         values.code = randomString({ length: 6 })

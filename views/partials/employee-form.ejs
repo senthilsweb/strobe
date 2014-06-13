@@ -152,7 +152,7 @@
                   </div>
               </div>
               <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="btnSaveEmployeeSave">Save</button>
+                <button type="submit" class="btn btn-primary" id="btnSaveEmployee">Save</button>
               </div>
            </form>
     </div>
@@ -175,6 +175,7 @@
     </div>
 </div>
 <!--Confirmation Pop up dialogs (end)-->
+
 <script type="text/javascript">
     console.log("EmployeeForm");
     EmployeeForm = function () {
@@ -201,17 +202,15 @@
     }
 
     function EmployeeFormPartialView_Add() {
-        debugger;
         //clear the previous values
         ResetControls("modalEmployee");
         //Reset Form
         ResetForm("frmAddEmployee");
-        
-        $("#btnSaveEmployee").removeAttr("disabled");
         $("#txtHiddenEmployeeId").val("0");
-        $("#btnEmployeeSave").show();
-        $("#btnEmployeeSave").html("Add");
+        $("#btnSaveEmployee").show();
+        $("#btnSaveEmployee").html("Add");
         $('#modalEmployeeLabel').text("Add " + "Employee");
+        $("#btnSaveEmployee").removeAttr("disabled");
         //reset all role checkbox
         $.each($(".vm-dummy-Role"), function () {
             $(this).prop('checked', false);
@@ -240,6 +239,26 @@
         request.status = ($("#chkstatusEmployee").is(":checked")== false) ? 0 : 1;
         request.password = $('#txtEmployeePassword').val();
         request.ConfirmPassword = $('#txtEmployeeConPassword').val();
+         var Roles = "";
+         var arr = new Array();
+         $.each($('.vm-dummy-Role'), function(i,o){ 
+                if ($(this).is(':checked'))
+                {
+                    //arr.push($(this).data('key') + "|" + $(this).data('value'));
+                    arr.push($(this).data('key'));
+                }
+            });
+
+        $('#hdnChkRole').val(arr.join(","));
+        //Get all roles with code|Name as comma seperated
+        if($('#hdnChkRole').val() != "")
+        {
+            Roles = $('#hdnChkRole').val();
+        }
+        // Pass comma seperated roles
+        request.roles = Roles; 
+    
+
            
                 var id=$('#hiddentxt<%=fnPrefix%>').val();
                 if($('#hiddentxt<%=fnPrefix%>').val() != 0)
@@ -253,7 +272,7 @@
                 }
         promiseAddEditEmployee.done(function () {
         setTimeout(function () {
-        $.Topic("vm_ui_events.ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedSuccess" });
+        $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedSuccess" });
         $('#modalEmployee').modal('hide');
         noty({ "text": "Employee saved successfully", "layout": "top", "type": "success" });
         }, 1000);

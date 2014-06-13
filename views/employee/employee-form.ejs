@@ -178,7 +178,7 @@
 
 <script type="text/javascript">
     console.log("EmployeeForm");
-    EmployeeForm = function () {debugger;
+    EmployeeForm = function () {
         //attach datepicket
         $(".vm-date").datepicker({ "format": "mm/dd/yyyy", "autoclose": true });
         // Fill Event Type dropdown
@@ -197,6 +197,9 @@
        
         //Subscribe on Edit of Employee
         $.Topic("master-list-row-click_edit").subscribe(EmployeeFormPartialView_Update);
+
+        //Subscribe on Delete of Employee
+        $.Topic("master-list-row-click_delete").subscribe(EmployeeForm_Delete);
 
         FormValidation();
         $.Topic(vm_ui_events.FormSubmitClick + "_frmAddEmployee").subscribe(frmAddEditEmployee_Handler);
@@ -319,6 +322,33 @@
             console.log("from employee api fail")
         });    
 
+    }
+
+    //Function to open the confirmation popup
+    function EmployeeForm_Delete(args)
+    {
+        $('#confirm-dialog-Employee').modal('show');
+        $("#btnConfirmOk").click(function (e) { Employee_PerformDelete(args); });
+    }
+
+    //Function to delete employee by id
+    function Employee_PerformDelete(args)
+    {
+        var promiseEmployeeDelete = $.ajax({ url: location.origin + '<%=apidelete%>/' + args.id });
+        promiseEmployeeDelete.done(function(data){
+        setTimeout(function () {
+            $("#confirm-dialog-Employee").modal('hide');
+            noty({ "text": "Deleted Successfully", "layout": "top", "type": "success" });
+        }, 0);
+        //Reset back the Employee list          
+        setTimeout(EmployeeListMasterList, 0);
+        return false;
+     
+        });
+    
+        promiseEmployeeDelete.fail(function(){
+            console.log("Employee delete fail");
+        });
     }
 
     addLoadEvent(EmployeeForm);

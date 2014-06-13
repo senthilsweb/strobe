@@ -61,7 +61,7 @@
                     var promiseMasterList = $.ajax({ url: urlapi });
 
                     //callback success
-                    promiseMasterList.done(function (data) { debugger
+                    promiseMasterList.done(function (data) { 
                     //Data filtered by status "Active"
                     var filtered_<%=fnPrefix%>_Active = _.filter(data, function (objData){			
 			                return objData.status == "1";
@@ -91,6 +91,7 @@
                             args.action = $(this).data( "action" );
                             args.id = $(this).data("id");
                             $.Topic("master-list-row-click_"+args.action).publish(args);
+   
                             //console.log($(this).data( "id" ) + ' ' + $(this).data( "action" ));  
                         })
                     }); 

@@ -15,7 +15,7 @@
                     //Initiate ajax
                     var promiseMasterSingle = $.ajax({ url: location.origin + '<%=api%>' });
                     //callback success
-                    promiseMasterSingle.done(function (data) {debugger;
+                    promiseMasterSingle.done(function (data) {
                             var options = $("#cbo<%=fnPrefix%>");
                             //empty the previous Options
                             options.empty().append($("<option />"));

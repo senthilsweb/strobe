@@ -29,10 +29,10 @@
     addLoadEvent(<%=fnPrefix%>_Master_CheckBox);
 
 
-    var <%=fnPrefix%>Master_CheckBox_BindData = function <%=fnPrefix%>Master_CheckBox_BindData(){debugger;
+    var <%=fnPrefix%>Master_CheckBox_BindData = function <%=fnPrefix%>Master_CheckBox_BindData(){
                 var tplData = {};
                 var promiseMastercheckboxData = $.ajax({ url: location.origin +  '<%=api%>'});
-                promiseMastercheckboxData.done(function (data) { debugger;
+                promiseMastercheckboxData.done(function (data) { 
                 tplData.Items = data;
                 //Before appending the template empty it
                 $("#<%=fnPrefix%>tbl-master-checkbox").empty();

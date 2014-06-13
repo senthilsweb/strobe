@@ -178,7 +178,7 @@
 
 <script type="text/javascript">
     console.log("EmployeeForm");
-    EmployeeForm = function () {
+    EmployeeForm = function () {debugger;
         //attach datepicket
         $(".vm-date").datepicker({ "format": "mm/dd/yyyy", "autoclose": true });
         // Fill Event Type dropdown
@@ -192,9 +192,11 @@
             $("#cboEmployeeGender").select2({ placeholder: 'Gender', allowClear: true });
         });
 
-        //Subscribe on Add
+        //Subscribe on Add of Employee
         $.Topic("master-list-add-click").subscribe(EmployeeFormPartialView_Add);
-
+       
+        //Subscribe on Edit of Employee
+        $.Topic("master-list-row-click_edit").subscribe(EmployeeFormPartialView_Update);
 
         FormValidation();
         $.Topic(vm_ui_events.FormSubmitClick + "_frmAddEmployee").subscribe(frmAddEditEmployee_Handler);
@@ -216,6 +218,18 @@
             $(this).prop('checked', false);
         });
         $('#modalEmployee').modal('show');
+    }
+
+    function EmployeeFormPartialView_Update(args)
+    {
+             $("#btnSaveEmployee").removeAttr("disabled"); 
+             $('#modalEmployeeLabel').text("Edit "+"Employee")          
+             $('#modalEmployee').modal('show');
+             $('#txtHiddenEmployeeId').val(args.id);
+             //$('#txt<%=fnPrefix%>Name').val(data.name);
+             //$('#divIs<%=fnPrefix%>Status').swatch('setState', data.status=="0" ? false : true);
+             
+             return false  
     }
 
     //Function on Add/Edit

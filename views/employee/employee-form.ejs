@@ -191,7 +191,7 @@
                 Are you sure you want to delete the record?
             </div>
             <div class="modal-footer">
-                <a href="#" class="btn btn-danger" id="btnConfirmOk">Ok</a> <a href="#"
+                <a href="#" class="btn btn-danger" id="btnConfirmOkEmployee">Ok</a> <a href="#"
                     class="btn btn-cancel btn-default" data-dismiss="modal">Cancel</a>
             </div>
             </form>
@@ -225,6 +225,9 @@
         //Subscribe on Delete of Employee
         $.Topic("master-list-row-click_delete").subscribe(EmployeeForm_Delete);
 
+        //Listener ok Button of confirmation event published 
+        $("#btnConfirmOkEmployee").click(function (e) { Employee_PerformDelete($("#confirm-dialog-Employee").data('modal').options.args); });
+
         FormValidation();
         $.Topic(vm_ui_events.FormSubmitClick + "_frmAddEmployee").subscribe(frmAddEditEmployee_Handler);
 
@@ -246,6 +249,7 @@
             $(this).prop('checked', false);
         });
         $('#modalEmployee').modal('show');
+    return false;
     }
     //function to setup popup on Edit an Employee
     function EmployeeFormPartialView_Update(args)
@@ -301,6 +305,7 @@
             promiseEmployeeFind.fail(function(){
             console.log("employee find by id fail");
             }); 
+    return false;
     }
 
     //Function on Add/Edit
@@ -377,10 +382,17 @@
     }
 
     //Function to open the confirmation popup
-    function EmployeeForm_Delete(args)
+    function EmployeeForm_Delete(request)
     {
-        $('#confirm-dialog-Employee').modal('show');
-        $("#btnConfirmOk").click(function (e) { Employee_PerformDelete(args); });
+             if ($("#confirm-dialog-Employee").data('modal') != undefined) {
+                $("#confirm-dialog-Employee").data('modal').options.args = request;
+                //Opens Confirmation Dialog
+                $("#confirm-dialog-Employee").modal({ show: true });
+                return false;
+            }
+            $("#confirm-dialog-Employee").modal({ "args": request, show: true });
+            return false;
+
     }
 
     //Function to delete employee by id

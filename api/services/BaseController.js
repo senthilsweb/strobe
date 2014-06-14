@@ -3,6 +3,7 @@
  * 
  * Base controller for all sails.js controllers. This just contains some common code
  * that every controller uses
+ * Reference : https://gist.github.com/tarlepp/869165914c26d753dbd8
  */
 'use strict';
 

@@ -6,19 +6,9 @@
  * @docs		:: http://sailsjs.org/#!documentation/models
  */
 
-module.exports = {
+var _ = require("lodash");
+module.exports = _.merge(_.cloneDeep(require("../services/BaseModel")),{
 
     attributes: {
-
-
-
-    },
-    beforeCreate: function (values, next) {
-         console.log("value = " + values.code);
-        var randomString = require('random-string');
-        values.code = randomString({ length: 6 })        
-        next();
     }
-
-
-};
+});

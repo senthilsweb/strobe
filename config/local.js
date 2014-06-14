@@ -52,19 +52,14 @@ module.exports = {
   // By default, Sails sets its environment using the `NODE_ENV` environment variable.
   // If NODE_ENV is not set, Sails will run in the 'development' environment.
 
-  environment: 'development', 
-
-  adapters: { 
-   'default' : 'mongo', 
-   'mongo' : {
-    module: 'sails-mongo',  
-    url: 'mongodb://strobe_user:strobe_pwd@ashoka.vmoksha.com/strobe-dev'  
-    /*
-    url: 'mongodb://strobe_user:strobe_pwd@ashoka.vmoksha.com/strobe-dev'        
-    ,user: 'finpulse-usr',   
-    password: 'finpulse-pwd', 
-    database: 'finpulse'*/
-   }   
+  environment: 'development',  
+  connections: {
+      mongodb: {
+           
+            ssl: {
+      rejectUnauthorized: false
+    },
+             url: 'mongodb://finpulse-usr:finpulse-pwd@oceanic.mongohq.com:10068/finpulse' 
+      }
   }
-
 };

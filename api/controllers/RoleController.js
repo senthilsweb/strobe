@@ -14,10 +14,8 @@
  *
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
-
-module.exports = {
-    
-  
+ var _ = require("lodash");
+module.exports = _.merge(_.cloneDeep(require("../services/BaseController")),{
   /**
    * Action blueprints:
    *    `/role/index`
@@ -40,4 +38,4 @@ module.exports = {
   }
 
   
-};
+});

@@ -14,6 +14,7 @@
     <table class="table table-condensed" id="<%=fnPrefix%>pc-master-list">   
           
     </table>
+    <div class="pagination"><ul id="pagination-demo"></ul></div>
     <!--Master List table(end)-->
 </div>
 
@@ -30,80 +31,132 @@
 <script type="text/javascript">
     console.log("Master List");     
     <%=fnPrefix%>MasterList = function() {
-    //1) Click of Add new master
-     $("#<%=fnPrefix%>_Add_master").click(function () {
-            $.Topic("master-list-add-click").publish();
-            return false;
-    });
-    //2) Subscribes for Events Search Button Click Event to clear the existing deatils
-    $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").subscribe(<%=fnPrefix%>Master_List_BindData);               
-
-        //Function to load master table on page load           
+        //1) Click of Add new master
+         $("#<%=fnPrefix%>_Add_master").click(function () {
+                $.Topic("master-list-add-click").publish();
+                return false;
+        });
+        //2) Subscribes for Events Search Button Click Event to clear the existing deatils
+        $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").subscribe(<%=fnPrefix%>Master_List_BindData);
+        //3 load master table on page load    
+             
         eval('<%=fnPrefix%>Master_List_BindData'+'()');
     }
-
+    //----------------------------------------------------------------------
     addLoadEvent(<%=fnPrefix%>MasterList); 
     
-    var <%=fnPrefix%>Master_List_BindData = function <%=fnPrefix%>Master_List_BindData(){
+    var <%=fnPrefix%>Master_List_BindData = function <%=fnPrefix%>Master_List_BindData(args){
+         
          //For Progress bar during ajax call      
          $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-list" });        
         //Ajax call in settimeout to show the progress bar otherwise in local the data will come very quick and one may not see the progressbar
         setTimeout(function () {
-
-        var txtSearch = $("#txt<%=fnPrefix%>SearchName").val();
-        var where = {};
-        where.name = {};
-        where.name.contains = txtSearch;
-        console.log(JSON.stringify(where));
-        var urlwithCriteria = location.origin + "<%=api%>?where=" + JSON.stringify(where);
-        var urlapi = $("#txt<%=fnPrefix%>SearchName").val() == "" ? location.origin + '<%=api%>' : urlwithCriteria;
-                    //Initiate ajax
-                    var promiseMasterList = $.ajax({ url: urlapi });
-
-                    //callback success
-                    promiseMasterList.done(function (data) { 
-                    //Data filtered by status "Active"
-                    var filtered_<%=fnPrefix%>_Active = _.filter(data, function (objData){			
-			                return objData.status == "1";
-	                });
-                    //Add class for status dynamically
-                    _.each( data, function ( item )
-                    {
-                        item.statusClass = item.status == "1" 
-                                                    ? "fa fa-circle vm-fa-green" 
-                                                    : "fa fa-circle vm-fa-grey";
-                        item.title= item.status == "1" 
-                                                    ? "Active" 
-                                                    : "Disabled";
-			
-                    });
-                    //before appending the template empty it
-                    $("#<%=fnPrefix%>pc-master-list").empty();   
-                    // $("#<%=fnPrefix%>pc-master-list > tbody tr").remove();     
-                    $("#tpl-master-list").tmpl(_.sortBy(data, "name")).appendTo("#<%=fnPrefix%>pc-master-list");   
-                    //AttachDatatablePagination("<%=fnPrefix%>pc-master-list");
-                    //hide the progress bar
-                    $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
-                    //To display tool tip
-                    $(".vm-dummy-trunk8").tooltip();
-                    //Attach event handlers
-                    $("#<%=fnPrefix%>pc-master-list").on("click", 'i, a', function (args) {
-                            args.action = $(this).data( "action" );
-                            args.id = $(this).data("id");
-                            $.Topic("master-list-row-click_"+args.action).publish(args);
-   
-                            //console.log($(this).data( "id" ) + ' ' + $(this).data( "action" ));  
-                        })
-                    }); 
+            var txtSearch = $("#txt<%=fnPrefix%>SearchName").val();
+            var where = {};
+            where.name = {};
+            where.name.contains = txtSearch;
+            console.log(JSON.stringify(where));
+            
+            var urlwithCriteria = location.origin + "<%=api%>"
+            urlwithCriteria += ("<%=api%>".indexOf("?") == -1) ? '?' : '&';
+            urlwithCriteria += "where=" + JSON.stringify(where);
+            var api = $("#txt<%=fnPrefix%>SearchName").val() == "" ? location.origin + '<%=api%>' : urlwithCriteria;
+               
+            if(args!==undefined){
+                api += (api.indexOf("?") == -1) ? '?' : '&';
+                api += 'skip=' + args.skip + '&limit=' + args.limit
+                //alert(api);
+            }
+                        //Initiate ajax
+                        console.log("api = " + api);
+                        console.log("count = " + api.replace('find','count'));
+                        var promiseMasterList = $.when( $.ajax( api ), $.ajax( api.replace('find','count') ) );
                     
-                    //callback failure
-                    promiseMasterList.fail(function () { 
-                     //hide the progress bar
-                     $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
-                    console.log("Something went wrong in <%=fnPrefix%>pc-master-list")
-                    //TODO: Show noty
-                    });    
-         },100);//End of setTimeout
+                        //var promiseMasterList = $.ajax({ url: api });
+
+                        //callback success
+                        promiseMasterList.done(function (res1,res2) { 
+                            var res1Data = res1[0];//contains result collection
+                            var res2Data = res2[0];//Contain count of records
+                            //merge res1Data & res1Data as data with TotalRecordCount
+                            var res = {};
+                                res.data = res1Data;
+                                res.TotalRecords = res2Data.count;
+                            //console.log("Result collection = " + JSON.stringify(res));
+                            //Data filtered by status "Active"
+                            var filtered_<%=fnPrefix%>_Active = _.filter(res.data, function (objData){			
+			                        return objData.status == "1";
+	                        });
+                        
+                            //Add class for status dynamically
+                            _.each( res.data, function ( item )
+                            {
+                                item.statusClass = item.status == "1" 
+                                                            ? "fa fa-circle vm-fa-green" 
+                                                            : "fa fa-circle vm-fa-grey";
+                                item.title= item.status == "1" 
+                                                            ? "Active" 
+                                                            : "Disabled";
+			
+                            });   
+                        //before appending the template empty it
+                        $("#<%=fnPrefix%>pc-master-list").empty();
+                        $("#tpl-master-list").tmpl(_.sortBy(res.data, "name")).appendTo("#<%=fnPrefix%>pc-master-list");                       
+                   
+                        //hide the progress bar
+                        $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
+                        //To display tool tip
+                        $(".vm-dummy-trunk8").tooltip();
+
+                        //Call for attach Pagination
+                         setTimeout(function () {<%=fnPrefix%>AttachPagination(res);},10);
+                                            
+
+                        //Attach event handlers
+                    
+                        $("#<%=fnPrefix%>pc-master-list").on("click", 'i, a', function (args) {
+                                args.action = $(this).data( "action" );
+                                args.id = $(this).data("id");
+                                $.Topic("master-list-row-click_"+args.action).publish(args);  
+                         })
+                    
+                                
+                    
+                        }); //End of done
+   
+                         
+                        //callback failure
+                        promiseMasterList.fail(function () { 
+                         //hide the progress bar
+                         $.Topic("LoadingImage").publish({ progress: "hide", container: "<%=fnPrefix%>pc-master-list" });
+                        console.log("Something went wrong in <%=fnPrefix%>pc-master-list")
+                        //TODO: Show noty
+                        });    
+             },100);//End of setTimeout
     } 
+    //-------------------------------------------------------------------------
+    <%=fnPrefix%>AttachPagination = function(res) {                          
+            var totPages =  Math.ceil(res.TotalRecords/'<%=limit%>') 
+            $('#pagination-demo').twbsPagination({
+                totalPages: totPages,
+                visiblePages : 0,
+                first : '<i class="fa fa-angle-double-left"></i>',
+                prev : '<i class="fa fa-angle-left"></i>',
+                next : '<i class="fa fa-angle-right"></i>',
+                last : '<i class="fa fa-angle-double-right"></i>',                     
+                onPageClick: function (event, page) {
+                    console.log("page = " + page);
+                    //if(page!=1){
+                        var skip = (page-1) * '<%=limit%>'
+                        var args = {};
+                        args.skip = skip;
+                        args.limit = '<%=limit%>';      
+                        eval('<%=fnPrefix%>Master_List_BindData'+'(args)');                    
+                 //}
+                   
+                }
+            });    
+
+    }
     
 </script>

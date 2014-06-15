@@ -15,7 +15,8 @@
  * @docs        :: http://sailsjs.org/#!documentation/controllers
  */
 
-module.exports = {
+var _ = require("lodash");
+module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
     
   'index' : function(req,res){
       res.view();
@@ -32,7 +33,5 @@ module.exports = {
             rest: true,
             shortcuts: true
         }
-  }
-
-  
-};
+  }  
+});

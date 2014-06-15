@@ -15,8 +15,6 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseModel")), {
             return obj;
         }
     },
-
-
     /**
     * Hash the users password with bcrypt
     * @param  {object}   user            the object of the submitted user data
@@ -28,6 +26,6 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseModel")), {
         obj.password = encryptedPassword
         obj.confirmPassword = encryptedPassword
         console.log("Employee before create")
-        return cb(null, user);
+        return cb(null, obj);
     }
 });

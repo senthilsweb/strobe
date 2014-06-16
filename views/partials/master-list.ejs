@@ -39,8 +39,9 @@
         //2) Subscribes for Events Search Button Click Event to clear the existing deatils
         $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").subscribe(<%=fnPrefix%>Master_List_BindData);
         //3 load master table on page load    
-             
-        eval('<%=fnPrefix%>Master_List_BindData'+'()');
+        var args = {};
+        args.initial = true;    
+        eval('<%=fnPrefix%>Master_List_BindData'+'(args)');
     }
     //----------------------------------------------------------------------
     addLoadEvent(<%=fnPrefix%>MasterList); 
@@ -58,13 +59,16 @@
             console.log(JSON.stringify(where));
             
             var urlwithCriteria = location.origin + "<%=api%>"
-            urlwithCriteria += ("<%=api%>".indexOf("?") == -1) ? '?' : '&';
+                        
+            urlwithCriteria += (urlwithCriteria.indexOf("?") == -1) ? '?' : '&';           
             urlwithCriteria += "where=" + JSON.stringify(where);
             var api = $("#txt<%=fnPrefix%>SearchName").val() == "" ? location.origin + '<%=api%>' : urlwithCriteria;
-               
-            if(args!==undefined){
+            try{
+            api += "?limit=" + "<%=limit%>";
+            }catch(e){}   
+            if(args!==undefined && args.skip!==undefined){
                 api += (api.indexOf("?") == -1) ? '?' : '&';
-                api += 'skip=' + args.skip + '&limit=' + args.limit
+                api += 'skip=' + args.skip
                 //alert(api);
             }
                         //Initiate ajax
@@ -109,12 +113,15 @@
                         $(".vm-dummy-trunk8").tooltip();
 
                         //Call for attach Pagination
+                          if(args!==undefined && args.initial == true){
+                            res.initial = args.initial
+                            }
                          setTimeout(function () {<%=fnPrefix%>AttachPagination(res);},10);
                                             
 
                         //Attach event handlers
                     
-                        $("#<%=fnPrefix%>pc-master-list").on("click", 'i, a', function (args) {
+                        $("#<%=fnPrefix%>pc-master-list").on("click", 'i, a', function (args) {            
                                 args.action = $(this).data( "action" );
                                 args.id = $(this).data("id");
                                 $.Topic("master-list-row-click_"+args.action).publish(args);  
@@ -140,20 +147,23 @@
             $('#pagination-demo').twbsPagination({
                 totalPages: totPages,
                 visiblePages : 0,
+                startPage : 1,
                 first : '<i class="fa fa-angle-double-left"></i>',
                 prev : '<i class="fa fa-angle-left"></i>',
                 next : '<i class="fa fa-angle-right"></i>',
                 last : '<i class="fa fa-angle-double-right"></i>',                     
                 onPageClick: function (event, page) {
-                    console.log("page = " + page);
-                    //if(page!=1){
+                        //As already the grid is binded for initial call, skip this for first call
+                        //alert(res.initial)
+                        if(!res.initial){
+                        console.log("page = " + page);
                         var skip = (page-1) * '<%=limit%>'
                         var args = {};
                         args.skip = skip;
                         args.limit = '<%=limit%>';      
-                        eval('<%=fnPrefix%>Master_List_BindData'+'(args)');                    
-                 //}
-                   
+                        eval('<%=fnPrefix%>Master_List_BindData'+'(args)');    
+                        }
+                        res.initial = false;
                 }
             });    
 

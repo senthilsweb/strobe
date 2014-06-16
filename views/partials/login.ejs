@@ -1,6 +1,8 @@
 <div class="box widget">		
     <h3>Login</h3>
 <form class="form-vertical" id="frmUser" action="#" method="post">
+    <div class="alert alert-danger hide" id="divAuthFailed">
+                </div>
 	<div class="form-group">
 		<div class="controls">
 			<input type="text" id="inputUsername" name="inputUsername" placeholder="Username" class="span12">
@@ -42,7 +44,51 @@
 <script type="text/javascript">
     console.log("Login");
     function Login() {
-        $("#btnSignIn").click(function(){window.location.href="/dashboard";return false;});
+        //$("#btnSignIn").click(function(){window.location.href="/dashboard";return false;});
+        $("#btnSignIn").click(function () {
+            //debugger;
+            User_Authenticate();
+            return false;
+        });
     }
     addLoadEvent(Login);
+
+    //---------------------------------------------------------------------------------------------------------
+    function User_Authenticate() {
+        if ($("#inputUsername").val() == "" && $("#inputPassword").val() == "") {
+            $("#divAuthFailed").removeClass('hide');
+            $("#divAuthFailed").html("Username and password is required.");
+        }
+        //added to fix bug no:8126
+        else if ($("#inputUsername").val() == "") {
+            $("#divAuthFailed").removeClass('hide');
+            $("#divAuthFailed").html("User name is required.");
+        }
+        else if ($("#inputPassword").val() == "") {
+            $("#divAuthFailed").removeClass('hide');
+            $("#divAuthFailed").html("Password is required.");
+        }
+        else {
+            $('#btnSignIn').button('loading');
+            var request = {}
+            request.email = $("#inputUsername").val();
+            request.password = $("#inputPassword").val();
+            //console.log(JSON.stringify(request))
+            setTimeout(function () {
+                //debugger;
+                var promiseLoginDetails = $.ajax({ url: location.origin + '/auth/login', data: JSON.stringify(request), type: 'POST' });
+                promiseLoginDetails.done(function (data) {
+                    //debugger;
+                    //alert("Success")
+                    //window.location.href = "/dashboard"; return false;
+                });
+                promiseLoginDetails.fail(function () {
+                    //debugger;
+                    $('#btnSignIn').button('reset')
+                    $("#divAuthFailed").show();
+                    console.log("Something went wrong in Authentication")
+                });
+            }, 100); //End of setTimeout
+        }
+    }
 </script>

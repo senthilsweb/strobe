@@ -7,27 +7,29 @@
 
 module.exports = {
     login: function (req, res) {
+        debugger;
+        console.log("request is :" + req);
         var params = req.params.all();
         //encrypt the password and then check
         var easycrypto = require('easycrypto').getInstance();
         //TODO : keep the encryption & decryption in common helper class & then bring the crypto password from confg file
         var encryptedPassword = easycrypto.encrypt(params.password, 'mypassword');  //"mypassword" -> is the password to be given during decryption
 
-        Employee.findOne({ email: params.email, password:encryptedPassword}, function(err, employee) {
-           if (err) {
+        Employee.findOne({ email: params.email, password: encryptedPassword }, function (err, employee) {
+            if (err) {
                 return console.log(err);
-              // The User was found successfully!
-              } else {                
-                if(employee===undefined){
-                    res.send(500,"Authentication Failed....")
-                }else{         
+                // The User was found successfully!
+            } else {
+                if (employee === undefined) {
+                    res.send(500, "Authentication Failed....")
+                } else {
                     delete employee.password;
                     delete employee.confirmPassword;
-                    console.log(employee);           
+                    console.log(employee);
                     res.send(200, employee);
                 }
                 //console.log("Employee found:", employee.name);
-              }
+            }
         });
     },
     logout: function (req, res) {

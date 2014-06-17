@@ -38,72 +38,67 @@
         });
         //2) Subscribes for Events Search Button Click Event to clear the existing deatils
         $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").subscribe(<%=fnPrefix%>Master_List_BindData);
-        //3 load master table on page load    
+        //3) Load master table on page load    
         var args = {};
-        args.initial = true;    
+        args.initial = true;  
+        //Bind master list on page load and also on Search  
         eval('<%=fnPrefix%>Master_List_BindData'+'(args)');
     }
+
     //----------------------------------------------------------------------
-    addLoadEvent(<%=fnPrefix%>MasterList); 
-    
     var <%=fnPrefix%>Master_List_BindData = function <%=fnPrefix%>Master_List_BindData(args){
          
          //For Progress bar during ajax call      
          $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-list" });        
         //Ajax call in settimeout to show the progress bar otherwise in local the data will come very quick and one may not see the progressbar
         setTimeout(function () {
-            var txtSearch = $("#txt<%=fnPrefix%>SearchName").val();
+
+        //----------------Form the url start-----------------------------------
+            //form the where criteria
             var where = {};
             where.name = {};
-            where.name.contains = txtSearch;
-            console.log(JSON.stringify(where));
-            
-            var urlwithCriteria = location.origin + "<%=api%>"
-                        
-            urlwithCriteria += (urlwithCriteria.indexOf("?") == -1) ? '?' : '&';           
-            urlwithCriteria += "where=" + JSON.stringify(where);
+            where.name.contains = $("#txt<%=fnPrefix%>SearchName").val();
+
+            //form the with criteria
+            var urlwithCriteria = location.origin + "<%=api%>?where=" + JSON.stringify(where);
+            //if criteria exist append the urlwithCriteria, otherwise normal api find all
             var api = $("#txt<%=fnPrefix%>SearchName").val() == "" ? location.origin + '<%=api%>' : urlwithCriteria;
+         
             try{
-            api += "?limit=" + "<%=limit%>";
-            }catch(e){}   
+               api += (api.indexOf("?") == -1) ? '?' : '&';
+               api += "limit=" + "<%=limit%>";
+            }catch(e){} 
+   
             if(args!==undefined && args.skip!==undefined){
                 api += (api.indexOf("?") == -1) ? '?' : '&';
-                api += 'skip=' + args.skip
-                //alert(api);
+                api += 'skip=' + args.skip;
             }
-
-                        //Initiate ajax
-                        console.log("api = " + api);
-                        console.log("count = " + api.replace('find','count'));
+         //----------------Form the url stop-----------------------------------
+   
+                        //Initiate ajax call for both "findall or find with criteria" and "get count of rows"
                         var promiseMasterList = $.when( $.ajax( api ), $.ajax( api.replace('find','count') ) );
-                    
-                        //var promiseMasterList = $.ajax({ url: api });
-
                         //callback success
                         promiseMasterList.done(function (res1,res2) { 
-                            var res1Data = res1[0];//contains result collection
-                            var res2Data = res2[0];//Contain count of records
-                            //merge res1Data & res1Data as data with TotalRecordCount
-                            var res = {};
-                                res.data = res1Data;
-                                res.TotalRecords = res2Data.count;
-                            //console.log("Result collection = " + JSON.stringify(res));
-                            //Data filtered by status "Active"
-                            var filtered_<%=fnPrefix%>_Active = _.filter(res.data, function (objData){			
-			                        return objData.status == "1";
-	                        });
+                        var res1Data = res1[0];//contains result collection
+                        var res2Data = res2[0];//Contain count of records
+
+                        //merge res1Data & res1Data as data with TotalRecordCount
+                        var res = {};
+                        res.data = res1Data;
+                        res.TotalRecords = res2Data.count;
+                            
+                        //Data filtered by status "Active"
+                        var filtered_<%=fnPrefix%>_Active = _.filter(res.data, function (objData){			
+			                    return objData.status == "1";
+	                    });
                         
-                            //Add class for status dynamically
-                            _.each( res.data, function ( item )
-                            {
-                                item.statusClass = item.status == "1" 
-                                                            ? "fa fa-circle vm-fa-green" 
-                                                            : "fa fa-circle vm-fa-grey";
-                                item.title= item.status == "1" 
-                                                            ? "Active" 
-                                                            : "Disabled";
+                        //Add class for status dynamically
+                        _.each( res.data, function ( item )
+                        {
+                            item.statusClass = item.status == "1" ? "fa fa-circle vm-fa-green": "fa fa-circle vm-fa-grey";
+                            item.title= item.status == "1"? "Active": "Disabled";
 			
-                            });   
+                        });   
                         //before appending the template empty it
                         $("#<%=fnPrefix%>pc-master-list").empty();
                         $("#tpl-master-list").tmpl(_.sortBy(res.data, "name")).appendTo("#<%=fnPrefix%>pc-master-list");                       
@@ -114,22 +109,18 @@
                         $(".vm-dummy-trunk8").tooltip();
 
                         //Call for attach Pagination
-                          if(args!==undefined && args.initial == true){
+                        if(args!==undefined && args.initial == true){
                             res.initial = args.initial
-                            }
-                         setTimeout(function () {<%=fnPrefix%>AttachPagination(res);},10);
+                        }
+                        setTimeout(function () {<%=fnPrefix%>AttachPagination(res);},10);
                                             
 
-                        //Attach event handlers
-                    
+                        //Attach event handlers                    
                         $("#<%=fnPrefix%>pc-master-list").on("click", 'i, a', function (args) {            
                                 args.action = $(this).data( "action" );
                                 args.id = $(this).data("id");
                                 $.Topic("master-list-row-click_"+args.action).publish(args);  
                          })
-                    
-                                
-                    
                         }); //End of done
    
                          
@@ -169,5 +160,8 @@
             });    
 
     }
+
+
+    addLoadEvent(<%=fnPrefix%>MasterList);
     
 </script>

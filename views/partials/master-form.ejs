@@ -56,12 +56,24 @@
 <!--Confirmation Pop up dialogs (end)-->
 <script type="text/javascript">
    console.log("<%=fnPrefix%>MasterFormInitialize");   
-    <%=fnPrefix%>MasterFormInitialize = function() { 
+    <%=fnPrefix%>MasterFormInitialize = function() {
+        //Subscribe on Add of Master
+        $.Topic("master-list-add-click").subscribe(<%=fnPrefix%>Form_ModalShow_ForAdd); 
         //Subscribe on Edit of Master
         $.Topic("master-list-row-click_edit").subscribe(<%=fnPrefix%>Form_ModalShow_ForEdit);
+        //Subscribe on Delete of Master
         $.Topic("master-list-row-click_delete").subscribe(<%=fnPrefix%>Delete);
+        //Listener ok Button of confirmation event published 
+        $("#btnConfirmOk").click(function (e) { <%=fnPrefix%>DeleteConfirm($("#confirm-dialog-<%=fnPrefix%>").data('modal').options.args); });       
 
-        $.Topic("master-list-add-click").subscribe(function () {
+        //On Master form save
+        FormValidation();
+        $.Topic(vm_ui_events.FormSubmitClick + "_frmAdd<%=fnPrefix%>").subscribe(<%=fnPrefix%>Save);           
+    }
+    
+    //function to setup popup on Add Master
+    function <%=fnPrefix%>Form_ModalShow_ForAdd()
+    {
             //clear the previous values
             ResetControls("modal<%=fnPrefix%>"); 
             //Reset Form
@@ -69,47 +81,7 @@
             $("#btnSave<%=fnPrefix%>").removeAttr("disabled"); 
             $('#modal<%=fnPrefix%>Label').text("Add "+"<%=fnPrefix%>")   
             $('#modal<%=fnPrefix%>').modal('show');
-        });
-
-        FormValidation();
-        $.Topic(vm_ui_events.FormSubmitClick + "_frmAdd<%=fnPrefix%>").subscribe(<%=fnPrefix%>Save);
-
-            //Function to save Employee on Add/Edit
-            function <%=fnPrefix%>Save() {
-                    $.Topic(vm_ui_events.ModalAction).publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "Initiated" });
-                    var request = {};
-                    request.name = $('#txt<%=fnPrefix%>Name').val();
-                    request.status = $("#chkStatus<%=fnPrefix%>").is(":checked")== false ? 0 : 1;
-
-                    var id=$('#hiddentxt<%=fnPrefix%>').val();
-   
-                    if($('#hiddentxt<%=fnPrefix%>').val() != 0)
-                    {
-                            request.id=id;
-                            var promiseAddEdit<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=apiupdate%>/' + id ,data: request });
-                    }
-                    else
-                    {
-                            var promiseAddEdit<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=apicreate%>', data: request });
-                    }
-                    
-                    promiseAddEdit<%=fnPrefix%>.done(function () {
-                    setTimeout(function () {
-                    $.Topic("ModalAction").publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "CompletedSuccess" });
-                    $('#modal<%=fnPrefix%>').modal('hide');
-                    noty({ "text": "<%=fnPrefix%> saved successfully", "layout": "top", "type": "success" });
-                    }, 1000);
-
-                    setTimeout(<%=fnPrefix%>ListMasterList, 0);
-                    return false;
-            })
-            promiseAddEdit<%=fnPrefix%>.fail(function(){
-                $('#modal<%=fnPrefix%>').modal('hide');
-                noty({ "text": "Failed", "layout": "top", "type": "error" });
-                console.log("from master api fail")
-            });    
-            }
-
+            return false;
     }
     
 
@@ -133,11 +105,53 @@
 
       }
 
+    //Function to save Employee on Add/Edit
+    function <%=fnPrefix%>Save() {
+            $.Topic(vm_ui_events.ModalAction).publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "Initiated" });
+            var request = {};
+            request.name = $('#txt<%=fnPrefix%>Name').val();
+            request.status = $("#chkStatus<%=fnPrefix%>").is(":checked")== false ? 0 : 1;
+            var id=$('#hiddentxt<%=fnPrefix%>').val();
+   
+            if($('#hiddentxt<%=fnPrefix%>').val() != 0)
+            {
+                    request.id=id;
+                    var promiseAddEdit<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=apiupdate%>/' + id ,data: request });
+            }
+            else
+            {
+                    var promiseAddEdit<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=apicreate%>', data: request });
+            }
+                    
+            promiseAddEdit<%=fnPrefix%>.done(function () {
+            setTimeout(function () {
+            $.Topic("ModalAction").publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "CompletedSuccess" });
+            $('#modal<%=fnPrefix%>').modal('hide');
+            noty({ "text": "<%=fnPrefix%> saved successfully", "layout": "top", "type": "success" });
+            }, 1000);
+
+            setTimeout(<%=fnPrefix%>ListMasterList, 0);
+            return false;
+    })
+    promiseAddEdit<%=fnPrefix%>.fail(function(){
+        $('#modal<%=fnPrefix%>').modal('hide');
+        noty({ "text": "Failed", "layout": "top", "type": "error" });
+        console.log("from master api fail")
+    });    
+      }
+
+
       //Function to open the confirmation popup
-      function <%=fnPrefix%>Delete(args)
+      function <%=fnPrefix%>Delete(request)
       {
-            $('#confirm-dialog-<%=fnPrefix%>').modal('show');
-            $("#btnConfirmOk").click(function (e) { <%=fnPrefix%>DeleteConfirm(args); });
+           if ($("#confirm-dialog-<%=fnPrefix%>").data('modal') != undefined) {
+                $("#confirm-dialog-<%=fnPrefix%>").data('modal').options.args = request;
+                //Opens Confirmation Dialog
+                $("#confirm-dialog-<%=fnPrefix%>").modal({ show: true });
+                return false;
+            }
+            $("#confirm-dialog-<%=fnPrefix%>").modal({ "args": request, show: true });
+            return false;
       }
 
       //Function to delete employee by id

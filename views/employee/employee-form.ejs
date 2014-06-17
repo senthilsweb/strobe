@@ -201,11 +201,12 @@
 <!--Confirmation Pop up dialogs (end)-->
 
 <script type="text/javascript">
-    console.log("EmployeeForm");
-    EmployeeForm = function () {
-        //attach datepicket
+    //On page load
+    EmployeeFormInitialize = function () {
+        //attach datepicket for date of birth and date of joining
         $(".vm-date").datepicker({ "format": "mm/dd/yyyy", "autoclose": true });
-        // Fill Event Type dropdown
+
+        // Populate gender dropdown start
         var Gender = [
              { "Id": "Male", "Code": "Male" },
              { "Id": "Female", "Code": "Female" }
@@ -215,26 +216,28 @@
             $("#cboEmployeeGender").append($("<option value='" + item.Id + "'>" + item.Code + "</option>"));
             $("#cboEmployeeGender").select2({ placeholder: 'Gender', allowClear: true });
         });
+        // Populate gender dropdown stop
 
         //Subscribe on Add of Employee
-        $.Topic("master-list-add-click").subscribe(EmployeeFormPartialView_Add);
+        $.Topic("master-list-add-click").subscribe(EmployeeForm_ModalShow_ForAdd);
        
         //Subscribe on Edit of Employee
-        $.Topic("master-list-row-click_edit").subscribe(EmployeeFormPartialView_Update);
+        $.Topic("master-list-row-click_edit").subscribe(EmployeeForm_ModalShow_ForEdit);
 
         //Subscribe on Delete of Employee
-        $.Topic("master-list-row-click_delete").subscribe(EmployeeForm_Delete);
+        $.Topic("master-list-row-click_delete").subscribe(EmployeeDelete);
 
         //Listener ok Button of confirmation event published 
-        $("#btnConfirmOkEmployee").click(function (e) { Employee_PerformDelete($("#confirm-dialog-Employee").data('modal').options.args); });
-
+        $("#btnConfirmOkEmployee").click(function (e) { EmployeeDeleteConfirm($("#confirm-dialog-Employee").data('modal').options.args); });
+        
+        //On Employee form save
         FormValidation();
-        $.Topic(vm_ui_events.FormSubmitClick + "_frmAddEmployee").subscribe(frmAddEditEmployee_Handler);
+        $.Topic(vm_ui_events.FormSubmitClick + "_frmAddEmployee").subscribe(EmployeeSave);
 
     }
 
     //function to setup popup on Add New Employee
-    function EmployeeFormPartialView_Add() {
+    function EmployeeForm_ModalShow_ForAdd() {
         //clear the previous values
         ResetControls("modalEmployee");
         //Reset Form
@@ -252,10 +255,10 @@
     return false;
     }
     //function to setup popup on Edit an Employee
-    function EmployeeFormPartialView_Update(args)
+    function EmployeeForm_ModalShow_ForEdit(args)
     {          
             var promiseEmployeeFind = $.ajax({ url: location.origin + '<%=apifind%>/' + args.id });
-            promiseEmployeeFind.done(function(data){ debugger;
+            promiseEmployeeFind.done(function(data){ 
             $("#btnSaveEmployee").removeAttr("disabled"); 
             $('#modalEmployeeLabel').text("Edit "+"Employee")          
             $('#modalEmployee').modal('show');
@@ -308,8 +311,8 @@
     return false;
     }
 
-    //Function on Add/Edit
-    function frmAddEditEmployee_Handler() {
+    //Function to save Employee on Add/Edit
+    function EmployeeSave() {
 
         $.Topic(vm_ui_events.ModalAction).publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "Initiated" });
         var request = {};
@@ -356,7 +359,7 @@
                 if($('#hiddentxtEmployee').val() != "0")
                 {
                     request.id=id;
-                    var promiseAddEditEmployee = $.ajax({ url: location.origin + '<%=apiupdate%>',data: request });
+                    var promiseAddEditEmployee = $.ajax({ url: location.origin + '<%=apiupdate%>/' + id,data: request });
                 }
                 else if($('#hiddentxtEmployee').val() == "0")
                 {
@@ -382,7 +385,7 @@
     }
 
     //Function to open the confirmation popup
-    function EmployeeForm_Delete(request)
+    function EmployeeDelete(request)
     {
              if ($("#confirm-dialog-Employee").data('modal') != undefined) {
                 $("#confirm-dialog-Employee").data('modal').options.args = request;
@@ -396,7 +399,7 @@
     }
 
     //Function to delete employee by id
-    function Employee_PerformDelete(args)
+    function EmployeeDeleteConfirm(args)
     {
         var promiseEmployeeDelete = $.ajax({ url: location.origin + '<%=apidelete%>/' + args.id });
         promiseEmployeeDelete.done(function(data){
@@ -415,5 +418,5 @@
         });
     }
 
-    addLoadEvent(EmployeeForm);
+    addLoadEvent(EmployeeFormInitialize);
 </script>

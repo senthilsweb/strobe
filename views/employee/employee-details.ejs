@@ -32,9 +32,9 @@
         //For click handle
         $.Topic("master-list-row-click_view").subscribe(EmployeeDetailsShow);
     }
-    addLoadEvent(EmployeeDetailsLoad);
+    
 
-    //function to show the Semployee details
+    //function to show the Employee details
     function EmployeeDetailsShow(args) {
         //For Progress bar during ajax call      
              $.Topic("LoadingImage").publish({ progress: "show", container: "Employee-details" });  
@@ -49,7 +49,7 @@
                         data.status=data.status == "1" ? "Active" : "Disable";  
                         data.iconGender = data.gender.toLowerCase() == 'male' ? 'fa fa-male' : 'fa fa-female';
                         data.dateOfJoining = data.doj == "" ? "": moment(data.doj).local().fromNow();
-                        debugger;
+                       
                         var otherRoles = "";
                         if (data.roles != "") {
                             var allRoles = data.roles == "" ? "" : (data.roles).split(",");
@@ -81,4 +81,6 @@
     return false;
 
     }
+
+    addLoadEvent(EmployeeDetailsLoad);
 </script>

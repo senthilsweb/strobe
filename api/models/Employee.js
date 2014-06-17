@@ -21,13 +21,13 @@
          }
 
      },
-     /*beforeCreate: function (values, next) {
+     beforeCreate: function (values, next) {
      console.log("value = " + values.code); 
      var randomString = require('random-string');
      values.code = randomString({ length: 6 })        
      next();
-     }*/
-     beforeCreate: function (obj, cb) {
+     }
+     /*beforeCreate: function (obj, cb) {
          
          var encryptedPassword = easycrypto.encrypt(obj.password, 'mypassword'); //"mypassword" -> is the password to be given during decryption
          obj.password = encryptedPassword
@@ -35,7 +35,8 @@
          console.log("Employee before create")
          obj.code = _randString({ length: 6 });
          console.log(obj + "" + obj.code + " ," + obj.password);
-         next();
-     }
+         //next();
+         return cb(null, obj);
+     }*/
  };
 

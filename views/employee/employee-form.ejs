@@ -148,7 +148,7 @@
                             </div>
                         </div>
 
-                      <div class="row-fluid">                        
+                      <div id="divEmployeeCredentials" class="row-fluid">                        
 
                           <div class="span4">
                                 <div class="control-group">
@@ -252,6 +252,7 @@
         ResetControls("modalEmployee");
         //Reset Form
         ResetForm("frmAddEmployee");
+        $('#divEmployeeCredentials').show();
         $("#hiddentxtEmployee").val("0");
         $("#btnSaveEmployee").show();
         $("#btnSaveEmployee").html("Add");
@@ -290,7 +291,7 @@
             $('#txtEmployeeNo').val(data.empNo);
             $('#txtDateofJoining').val(data.doj);
             $('#cboEmployeeLocation').select2("val", data.location);
-   
+            $('#divEmployeeCredentials').hide();
             var employeeRole=[];
             if (data.roles != "")
             {
@@ -364,7 +365,7 @@
         }
         // Pass comma seperated roles
         request.roles = Roles; 
-    
+                debugger;
                 var id=$('#hiddentxtEmployee').val();
                 if($('#hiddentxtEmployee').val() != "0")
                 {

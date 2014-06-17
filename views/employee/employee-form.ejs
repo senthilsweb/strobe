@@ -11,7 +11,7 @@
                 <h3 id="modalEmployeeLabel">Add Employee</h3>
               </div>
               <div class="modal-body">
-                  <div id="modalEmployeeBody" class="modalEmployeeBody validate">
+                  <div id="modalEmployeeBody" class="modalEmployeeBody validate pr10">
                       <div class="row-fluid">
                           <div class="span4">
                                 <div class="control-group">
@@ -233,6 +233,12 @@
         //On Employee form save
         FormValidation();
         $.Topic(vm_ui_events.FormSubmitClick + "_frmAddEmployee").subscribe(EmployeeSave);
+
+       //TO DO: Slim scroll will get attached if two file are to be added ("jquery-ui-1.9.1.custom.min" and "jquery-ui.min")
+       // But the date picker ui is disturbed if these two files are added
+       // $('#modalEmployeeBody').slimscroll({
+       
+       // });
 
     }
 

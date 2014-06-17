@@ -92,7 +92,7 @@
                                     <label class="control-label label-bold" for="txtEmployeeEmail">
                                        Email</label>
                                     <div class="controls">
-                                        <input type="text" class="span12 required" id="txtEmployeeEmail" name="txtEmployeeEmail" placeholder="Email"></div>
+                                        <input type="text" class="span12 required email" id="txtEmployeeEmail" name="txtEmployeeEmail" placeholder="Email"></div>
                                 </div>
                             </div>
                        </div>
@@ -103,7 +103,7 @@
                                     <label class="control-label label-bold" for="txtEmployeePhoneNumber">
                                         Phone</label>
                                     <div class="controls">
-                                        <input type="text" class="span12" id="txtEmployeePhoneNumber" name="txtEmployeePhoneNumber" placeholder="Phone"></div>
+                                        <input type="text" class="span12 phoneNo" id="txtEmployeePhoneNumber" name="txtEmployeePhoneNumber" placeholder="Phone"></div>
                                 </div>
                             </div>
                            <div class="span6">
@@ -112,7 +112,7 @@
                                         Mobile
                                     </label>
                                     <div class="controls">
-                                        <input class="input-medium span12" type="text" id="txtEmployeeMobileNumber" name="txtEmployeeMobileNumber"
+                                        <input class="input-medium span12 phoneNo" type="text" id="txtEmployeeMobileNumber" name="txtEmployeeMobileNumber"
                                             placeholder="Mobile" /></div>
                                 </div>
                             </div>                      
@@ -155,7 +155,7 @@
                                     <label class="control-label label-bold" for="txtEmployeePassword">
                                         Password</label>
                                     <div class="controls">
-                                        <input type="text" class="span12 required" id="txtEmployeePassword" name="txtEmployeePassword" placeholder="Password"></div>
+                                        <input type="password" class="span12 required" id="txtEmployeePassword" name="txtEmployeePassword" placeholder="Password"></div>
                                 </div>
                             </div>
                           <div class="span4">
@@ -163,7 +163,7 @@
                                     <label class="control-label label-bold" for="txtEmployeeConPassword">
                                        Confirm Password</label>
                                     <div class="controls">
-                                        <input type="text" class="span12 required" id="txtEmployeeConPassword" name="txtEmployeeConPassword" placeholder="Confirm Password"></div>
+                                        <input type="password" class="span12 required" id="txtEmployeeConPassword" name="txtEmployeeConPassword" placeholder="Confirm Password"></div>
                                 </div>
                             </div>
                           
@@ -229,7 +229,11 @@
 
         //Listener ok Button of confirmation event published 
         $("#btnConfirmOkEmployee").click(function (e) { EmployeeDeleteConfirm($("#confirm-dialog-Employee").data('modal').options.args); });
-        
+       
+        //Phone Number with +-() allowed
+        $('.phoneNo').numeric({ allow: "+-() " });
+           
+
         //On Employee form save
         FormValidation();
         $.Topic(vm_ui_events.FormSubmitClick + "_frmAddEmployee").subscribe(EmployeeSave);

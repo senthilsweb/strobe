@@ -76,7 +76,7 @@
             //console.log(JSON.stringify(request))
             setTimeout(function () {
                 //debugger;
-                var promiseLoginDetails = $.ajax({ url: location.origin + '/auth/login', data: JSON.stringify(request), type: 'POST' });
+                var promiseLoginDetails = $.ajax({ url: location.origin + '/auth/login', data: JSON.stringify(request) });
                 promiseLoginDetails.done(function (data) {
                     //debugger;
                     //alert("Success")

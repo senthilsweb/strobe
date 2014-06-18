@@ -41,7 +41,7 @@ module.exports.routes = {
         action: 'loginCustom'
     },*/
 
-    'POST /auth/login': 'AuthController.loginCustom'
+    'POST /auth/login': 'AuthController.login'
 
   /*
   // But what if you want your home page to display

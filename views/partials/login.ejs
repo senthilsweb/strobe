@@ -22,7 +22,7 @@
 	</div>
 	<div class="form-group">
 		<div class="controls">
-			<div class="span6" style="margin-top: 5px;"><a href="#">Forgot Password?</a></div>
+			<div id="divForgotPassword" class="span6" style="margin-top: 5px;"><a href="#">Forgot Password?</a></div>
 			<div class="span6 pull-right">
 				<button type="reset" class="btn btn-default" id="btnClear">
 				Clear</button>
@@ -49,8 +49,14 @@
             User_Authenticate();
             return false;
         });
+
+        //On click of ForgotPassword link
+        $('#divForgotPassword').click(function () {
+            debugger;
+            $.Topic('ForgotPasswordClick').publish();
+        });
     }
-    addLoadEvent(Login);
+
 
     //---------------------------------------------------------------------------------------------------------
     function User_Authenticate() {
@@ -73,8 +79,8 @@
             request.password = $("#inputPassword").val();
             //console.log(JSON.stringify(request))
             setTimeout(function () {
-                var promiseLoginDetails = $.ajax({ url: location.origin + '/auth/loginCustom', data: request });
-                promiseLoginDetails.done(function (data) {                  
+                var promiseLoginDetails = $.ajax({ url: location.origin + '/auth/login', data: request });
+                promiseLoginDetails.done(function (data) {
                     window.location.href = "/dashboard";
                     return false;
                 });
@@ -87,4 +93,6 @@
             }, 100); //End of setTimeout
         }
     }
+
+    addLoadEvent(Login);
 </script>

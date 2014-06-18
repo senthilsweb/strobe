@@ -46,7 +46,6 @@
     function Login() {
         //$("#btnSignIn").click(function(){window.location.href="/dashboard";return false;});
         $("#btnSignIn").click(function () {
-            //debugger;
             User_Authenticate();
             return false;
         });
@@ -59,7 +58,6 @@
             $("#divAuthFailed").removeClass('hide');
             $("#divAuthFailed").html("Username and password is required.");
         }
-        //added to fix bug no:8126
         else if ($("#inputUsername").val() == "") {
             $("#divAuthFailed").removeClass('hide');
             $("#divAuthFailed").html("User name is required.");
@@ -75,18 +73,15 @@
             request.password = $("#inputPassword").val();
             //console.log(JSON.stringify(request))
             setTimeout(function () {
-                //debugger;
                 var promiseLoginDetails = $.ajax({ url: location.origin + '/auth/loginCustom', data: request });
-                promiseLoginDetails.done(function (data) {
-                    debugger;
-                    
-                    window.location.href = "/dashboard"; return false;
-                    alert("Success");
+                promiseLoginDetails.done(function (data) {                  
+                    window.location.href = "/dashboard";
+                    return false;
                 });
                 promiseLoginDetails.fail(function () {
-                    //debugger;
                     $('#btnSignIn').button('reset')
                     $("#divAuthFailed").show();
+                    $("#divAuthFailed").html("The username or password you have entered is incorrect.");
                     console.log("Something went wrong in Authentication")
                 });
             }, 100); //End of setTimeout

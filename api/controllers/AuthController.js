@@ -6,15 +6,16 @@
  */
 
 module.exports = {
-    login: function (req, res) {
-        debugger;
-        console.log("request is :" + req);
+        
+   login: function (req, res) {        
         var params = req.params.all();
         //encrypt the password and then check
         var easycrypto = require('easycrypto').getInstance();
         //TODO : keep the encryption & decryption in common helper class & then bring the crypto password from confg file
         var encryptedPassword = easycrypto.encrypt(params.password, 'mypassword');  //"mypassword" -> is the password to be given during decryption
-
+        //Paulomi: added console to check values
+        console.log("email is :" + params.email);
+        console.log("password is :" + encryptedPassword);
         Employee.findOne({ email: params.email, password: encryptedPassword }, function (err, employee) {
             if (err) {
                 return console.log(err);
@@ -36,4 +37,5 @@ module.exports = {
         req.logout();
         res.send(200, 'logout successful');
     }
+    
 }

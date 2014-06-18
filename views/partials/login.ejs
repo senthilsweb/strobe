@@ -76,11 +76,12 @@
             //console.log(JSON.stringify(request))
             setTimeout(function () {
                 //debugger;
-                var promiseLoginDetails = $.ajax({ url: location.origin + '/auth/login', data: JSON.stringify(request) });
+                var promiseLoginDetails = $.ajax({ url: location.origin + '/auth/loginCustom', data: request });
                 promiseLoginDetails.done(function (data) {
-                    //debugger;
-                    //alert("Success")
-                    //window.location.href = "/dashboard"; return false;
+                    debugger;
+                    
+                    window.location.href = "/dashboard"; return false;
+                    alert("Success");
                 });
                 promiseLoginDetails.fail(function () {
                     //debugger;

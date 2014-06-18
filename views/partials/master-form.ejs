@@ -91,7 +91,7 @@
              var promiseMasterUpdate = $.ajax({ url: location.origin + '<%=apifind%>/' + args.id });
              promiseMasterUpdate.done(function(data){ 
              $("#btnSave<%=fnPrefix%>").removeAttr("disabled"); 
-             $('#modal<%=fnPrefix%>Label').text("Edit "+"<%=fnPrefix%>")          
+             $('#modal<%=fnPrefix%>Label').text("Edit "+"<%=fnPrefix%>");          
              $('#modal<%=fnPrefix%>').modal('show');
              $('#txt<%=fnPrefix%>Name').val(data.name);
              $('#divIs<%=fnPrefix%>Status').swatch('setState', data.status=="0" ? false : true);

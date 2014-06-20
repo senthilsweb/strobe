@@ -36,12 +36,22 @@ module.exports.routes = {
     view: 'home/index'
   },
 
-  /*'post /auth/loginCustom': {
-        controller: 'auth',
-        action: 'loginCustom'
-    },*/
+   'post /employee/forgotPassword': {
+        controller: 'employee',
+        action: 'forgotPassword'
+    },
 
-    'POST /auth/login': 'AuthController.login'
+    'post /emailnotification/sendNotification': {
+        controller: 'emailnotification',
+        action: 'sendNotification'
+    },
+
+    'post /auth/login': {
+        controller: 'auth',
+        action: 'login'
+    },
+
+    //'POST /auth/login': 'AuthController.login'
 
   /*
   // But what if you want your home page to display

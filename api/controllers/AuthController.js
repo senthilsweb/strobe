@@ -6,8 +6,8 @@
  */
 
 module.exports = {
-        
-   login: function (req, res) {        
+
+    login: function (req, res) {
         var params = req.params.all();
         //encrypt the password and then check
         var easycrypto = require('easycrypto').getInstance();
@@ -26,7 +26,11 @@ module.exports = {
                 } else {
                     delete employee.password;
                     delete employee.confirmPassword;
+                    //employee.online = true;
                     console.log(employee);
+                    req.session.authenticated = true;
+                    req.employee = employee;
+                    console.log("check session :" + req.session.authenticated );
                     res.send(200, employee);
                 }
                 //console.log("Employee found:", employee.name);
@@ -34,8 +38,12 @@ module.exports = {
         });
     },
     logout: function (req, res) {
-        req.logout();
+        var params = req.params.all();
+        req.session.authenticated = false;
+        //wipe out the session (log out)
+        req.session.destroy()
+        //req.logout();
         res.send(200, 'logout successful');
     }
-    
+
 }

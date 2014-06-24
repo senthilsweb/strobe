@@ -45,7 +45,11 @@
                     , { 'name': 'Employee', 'url': '/employee' }
                     , { 'name': 'Location', 'url': '/location' }
                     ]
-            }];
+            },
+            { 'name': '', 'url': '#', 'signout': 'true'
+
+            }
+            ];
         var buildmenu = '';
         $.each(allmenus, function (index, menu) {
             if (menu.menus != undefined) {
@@ -56,13 +60,34 @@
                 });
                 buildmenu += '</ul></li>';
             }
+
             else if (menu.menus == undefined) {
-                buildmenu += '<li class="menu-item" id="' + menu.name + '"><a href="' + menu.url + '">' + menu.name + '</a></li>';
+                if (menu.signout == "true")
+                    buildmenu += '<li class="menuSignOut"><a id="anchSignOut" href="#"><i class="fa fa-power-off vm-fa-red"></i></a></li>';
+                else
+                    buildmenu += '<li class="menu-item" id="' + menu.name + '"><a href="' + menu.url + '">' + menu.name + '</a></li>';
             }
+
         });
         $('#navMenu').append(buildmenu);
         $('a[href$="' + location.pathname + '"]').closest('li').addClass('active');
         $('a[href$="' + location.pathname + '"]').closest('ul').closest('li').addClass('active');
+
+        //On click of SignOut link
+        $('#anchSignOut').click(function () {
+            setTimeout(function () {
+                var promiseLogoutDetails = $.ajax({ url: location.origin + '/auth/logout' });
+                promiseLogoutDetails.done(function (data) {
+                    window.location.href = "/";
+                    return false;
+                });
+                promiseLogoutDetails.fail(function () {
+                    console.log("Something went wrong in Logout")
+                });
+
+                return false;
+            }, 100); //End of setTimeout
+        });
     }
     addLoadEvent(hignLightMenu);
 </script>

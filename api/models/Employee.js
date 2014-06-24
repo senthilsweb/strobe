@@ -11,6 +11,7 @@
 module.exports = {
 
     attributes: {
+      
     },
     beforeCreate: function (values, next) {
         var randomString = require('random-string');
@@ -23,7 +24,7 @@ module.exports = {
         values.confirmPassword = encryptedPassword;
         console.log("password = " + values.password);
         //Added by Paulomi: stop
-        next();//Added by Paulomi: In your Employee model, you need to use the next() method. This method passes control back to the next piece of middleware on the stack. Without it, it blocks execution.
+        next(); //Added by Paulomi: In your Employee model, you need to use the next() method. This method passes control back to the next piece of middleware on the stack. Without it, it blocks execution.
     }
     /*beforeCreate: function (obj, cb) {
          

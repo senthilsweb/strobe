@@ -45,6 +45,8 @@
     console.log("Login");
     function Login() {
         //$("#btnSignIn").click(function(){window.location.href="/dashboard";return false;});
+        //$.Topic('SignOutClick').subscribe(SignOut_Show);
+
         $("#btnSignIn").click(function () {
             User_Authenticate();
             return false;
@@ -54,8 +56,11 @@
         $('#divForgotPassword').click(function () {
             $.Topic('ForgotPasswordClick').publish();
         });
+
+
     }
 
+   
 
     //---------------------------------------------------------------------------------------------------------
     function User_Authenticate() {
@@ -80,8 +85,7 @@
             setTimeout(function () {
                 var promiseLoginDetails = $.ajax({ url: location.origin + '/auth/login', data: request });
                 promiseLoginDetails.done(function (data) {
-                    window.location.href = "/dashboard";
-                    return false;
+                    window.location.href = "/dashboard";                    
                 });
                 promiseLoginDetails.fail(function () {
                     $('#btnSignIn').button('reset')
@@ -89,6 +93,7 @@
                     $("#divAuthFailed").html("The username or password you have entered is incorrect.");
                     console.log("Something went wrong in Authentication")
                 });
+                return false;
             }, 100); //End of setTimeout
         }
     }

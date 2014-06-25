@@ -331,7 +331,6 @@
 
         $.Topic(vm_ui_events.ModalAction).publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "Initiated" });
         var request = {};
-        request.name = $('#txt<%=fnPrefix%>Name').val();
         request.firstname = $('#txtEmployeeFirstName').val();
         request.middlename = $('#txtEmployeeMiddleName').val();
         request.lastname = $('#txtEmployeeLastName').val();

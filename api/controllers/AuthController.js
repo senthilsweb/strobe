@@ -29,7 +29,7 @@ module.exports = {
                     //employee.online = true;
                     console.log(employee);
                     req.session.authenticated = true;
-                    req.employee = employee;
+                    req.session.employee = employee;
                     console.log("check session :" + req.session.authenticated );
                     res.send(200, employee);
                 }

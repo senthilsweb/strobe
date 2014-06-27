@@ -9,9 +9,9 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
     sendNotification: function (req, res) {
         var params = req.params.all();
         var Mailgun = require('mailgun-js');
-        var api_key = 'key-6d9ato2pcav6w376dp5ad0ozpbxu0sx9';
-        var domain = 'sandbox45333.mailgun.org';
-        var from = 'vmokshalab@gmail.com';
+        var api_key = sails.config.customConfig.mailgun.api_key;
+        var domain = sails.config.customConfig.mailgun.domain;
+        var from = sails.config.customConfig.mailgun.from;
         //Instantiate Mailgun
         var mailgun = new Mailgun({ apiKey: api_key, domain: domain });
 

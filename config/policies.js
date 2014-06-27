@@ -16,15 +16,38 @@ module.exports.policies = {
 
     // Default policy for all controllers and actions
     // (`true` allows public access) 
-    '*': true,
+    //'*': true,
     /*EmployeeController : {
     '*' : false
     }*/
 
-    employee:
+ /* employee:
   {
-      '*' : "isAuthenticated"
-  }
+      '*' : "isAuthenticated",
+      'forgotPassword' : 'forgotPassword'
+  }*/
+
+
+  // Default policy for all controllers and actions
+	// (`true` allows public access) 
+	'*': "flash",
+
+	employee: {
+		'*': "isAuthenticated",	
+        'forgotPassword' : 'flash'		
+	},
+    department: {
+		'*': "isAuthenticated"		
+	},
+    role: {
+		'*': "isAuthenticated"		
+	},
+    location: {
+		'*': "isAuthenticated"		
+	},
+    obfuscation: {			
+        '*' : 'isAuthenticated'		
+	}
 
     /*
     // Here's an example of adding some policies to a controller

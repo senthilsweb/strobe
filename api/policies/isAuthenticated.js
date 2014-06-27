@@ -8,17 +8,28 @@
  *
  */
 module.exports = function (req, res, next) {
-
-    // User is allowed, proceed to the next policy, 
-    // or if this is the last policy, the controller
-    if (req.session.authenticated) {        
-        return next();
+    /* var action = req.param('forgotPassword');
+    var params = req.params.all();
+    console.log("action is: " + params.action);
+    if (action == "forgotPassword")
+    { 
+    req.session.authenticated = true; 
     }
     else { 
-       // res.send(403);
-       //return res.forbidden('You are not permitted to perform this action.');
-       return res.forbidden('You are not permitted to perform this action.');
-      //res.redirect('/403');
+    req.session.authenticated = false; 
+    }*/
+    // User is allowed, proceed to the next policy, 
+    // or if this is the last policy, the controller
+    if (req.session.authenticated) {
+        console.log("Is Authenticated");
+        return next();
+    }
+    else {
+        console.log("Is not authenticated");
+        // res.send(403);
+        //return res.forbidden('You are not permitted to perform this action.');
+        return res.forbidden('You are not permitted to perform this action.');
+        //res.redirect('/403');
     }
 
     // User is not allowed

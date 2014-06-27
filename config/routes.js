@@ -46,7 +46,7 @@ module.exports.routes = {
         action: 'sendNotification'
     },
 
-    'post /auth/login': {
+    'get /auth/login': {
         controller: 'auth',
         action: 'login'
     },
@@ -54,7 +54,12 @@ module.exports.routes = {
     'post /auth/logout': {
         controller: 'auth',
         action: 'logout'
-    }
+    },
+
+     'POST /obfuscation/encryptordecrypt': {
+        controller: 'obfuscation',
+        action: 'encryptordecrypt'
+    },
 
     //'POST /auth/logout': 'AuthController.logout'
 

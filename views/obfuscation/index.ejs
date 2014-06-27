@@ -1,0 +1,95 @@
+    <div class="row-fluid">
+        <div class="span12">
+           
+            <div class="row-fluid">
+                <div class="controls span12">
+                    <div class="span5">
+                                <div class="control-group">
+                                    <label class="control-label label-bold" for="txtOriginalText">
+                                       Text to Encrypt or Decrypt</label>
+                                    <div class="controls">
+                                        <input type="text" class="span12" id="txtOriginalText" name="txtOriginalText" placeholder="Enter text"></div>
+                                </div>
+
+                    </div>
+                    <div class="span2">
+                        <div class="control-group">
+                                     <label class="control-label label-bold" for="cboAction">
+                                            Action
+                                       </label>
+                                    <div class="controls">
+                                      <select class="dropdown-width" id="cboAction" name="cboAction"  placeholder="Select" >
+                                        <option></option>
+                                      </select>
+                                    </div>
+                                </div>
+                    </div>
+                    <div class="span2">
+                        <div class="control-group">
+                                    <label class="control-label label-bold" for="btnSubmit">&nbsp;</label>
+                                    <div class="controls">
+                                        <button class="btn btn-primary" id="btnSubmit" type="submit" name="Submit">Submit</button>
+                                    </div>
+                                </div>
+                    </div>
+                    <div class="span3"></div>                    
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="divEncryptedText">
+        
+    </div>
+
+    
+
+
+<script type="text/javascript">
+    console.log("Obfuscation");
+    function ObfuscationInitialize() {
+        // Populate Action dropdown
+        var Action = [
+             { "Id": "Encrypt", "Code": "Encrypt" },
+             { "Id": "Decrypt", "Code": "Decrypt" }
+             ];
+        $("#cboAction").empty().append($("<option/>"));
+        $.each(Action, function (i, item) {
+            $("#cboAction").append($("<option value='" + item.Id + "'>" + item.Code + "</option>"));
+            $("#cboAction").select2({ placeholder: 'Select', allowClear: true });
+        });
+
+        //On click of SignOut link
+        $('#btnSubmit').click(function () { 
+        $.Topic('EncryptOrDecryptButtonClick').publish();
+        });
+
+        //Listener for Obfuscation  event published
+        $.Topic('EncryptOrDecryptButtonClick').subscribe(Obfuscation_Result);
+
+
+    }
+
+    function Obfuscation_Result() {
+        //encrypted text and decrypted text
+        var request = {};
+        request.action = $('#cboAction option:selected').val().toLowerCase() == "" ? null : $('#cboAction option:selected').val().toLowerCase();        
+        request.text = $("#txtOriginalText").val();
+        
+        setTimeout(function () {
+            var promiseEncryptorDecrypt = $.ajax({ url: location.origin + '/obfuscation/encryptordecrypt', data: JSON.stringify(request), type: 'post', dataType : 'json', contentType: 'application/json' });
+            promiseEncryptorDecrypt.done(function (data) {
+                debugger;
+                $("#divEncryptedText").empty();
+                $("#divEncryptedText").html(data);
+            });
+            promiseEncryptorDecrypt.fail(function () {
+                console.log("Something went wrong in encryptordecrypt")
+            });
+
+            return false;
+        }, 100); //End of setTimeout
+    }
+
+    addLoadEvent(ObfuscationInitialize);
+</script>

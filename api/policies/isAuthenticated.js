@@ -8,6 +8,7 @@
  *
  */
 module.exports = function (req, res, next) {
+    debugger;
     /* var action = req.param('forgotPassword');
     var params = req.params.all();
     console.log("action is: " + params.action);

@@ -6,7 +6,7 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
 
     },
     encryptordecrypt: function (req, res) {
-        console.log(req.session);
+        var response = {};
         //decrypt the password and then check
         var easycrypto = require('easycrypto').getInstance();
         var params = req.params.all();
@@ -17,7 +17,8 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
                                                                       : easycrypto.decrypt(params.text, 'decrypt');
 
         console.log(encryptedORDecryptedText);
-        res.send(200, encryptedORDecryptedText);
+        response.encryptedORDecryptedText = encryptedORDecryptedText;
+        res.send(200, response);
 
     },
     /**

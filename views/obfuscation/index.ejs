@@ -60,8 +60,9 @@
         });
 
         //On click of SignOut link
-        $('#btnSubmit').click(function () { 
-        $.Topic('EncryptOrDecryptButtonClick').publish();
+        $('#btnSubmit').click(function () {
+            debugger;
+            $.Topic('EncryptOrDecryptButtonClick').publish();
         });
 
         //Listener for Obfuscation  event published
@@ -73,11 +74,26 @@
     function Obfuscation_Result() {
         //encrypted text and decrypted text
         var request = {};
-        request.action = $('#cboAction option:selected').val().toLowerCase() == "" ? null : $('#cboAction option:selected').val().toLowerCase();        
+        request.action = $('#cboAction option:selected').val().toLowerCase() == "" ? null : $('#cboAction option:selected').val().toLowerCase();
         request.text = $("#txtOriginalText").val();
-        
+
         setTimeout(function () {
-            var promiseEncryptorDecrypt = $.ajax({ url: location.origin + '/obfuscation/encryptordecrypt', data: JSON.stringify(request), type: 'post', dataType : 'json', contentType: 'application/json' });
+            var csrfToken = "";
+            var promisecsrftoken = $.ajax({ url: location.origin + '/csrftoken' });
+            promisecsrftoken.done(function (data) {
+                debugger;
+                csrfToken = data._csrf;
+                return false;
+            });
+            promisecsrftoken.fail(function () {
+                return false;
+            });
+            debugger;
+            var promiseEncryptorDecrypt = $.ajax({ url: location.origin + '/obfuscation/encryptordecrypt',
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader('X-CSRF-Token', csrfToken);
+                }, data: JSON.stringify(request), type: 'post', dataType: 'json', contentType: 'application/json'
+            });
             promiseEncryptorDecrypt.done(function (data) {
                 debugger;
                 $("#divEncryptedText").empty();

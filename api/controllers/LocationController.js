@@ -18,9 +18,9 @@
 var _ = require("lodash");
 module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
     
-  'index' : function(req,res){
+  /*'index' : function(req,res){
       res.view();
-  },
+  },*/
 
 
   /**

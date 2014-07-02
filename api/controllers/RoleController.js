@@ -21,10 +21,10 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")),{
    *    `/role/index`
    *    `/role`
    */
-   'index': function (req, res) { 
+   /*'index': function (req, res) { 
 
     res.view();
-  },
+  },*/
  /**
    * Overrides for the settings in `config/controllers.js`
    * (specific to CasestudyController)

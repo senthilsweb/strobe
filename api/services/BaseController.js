@@ -16,6 +16,13 @@ module.exports = {
     * @param   {Request}   request
     * @param   {Response}  response
     */
+      'index' : function(req,res,next){
+      console.log("response type = " + req.wantsJSON)
+      if(req.wantsJSON)
+          next();
+      else
+          res.view();
+  },
     count: function (request, response) {
         console.log("Inside count");
         var Model = actionUtil.parseModel(request);

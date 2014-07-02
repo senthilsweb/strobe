@@ -1,13 +1,13 @@
 <div class="row-fluid">
     <div class="span3">
         <div class="row-fluid">
-            <%- partial('../partials/master-list', {'title': 'Locations','fnPrefix' : 'LocationList','api':'/location/find', 'showComponent':'true','limit': '5'})%>
+            <%- partial('../partials/master-list', {'title': 'Locations','fnPrefix' : 'LocationList','api':'/location', 'showComponent':'true','limit': '5'})%>
         </div>
        
     </div>
     <div class="span9">        
         <div class="row-fluid">
-            <%- partial('../partials/master-details', {'title': 'Location Details','fnPrefix' : 'LocationDetails','api':'/location/find/', 'showComponent':'true'})%>
+            <%- partial('../partials/master-details', {'title': 'Location Details','fnPrefix' : 'LocationDetails','api':'/location/', 'showComponent':'true'})%>
         </div>
     </div>
 </div>
@@ -17,7 +17,7 @@
            <div class="box widget">	
         <h3><i class="fa fa-list vm-fa-white"></i>&nbsp;Sample Dropdown</h3>
     </div>
-    <%- partial('../partials/master-combo-single', {'fnPrefix' : 'Location','api':'/location/find', 'ph': 'Location', 'showComponent':'true'})%>
+    <%- partial('../partials/master-combo-single', {'fnPrefix' : 'Location','api':'/location', 'ph': 'Location', 'showComponent':'true'})%>
     </div>
 </div>
 <div>&nbsp;</div>
@@ -26,11 +26,11 @@
          <div class="box widget">	
         <h3><i class="fa fa-list vm-fa-white"></i>&nbsp;Sample Multiselect</h3>
     </div>
-    <%- partial('../partials/master-combo-multi', {'fnPrefix' : 'Locationmulti','api':'/location/find', 'ph' : 'Location', 'showComponent':'true'})%>
+    <%- partial('../partials/master-combo-multi', {'fnPrefix' : 'Locationmulti','api':'/location', 'ph' : 'Location', 'showComponent':'true'})%>
     </div>
 </div>
 <div class="row-fluid">
-    <%- partial('../partials/master-form', {'title': 'Add Locations','fnPrefix' : 'Location','apicreate':'/location/create', 'apifind':'/location/find' , 'apidelete':'/location/destroy','apiupdate':'/location/update', 'showComponent':'true'})%>
+    <%- partial('../partials/master-form', {'title': 'Add Locations','fnPrefix' : 'Location','apicreate':'/location', 'apifind':'/location' , 'apidelete':'/location','apiupdate':'/location', 'showComponent':'true'})%>
 </div>
 <script type="text/javascript">
     console.log("Location");

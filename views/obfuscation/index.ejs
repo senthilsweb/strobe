@@ -61,50 +61,30 @@
 
         //On click of SignOut link
         $('#btnSubmit').click(function () {
-            debugger;
             $.Topic('EncryptOrDecryptButtonClick').publish();
         });
 
-        //Listener for Obfuscation  event published
-        $.Topic('EncryptOrDecryptButtonClick').subscribe(Obfuscation_Result);
-
-
+        //Listener for Submit event published for encrypt/decrypt
+        $.Topic('EncryptOrDecryptButtonClick').subscribe(Obfuscation_PerformPost);
+         //Listener for Obfuscation event 
+        $.Topic('ajaxPostSuccess').subscribe(Obfuscation_Result);
     }
 
-    function Obfuscation_Result() {
-        //encrypted text and decrypted text
+    function Obfuscation_PerformPost() {
+        var args = {};
+        args.api = '/obfuscation/obfuscate';
         var request = {};
         request.action = $('#cboAction option:selected').val().toLowerCase() == "" ? null : $('#cboAction option:selected').val().toLowerCase();
         request.text = $("#txtOriginalText").val();
+        args.Data = request;
+        //generic function called to retrieve csrf token and fire post ajax
+        PerformAjaxPost(args);
+        return false;
+    }
 
-        setTimeout(function () {
-            var csrfToken = "";
-            var promisecsrftoken = $.ajax({ url: location.origin + '/csrftoken' });
-            promisecsrftoken.done(function (data) {
-                debugger;
-                csrfToken = data._csrf;
-                return false;
-            });
-            promisecsrftoken.fail(function () {
-                return false;
-            });
-            debugger;
-            var promiseEncryptorDecrypt = $.ajax({ url: location.origin + '/obfuscation/encryptordecrypt',
-                beforeSend: function (xhr) {
-                    xhr.setRequestHeader('X-CSRF-Token', csrfToken);
-                }, data: JSON.stringify(request), type: 'post', dataType: 'json', contentType: 'application/json'
-            });
-            promiseEncryptorDecrypt.done(function (data) {
-                debugger;
-                $("#divEncryptedText").empty();
-                $("#divEncryptedText").html(data);
-            });
-            promiseEncryptorDecrypt.fail(function () {
-                console.log("Something went wrong in encryptordecrypt")
-            });
-
-            return false;
-        }, 100); //End of setTimeout
+    function Obfuscation_Result(data) {
+        $("#divEncryptedText").empty();
+        $("#divEncryptedText").html(data.encryptedORDecryptedText);
     }
 
     addLoadEvent(ObfuscationInitialize);

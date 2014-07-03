@@ -56,10 +56,10 @@ module.exports.routes = {
         action: 'logout'
     },
 
-     'POST /obfuscation/encryptordecrypt': {
+     /*'POST /obfuscation/encryptordecrypt': {
         controller: 'obfuscation',
         action: 'encryptordecrypt'
-    },
+    },*/
 
     //'POST /auth/logout': 'AuthController.logout'
 

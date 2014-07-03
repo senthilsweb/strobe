@@ -111,3 +111,36 @@ function FormValidation() {
             }
         } catch (e) { }
     };
+
+    //---------------------------------------------------------------------------------------------------------
+    //Ajax Post Call. Append csrf token to all ajax post to avoid 403 forbidden error
+    //argrs -----------------Object to hold the post ajax call parameter such as url and data to be passed
+    // args.api -------------Post Url
+    // args.Data ------------Data to be send to the post call
+    //---------------------------------------------------------------------------------------------------------    
+    function PerformAjaxPost(args) {    
+        //Initiate ajax call for both ie retrieving csrftoken 
+        //and performing ajax post url with the token received in the previous call
+        var promisePostCallList = $.when($.ajax(location.origin + '/csrftoken')
+                                   .then(function (res) {
+                                       var promisePost = $.ajax({ url: location.origin + args.api,
+                                           beforeSend: function (xhr) {
+                                               xhr.setRequestHeader('X-CSRF-Token', res._csrf);
+                                           },
+                                           data: JSON.stringify(args.Data),
+                                           type: 'post',
+                                           dataType: 'json',
+                                           contentType: 'application/json'
+                                       });
+                                       promisePost.done(function (data) {
+                                           //Publish Success Event
+                                           $.Topic('ajaxPostSuccess').publish(data);
+                                       });
+                                       promisePost.fail(function () {
+                                           //Publish Failure Event
+                                           console.log("Something went wrong in post ajax")
+                                       });
+                                   }, function (err) {
+                                       console.log("Something went wrong in retrieval of csrf token")
+                                   }));
+    }

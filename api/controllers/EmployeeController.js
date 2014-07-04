@@ -1,8 +1,11 @@
 var _ = require("lodash");
+var utility = require('../services/utility');
+var mailgunEmailNotification = require('../services/mail-gunEmailNotification');
+
 module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
 
     /*'index': function (req, res) {
-        res.view();
+    res.view();
     },*/
     forgotPassword: function (req, res) {
         var response = {};
@@ -25,50 +28,31 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
                     response.message = "The email [" + params.email + "] does not exists!!!!";
                     res.send(500, response)
                 } else {
+                    
                     //Added by Paulomi: to decrypt the passowrd
                     var decryptedPassword = easycrypto.decrypt(employee.password, 'mypassword');
                     employee.password = decryptedPassword;
+                    //Pass the path of the template and the data to bind template
+                    var args = {};
+                    args.tempPath = "./email_templates/forgotpassword.ejs";
+                    args.data = employee;
+                    //html variable contain the entire text of the template
+                    //use the utility helper method to call the template                                       
+                    var html = utility.renderHtmlfromTemplate(args);
 
-                    /*Send Email (start)*/
-                    var ejs = require('ejs');
-                    var fs = require("fs");                  
-                    var tmpl = fs.readFileSync("./email_templates/forgotpassword.ejs", "utf-8");
-                    //console.log("ejs = " + ejs);
-                    var html = ejs.render(tmpl,employee);                    
-                    var Mailgun = require('mailgun-js');
-                    var api_key = sails.config.appsettings.mailgun.api_key;
-                    var domain = sails.config.appsettings.mailgun.domain;
-                    var from = sails.config.appsettings.mailgun.from;
-                    //Instantiate Mailgun
-                    var mailgun = new Mailgun({ apiKey: api_key, domain: domain });
 
-                    //Create Mail Message
-                    var data = {
-                        from: from,
-                        to: params.email,
-                        subject: "Password Reminder",
-                        text: html
-                    };
-                    //Send Mail Message
-                    try {
-                        mailgun.messages().send(data, function (error, body) {
-                            if (error !== undefined) {
-                                response.err = error;
-                                response.status = false;
-                                response.message = error;
-                                res.send(500, response)
-                            } else {
-                                response.message = 'The password has been sent to your email registered with us!!!';
-                                res.send(200, response)
-                            }
-                        });
-                    }
-                    catch (e) {
-                        res.send('Exception while sending mail...');
-                        console.log("Exception: " + e.message);
-                    }
-
-                    /*Send Email (end)*/
+                    //Pass the email data to mail-gunEmailNotification
+                    var emailData = {};
+                    //emailData.from = "";
+                    emailData.to = params.email;
+                    emailData.subject = "Password Reminder";
+                    emailData.text = html;
+                    var response = mailgunEmailNotification.sendNotification(emailData);
+                                
+                    if (response != undefined)
+                        res.send(200, response);
+                    else
+                        res.send('Mailgun failed');
                 }
                 //console.log("Employee found:", employee.name);
             }
@@ -80,9 +64,9 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
     */
     _config: {
         /*blueprints: {
-            actions: true,
-            rest: true,
-            shortcuts: true
+        actions: true,
+        rest: true,
+        shortcuts: true
         }*/
     }
 

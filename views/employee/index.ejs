@@ -1,20 +1,20 @@
 <div class="row-fluid">
      <div class="span3">
         <div class="row-fluid">
-            <%- partial('../partials/master-list', {'title': 'Employees','fnPrefix' : 'EmployeeList','api':'/employee/find','limit': '5'})%>
+            <%- partial('../partials/master-list', {'title': 'Employees','fnPrefix' : 'EmployeeList','api':'/employee','limit': '5'})%>
         </div>
        
     </div>
     <div class="span6">        
         <div class="row-fluid">
-            <%- partial('employee-details', {'title': 'Employee Details','api':'/employee/find/'})%>
+            <%- partial('employee-details', {'title': 'Employee Details','api':'/employee'})%>
         </div>
     </div>
 </div>
 <div>&nbsp;</div>
 
 <div class="row-fluid">
-    <%- partial('employee-form', {'title': 'Add Employee','fnPrefix' : 'Employee','apicreate':'/employee/create', 'apifind':'/employee/find' , 'apidelete':'/employee/destroy','apiupdate':'/employee/update'})%>
+    <%- partial('employee-form', {'title': 'Add Employee','fnPrefix' : 'Employee','api':'/employee'})%>
 </div>
 <script type="text/javascript">
     console.log("Employees");

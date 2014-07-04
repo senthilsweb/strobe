@@ -133,7 +133,7 @@
                                     <label class="control-label label-bold" for="cboEmployeeLocation">
                                         Location</label>
                                     <div class="controls">                                        
-                                        <%- partial('../partials/master-combo-single', {'fnPrefix' : 'EmployeeLocation','api':'/location/find', 'ph': 'Location', 'showComponent':'true'})%>
+                                        <%- partial('../partials/master-combo-single', {'fnPrefix' : 'EmployeeLocation','api':'/location', 'ph': 'Location'})%>
                                     </div>
                                 </div>
                             </div>
@@ -142,7 +142,7 @@
                                     <label class="control-label label-bold" for="cboEmployeeManager">
                                         Manager</label>
                                     <div class="controls">                                        
-                                        <%- partial('../partials/master-combo-single', {'fnPrefix' : 'EmployeeManager','api':'/employee/find', 'ph': 'Manager', 'showComponent':'true'})%>
+                                        <%- partial('../partials/master-combo-single', {'fnPrefix' : 'EmployeeManager','api':'/employee', 'ph': 'Manager'})%>
                                     </div>
                                 </div>
                             </div>
@@ -170,7 +170,7 @@
                         </div>                      
 
                       <div class="row-fluid">
-                          <%- partial('../partials/master-checkbox', {'fnPrefix' : 'Role','api':'/role/find'})%>
+                          <%- partial('../partials/master-checkbox', {'fnPrefix' : 'Role','api':'/role'})%>
                       </div>
                        
                   </div>
@@ -272,8 +272,8 @@
             $.each($(".vm-dummy-Role"), function () {
                 $(this).prop('checked', false);
             }); 
-            var promiseEmployeeFind = $.ajax({ url: location.origin + '<%=apifind%>/' + args.id });
-            promiseEmployeeFind.done(function(data){ debugger
+            var promiseEmployeeFind = $.ajax({ url: location.origin + '<%=api%>/' + args.id, type:'GET' });
+            promiseEmployeeFind.done(function(data){ 
             $("#btnSaveEmployee").removeAttr("disabled"); 
             $('#modalEmployeeLabel').text("Edit "+"Employee")          
             $('#modalEmployee').modal('show');
@@ -373,11 +373,11 @@
                 if($('#hiddentxtEmployee').val() != "0")
                 {
                     request.id=id;
-                    var promiseAddEditEmployee = $.ajax({ url: location.origin + '<%=apiupdate%>/' + id,data: request });
+                    var promiseAddEditEmployee = $.ajax({ url: location.origin + '<%=api%>/' + id,data: request, type:'PUT' });
                 }
                 else if($('#hiddentxtEmployee').val() == "0")
                 {
-                    var promiseAddEditEmployee = $.ajax({ url: location.origin + '<%=apicreate%>', data: request });
+                    var promiseAddEditEmployee = $.ajax({ url: location.origin + '<%=api%>', data: request, type:'POST' });
                 }
         promiseAddEditEmployee.done(function () {
         setTimeout(function () {
@@ -416,11 +416,11 @@
     //Function to delete employee by id
     function EmployeeDeleteConfirm(args)
     {
-        var promiseEmployeeDelete = $.ajax({ url: location.origin + '<%=apidelete%>/' + args.id });
+        var promiseEmployeeDelete = $.ajax({ url: location.origin + '<%=api%>/' + args.id, type:'DELETE' });
         promiseEmployeeDelete.done(function(data){
         setTimeout(function () {
             $("#confirm-dialog-Employee").modal('hide');
-            noty({ "text": "Deleted Successfully", "layout": "top", "type": "success" });
+            noty({ "text": "<%=fnPrefix%> deleted successfully", "layout": "top", "type": "success" });
         }, 0);
         //Reset back the Employee list          
         setTimeout(EmployeeListMasterList, 0);

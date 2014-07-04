@@ -1,9 +1,9 @@
 var _ = require("lodash");
 module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
 
-    'index': function (req, res) {
+    /*'index': function (req, res) {
         res.view();
-    },
+    },*/
     forgotPassword: function (req, res) {
         var response = {};
         response.status = true;
@@ -79,11 +79,11 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
     * (specific to CasestudyController)
     */
     _config: {
-        blueprints: {
+        /*blueprints: {
             actions: true,
             rest: true,
             shortcuts: true
-        }
+        }*/
     }
 
 

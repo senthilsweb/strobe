@@ -67,7 +67,7 @@
         $("#btnConfirmOk").click(function (e) { <%=fnPrefix%>DeleteConfirm($("#confirm-dialog-<%=fnPrefix%>").data('modal').options.args); });       
 
 
-    $.Topic('ajaxPostSuccess').subscribe(<%=fnPrefix%>PostSuccessResult);
+        $.Topic('ajaxPostSuccess').subscribe(<%=fnPrefix%>PostSuccessResult);
 
         //On Master form save
         FormValidation();
@@ -91,7 +91,7 @@
     //function to setup popup on Edit Master
     function <%=fnPrefix%>Form_ModalShow_ForEdit(args)
     {
-             var promiseMasterUpdate = $.ajax({ url: location.origin + '<%=apifind%>/' + args.id });
+             var promiseMasterUpdate = $.ajax({ url: location.origin + '<%=api%>/' + args.id, type:'GET' });
              promiseMasterUpdate.done(function(data){ 
              $("#btnSave<%=fnPrefix%>").removeAttr("disabled"); 
              $('#modal<%=fnPrefix%>Label').text("Edit "+"<%=fnPrefix%>");          
@@ -119,16 +119,11 @@
             if($('#hiddentxt<%=fnPrefix%>').val() != 0)
             {
                     request.id=id;
-                    var promiseAddEdit<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=apiupdate%>/' + id ,data: request });
+                    var promiseAddEdit<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=api%>/' + id ,data: request, type:'PUT' });
             }
             else
-            {
-                var args = {};
-                args.api = '<%=apicreate%>';
-                args.Data = request;
-                //generic function called to retrieve csrf token and fire post ajax
-                PerformAjaxPost(args);
-                    //var promiseAddEdit<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=apicreate%>', data: request });
+            {               
+                    var promiseAddEdit<%=fnPrefix%> = $.ajax({ url: location.origin + '<%=api%>', data: request, type:'POST' });
             }
                     
             promiseAddEdit<%=fnPrefix%>.done(function () {
@@ -173,11 +168,11 @@
       //Function to delete employee by id
       function <%=fnPrefix%>DeleteConfirm(args)
       {
-            var promiseMasterDelete = $.ajax({ url: location.origin + '<%=apidelete%>/' + args.id });
+            var promiseMasterDelete = $.ajax({ url: location.origin + '<%=api%>/' + args.id, type:'DELETE' });
             promiseMasterDelete.done(function(data){
             setTimeout(function () {
                 $("#confirm-dialog-<%=fnPrefix%>").modal('hide');
-                noty({ "text": "Deleted Successfully", "layout": "top", "type": "success" });
+                noty({ "text": "<%=fnPrefix%> deleted successfully", "layout": "top", "type": "success" });
             }, 0);
                 setTimeout(<%=fnPrefix%>ListMasterList, 0);
             return false;

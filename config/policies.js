@@ -36,7 +36,7 @@ module.exports.policies = {
 		'*': "isAuthenticated",	
         'forgotPassword' : 'flash'		
 	},
-    /*department: {
+    department: {
 		'*': "isAuthenticated"		
 	},
     role: {
@@ -44,7 +44,7 @@ module.exports.policies = {
 	},
     location: {
 		'*': "isAuthenticated"		
-	},*/
+	},
     obfuscation: {			
         '*' : 'isAuthenticated'		
 	}

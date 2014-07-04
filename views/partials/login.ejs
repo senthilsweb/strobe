@@ -83,7 +83,7 @@
             request.password = $("#inputPassword").val();
             //console.log(JSON.stringify(request))
             setTimeout(function () {
-                var promiseLoginDetails = $.ajax({ url: location.origin + '/auth/login', data: request });
+                var promiseLoginDetails = $.ajax({ url: location.origin + '/auth/login', data: request, type:'POST' });
                 promiseLoginDetails.done(function (data) {
                     window.location.href = "/dashboard";                    
                 });

@@ -10,7 +10,7 @@
         //Ajax call in settimeout to get the combo data
         setTimeout(function () {
                     //Initiate ajax
-                    var promiseMasterMulti = $.ajax({ url: location.origin + '<%=api%>' });
+                    var promiseMasterMulti = $.ajax({ url: location.origin + '<%=api%>', type:'GET' });
                     //callback success
                     promiseMasterMulti.done(function (data) {
                             var options = $("#cbo<%=fnPrefix%>");

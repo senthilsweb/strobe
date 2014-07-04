@@ -36,17 +36,17 @@ module.exports.routes = {
     view: 'home/index'
   },
 
-   'post /employee/forgotPassword': {
+   /*'post /employee/forgotPassword': {
         controller: 'employee',
         action: 'forgotPassword'
-    },
+    },*/
 
     'post /emailnotification/sendNotification': {
         controller: 'emailnotification',
         action: 'sendNotification'
     },
 
-    'get /auth/login': {
+    /*'get /auth/login': {
         controller: 'auth',
         action: 'login'
     },
@@ -54,7 +54,7 @@ module.exports.routes = {
     'post /auth/logout': {
         controller: 'auth',
         action: 'logout'
-    },
+    },*/
 
      /*'POST /obfuscation/encryptordecrypt': {
         controller: 'obfuscation',

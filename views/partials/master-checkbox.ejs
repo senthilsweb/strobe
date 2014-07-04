@@ -31,16 +31,13 @@
 
     var <%=fnPrefix%>Master_CheckBox_BindData = function <%=fnPrefix%>Master_CheckBox_BindData(){
                 var tplData = {};
-                var promiseMastercheckboxData = $.ajax({ url: location.origin +  '<%=api%>'});
+                var promiseMastercheckboxData = $.ajax({ url: location.origin +  '<%=api%>', type:'GET'});
                 promiseMastercheckboxData.done(function (data) { 
                 tplData.Items = data;
                 //Before appending the template empty it
                 $("#<%=fnPrefix%>tbl-master-checkbox").empty();
                 //Render the specified HTML content as a template, using the specified data.           
-                $("#tpl-master-checkbox").tmpl(tplData).appendTo("#<%=fnPrefix%>tbl-master-checkbox"); 
-
-
-                       
+                $("#tpl-master-checkbox").tmpl(tplData).appendTo("#<%=fnPrefix%>tbl-master-checkbox");
                 });
                 promiseMastercheckboxData.fail(function () {                 
                 console.log("Something went wrong in <%=fnPrefix%>-master-checkbox")

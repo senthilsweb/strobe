@@ -22,11 +22,10 @@
     }
       
     <%=fnPrefix%>MasterDetailsShow=function(args){
-            console.log("id = " + args.id)
              //For Progress bar during ajax call      
              $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-details" });  
              setTimeout(function () {
-                    var promiseMasterDetails = $.ajax({ url: location.origin +  '<%=api%>'  + args.id });
+                    var promiseMasterDetails = $.ajax({ url: location.origin +  '<%=api%>/'  + args.id , type:'GET' });
                     promiseMasterDetails.done(function (data) { debugger;
                         $("#<%=fnPrefix%>pc-master-details").html("");
                         //Add class for status dynamically                        

@@ -65,12 +65,12 @@
         });
 
         //Listener for Submit event published for encrypt/decrypt
-        $.Topic('EncryptOrDecryptButtonClick').subscribe(Obfuscation_PerformPost);
+        $.Topic('EncryptOrDecryptButtonClick').subscribe(Obfuscation_Result);
          //Listener for Obfuscation event 
-        $.Topic('ajaxPostSuccess').subscribe(Obfuscation_Result);
+        //$.Topic('ajaxPostSuccess').subscribe(Obfuscation_Result);
     }
 
-    function Obfuscation_PerformPost() {
+    /*function Obfuscation_PerformPost() {
         var args = {};
         args.api = '/obfuscation/obfuscate';
         var request = {};
@@ -80,11 +80,23 @@
         //generic function called to retrieve csrf token and fire post ajax
         PerformAjaxPost(args);
         return false;
-    }
+    }*/
 
-    function Obfuscation_Result(data) {
-        $("#divEncryptedText").empty();
-        $("#divEncryptedText").html(data.encryptedORDecryptedText);
+    function Obfuscation_Result() {
+        var request = {};
+          request.action = $('#cboAction option:selected').val().toLowerCase() == "" ? null : $('#cboAction option:selected').val().toLowerCase();
+          request.text = $("#txtOriginalText").val();
+        setTimeout(function () {           
+             var promiseObfuscate = $.ajax({ url: location.origin + '/obfuscation/obfuscate', data: request, type: 'post'});
+             promiseObfuscate.done(function (data) {
+                 $("#divEncryptedText").empty();
+                 $("#divEncryptedText").html(data.encryptedORDecryptedText);
+             });
+             promiseObfuscate.fail(function () {
+                 console.log("Something went wrong in encryptordecrypt")
+             }); 
+            return false;
+         }, 100); //End of setTimeout
     }
 
     addLoadEvent(ObfuscationInitialize);

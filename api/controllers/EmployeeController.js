@@ -28,7 +28,7 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
                     response.message = "The email [" + params.email + "] does not exists!!!!";
                     res.send(500, response)
                 } else {
-                    
+
                     //Added by Paulomi: to decrypt the passowrd
                     var decryptedPassword = easycrypto.decrypt(employee.password, 'mypassword');
                     employee.password = decryptedPassword;
@@ -47,12 +47,17 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
                     emailData.to = params.email;
                     emailData.subject = "Password Reminder";
                     emailData.text = html;
-                    var response = mailgunEmailNotification.sendNotification(emailData);
-                                
-                    if (response != undefined)
-                        res.send(200, response);
-                    else
-                        res.send('Mailgun failed');
+                    // var response = mailgunEmailNotification.sendNotification(emailData);
+                    mailgunEmailNotification.sendNotification(emailData)
+                    .then(function (responseText) {
+                        // If the HTTP response returns 200 OK, log the response text.
+                        //console.log(responseText);
+                        res.send(200, responseText);
+                    }, function (error) {
+                        // If there's an error or a non-200 status code, log the error.
+                        //console.error(error);
+                        res.send(500, error);
+                    });
                 }
                 //console.log("Employee found:", employee.name);
             }

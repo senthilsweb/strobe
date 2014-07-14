@@ -1,15 +1,13 @@
-<%- console.log(title)%>
-
-
-<select class="dropdown-width" id="cbo<%=fnPrefix%>" name="cbo<%=fnPrefix%>"  placeholder="<%=ph%>" >
+<select class="dropdown-width <% if( typeof validation != 'undefined') {%> <%=validation%> <%}%>" id="cbo<%=fnPrefix%>" name="cbo<%=fnPrefix%>"  placeholder="<%=ph%>" >
     <option></option>
 </select>
+
+
 
 <script type="text/javascript">
     console.log("Master Combo Single"); 
     //On page load    
-    <%=fnPrefix%>MasterCombo_Single = function() {     
-            
+    <%=fnPrefix%>MasterCombo_Single = function() { 
         //Ajax call in settimeout to get the combo data
         setTimeout(function () {
                     //Initiate ajax

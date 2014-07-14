@@ -74,9 +74,9 @@
                 api += 'skip=' + args.skip;
             }
          //----------------Form the url stop-----------------------------------
-   
+
                         //Initiate ajax call for both "findall or find with criteria" and "get count of rows"
-                        var promiseMasterList = $.when( $.ajax( api ), $.ajax( api.replace('find','count') ) );
+                        var promiseMasterList = $.when( $.ajax( api ), $.ajax( api.split('?')[0] + "/count" ) );
                         //callback success
                         promiseMasterList.done(function (res1,res2) { 
                         var res1Data = res1[0];//contains result collection

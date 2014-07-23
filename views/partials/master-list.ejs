@@ -38,9 +38,11 @@
         });
         //2) Subscribes for Events Search Button Click Event to clear the existing deatils
         $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").subscribe(<%=fnPrefix%>Master_List_BindData);
-        //3) Load master table on page load    
-        var args = {};
-        args.initial = true;  
+        //3) Load master table on page load
+        var args = {}
+        args.OnTableLoad = true;
+        args.isSearch = true;
+
         //Bind master list on page load and also on Search  
         eval('<%=fnPrefix%>Master_List_BindData'+'(args)');
     }
@@ -52,7 +54,7 @@
          $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-list" });        
         //Ajax call in settimeout to show the progress bar otherwise in local the data will come very quick and one may not see the progressbar
         setTimeout(function () {
-
+      
         //----------------Form the url start-----------------------------------
             //form the where criteria
             var where = {};
@@ -63,7 +65,7 @@
             var urlwithCriteria = location.origin + "<%=api%>?where=" + JSON.stringify(where);
             //if criteria exist append the urlwithCriteria, otherwise normal api find all
             var api = $("#txt<%=fnPrefix%>SearchName").val() == "" ? location.origin + '<%=api%>' : urlwithCriteria;
-         
+            
             try{
                api += (api.indexOf("?") == -1) ? '?' : '&';
                api += "limit=" + "<%=limit%>";
@@ -73,10 +75,13 @@
                 api += (api.indexOf("?") == -1) ? '?' : '&';
                 api += 'skip=' + args.skip;
             }
+    
+            var searchapi = $("#txt<%=fnPrefix%>SearchName").val() == "" ? api.split('?')[0] + "/count" 
+                                                                         : location.origin + "<%=api%>/count?where=" + JSON.stringify(where);
          //----------------Form the url stop-----------------------------------
-
+         
                         //Initiate ajax call for both "findall or find with criteria" and "get count of rows"
-                        var promiseMasterList = $.when( $.ajax( api ), $.ajax( api.split('?')[0] + "/count" ) );
+                        var promiseMasterList = $.when( $.ajax( api ), $.ajax( searchapi ) );
                         //callback success
                         promiseMasterList.done(function (res1,res2) { 
                         var res1Data = res1[0];//contains result collection
@@ -108,11 +113,30 @@
                         //To display tool tip
                         $(".vm-dummy-trunk8").tooltip();
 
-                        //Call for attach Pagination
-                        if(args!==undefined && args.initial == true){
-                            res.initial = args.initial
-                        }
-                        setTimeout(function () {<%=fnPrefix%>AttachPagination(res);},10);
+                        setTimeout(function() {
+                                                    if (args.isSearch) {
+                                                    //get the instance of pagination 
+                                                    var w = $('#pagination-demo').data("twbs-pagination");
+                                                    args.isPaginationExists = false;
+                                                    //if the paginator instance is already defined, then set it to new
+                                                    if (w != undefined) {
+                                                        args.isPaginationExists = true;
+                                                        //paginator configs
+                                                        var paginatorOptions = {
+                                                            totalPages: Math.ceil(res.TotalRecords/'<%=limit%>'),
+                                                            visiblePages: 0,
+                                                            startPage : 1,
+                                                            first : '<i class="fa fa-angle-double-left"></i>',
+                                                            prev : '<i class="fa fa-angle-left"></i>',
+                                                            next : '<i class="fa fa-angle-right"></i>',
+                                                            last : '<i class="fa fa-angle-double-right"></i>'  
+                                                        };
+                                                        //reinitiate the pagination , create new instance to bind pagination for new data set based on search criteria
+                                                        w = new $.fn.twbsPagination.Constructor($('#pagination-demo'), paginatorOptions);
+                                                    }
+                                                <%=fnPrefix%>AttachPagination(res,args); 
+                                                }
+                                       },10);
                                             
 
                         //Attach event handlers                    
@@ -120,7 +144,7 @@
                                 args.action = $(this).data( "action" );
                                 args.id = $(this).data("id");
                                 $.Topic("master-list-row-click_"+args.action).publish(args);  
-                         })
+                         });
                         }); //End of done
    
                          
@@ -134,7 +158,7 @@
              },100);//End of setTimeout
     } 
     //-------------------------------------------------------------------------
-    <%=fnPrefix%>AttachPagination = function(res) {                          
+    <%=fnPrefix%>AttachPagination = function(res,args) {                          
             var totPages =  Math.ceil(res.TotalRecords/'<%=limit%>') 
             $('#pagination-demo').twbsPagination({
                 totalPages: totPages,
@@ -144,18 +168,18 @@
                 prev : '<i class="fa fa-angle-left"></i>',
                 next : '<i class="fa fa-angle-right"></i>',
                 last : '<i class="fa fa-angle-double-right"></i>',                     
-                onPageClick: function (event, page) {
-                        //As already the grid is binded for initial call, skip this for first call
-                        //alert(res.initial)
-                        if(!res.initial){
-                        console.log("page = " + page);
-                        var skip = (page-1) * '<%=limit%>'
-                        var args = {};
-                        args.skip = skip;
-                        args.limit = '<%=limit%>';      
-                        eval('<%=fnPrefix%>Master_List_BindData'+'(args)');    
-                        }
-                        res.initial = false;
+                onPageClick: function (event, page) {                 
+
+                                var myargs = {};
+                                myargs.page = page;
+                                myargs.skip = (page-1) * '<%=limit%>';
+                                myargs.limit = <%=limit%>;
+                                myargs.isSearch = false;
+                                if (!args.OnTableLoad && args.isPaginationExists) {                                    
+                                    eval('<%=fnPrefix%>Master_List_BindData'+'(myargs)');  
+                                }
+                                args.OnTableLoad = false;
+                                args.isPaginationExists = true;
                 }
             });    
 

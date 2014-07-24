@@ -87,7 +87,7 @@ function FormValidation()
             obj.className.indexOf('pwd-confirm-cmp') != -1 ? formId_msg[(obj.id)].equalTo = "Password Mismatch" : null;
             //-------------MESSAGES (End)-------------//
         } );
-        debugger;
+       
         //call validation wrapper
         setTimeout( vmValidatorWrapper, 0, formId, formId_rules, formId_msg );
     } );

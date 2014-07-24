@@ -1,6 +1,7 @@
 var _ = require("lodash");
 var utility = require('../services/utility');
 var mailgunEmailNotification = require('../services/mail-gunEmailNotification');
+var _randString = require('random-string');
 
 module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
 
@@ -29,9 +30,25 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
                     res.send(500, response)
                 } else {
 
+                    //Commented to generate random password to send to employee
                     //Added by Paulomi: to decrypt the passowrd
-                    var decryptedPassword = easycrypto.decrypt(employee.password, 'mypassword');
-                    employee.password = decryptedPassword;
+                    //var decryptedPassword = easycrypto.decrypt(employee.password, sails.config.appsettings.strobePassKey);
+                    //employee.password = decryptedPassword;
+                    
+                    //Generate a random password
+                    employee.password = _randString({ length: 10 });
+                    var encryptpassword = easycrypto.encrypt(employee.password, sails.config.appsettings.strobePassKey);
+                    employee.password = encryptpassword;
+                    employee.confirmPassword = encryptpassword;
+                    //Update the password and confirmPassword in Employee table into database
+                    employee.save(function (err) {
+                        if (err) return res.serverError(err);
+                    });
+
+                    //Get back the employee by id to send the decrypted password
+                    //to send to template decrypt the password and send
+                    employee.password = easycrypto.decrypt(employee.password, sails.config.appsettings.strobePassKey);
+
                     //Pass the path of the template and the data to bind template
                     var args = {};
                     args.tempPath = "./email_templates/forgotpassword.ejs";

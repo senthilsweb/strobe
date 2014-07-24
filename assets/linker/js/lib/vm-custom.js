@@ -2,6 +2,7 @@
 // Passing Arguments to setTimeout and setInterval
 //http://arguments.callee.info/2008/11/10/passing-arguments-to-settimeout-and-setinterval/
 
+
 (function (f) {
     window.setTimeout = f(window.setTimeout);   // overwrites the global function!
     window.setInterval = f(window.setInterval); // overwrites the global function!
@@ -121,7 +122,9 @@ function ResetForm(id) {
     $('#' + id).validate().beenSubmitted = false;
     //end
     //remove error class if exists
-    $(".has-error").removeClass("has-error");
+    //$(".has-error").removeClass("has-error");
+    //swathi: bootstrap 2 has class error not has-error
+    $(".error").removeClass("error");
 }
 
 //added new parameter "hasMultipleForms"  to avoid multiple alerts 
@@ -145,8 +148,8 @@ function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {
             //grouped control was not working properly.  
             if (element.hasClass('vm-date') || element.hasClass('vm-group')) {
                 //get the span and attach the text after it
-                error.insertAfter(element.closest('div'));
-            }
+                error.insertAfter(element.siblings().closest('span'));
+            }            
             else {
                 error.insertAfter(element);
             }
@@ -164,21 +167,17 @@ function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {
         messages: messages,
         //Highlights an invalid element by fading it out and in again.
         highlight: function (label) {
-            $(label).closest('.form-group').addClass('has-error');
-            AnimateToRequiredDiv(formId)
+            $(label).closest('.control-group').addClass('error');     
+        	 AnimateToRequiredDiv(formId)
             return false;
         },
-        //the error label is displayed to show a valid element.
         success: function (label) {
-            $(label).closest('.form-group').removeClass('has-error');
-            //Added beacuse it was not removing the error label in mozilla, and causing alignment issues because label was 
-            //present but not having any text.
-            $(label).remove();
-        },
+            $(label).closest('.control-group').removeClass('error');
+        },      
         //Callback for handling the actual submit when the form is valid
         submitHandler: function (form) {
             //Table validation(start) Added By ranjitha on 20-01-2014
-            var errorMessages = "";
+            var errorMessages = "";            
             _.each($("#" + formId + " div.tablerequired"), function (obj) {
                 if ($("#" + obj.id + " table tbody tr").length == 0) {
                     $("#" + obj.id).css({ 'border-color': '#EE1411', '-webkit-box-shadow': 'inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #A71614', '-moz-box-shadow': 'inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #A71614', 'box-shadow': 'inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #A71614' });
@@ -186,6 +185,23 @@ function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {
                     errorMessages += "Atleast one " + $("#" + obj.id).data('message') + " required \n"; //Message Example : Atleast one address is required
                 }
             });
+
+            _.each($("#" + formId + " .dateCmp"),function(obj){
+                if($(obj).data('tocompare')!=undefined)
+                {
+                    if(($("#"+$(obj).data('tocompare')).val())!=""&&($(obj).val()!=""))
+                    {
+                        if(moment($("#"+$(obj).data('tocompare')).val()).isAfter($(obj).val()))
+                        {
+                            $("#" + obj.id).closest('.control-group').addClass('error');
+                            $("#" + obj.id).next().next('label').html($( '#' + formId + ' label[for=' + obj.id + ']' ).text().trim() + " should be greater than or equal to " + $( '#' + formId + ' label[for=' + $(obj).data('tocompare') + ']').text().trim()).attr('style', 'color:#b94a48');
+                            $("#" + obj.id).next().next('label').css('white-space','pre-wrap');
+                            errorMessages += $( '#' + formId + ' label[for=' + obj.id + ']' ).text().trim() + " should be greater than or equal to " + $( '#' + formId + ' label[for=' + $(obj).data('tocompare') + ']' ).text().trim();
+                        }
+                    }
+                }
+            });
+
             if (!hasMultipleForms && errorMessages != "") {
                 alert(errorMessages);
                 return false;
@@ -207,11 +223,21 @@ function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {
 
         },
         //Displays a message , indicating how many fields are invalid when the user tries to submit an invalid form.
-        invalidHandler: function (form, validator) {
+        invalidHandler: function (form, validator,label) {
+            $("#"+formId +" .control-group.error").removeClass('error'); 
             var errorMessages = "";
-            for (var i = 0; i < validator.errorList.length; i++) {
-                errorMessages = errorMessages + validator.errorList[i].message + "\n";
+            for (var i = 0; i < validator.errorList.length; i++) { 
+                /*if($(validator.errorList[i].element).hasClass('vm-dummy-date'))
+                {
+                    validator.errorList[i].message=$( '#' + formId + ' label[for=' + $(validator.errorList[i].element).attr('id') + ']' ).text().trim() + " is required" ;
+                    errorMessages = errorMessages + validator.errorList[i].message + "\n";
+                }
+                else
+                {*/
+            	errorMessages = errorMessages + validator.errorList[i].message + "\n";  
+                //}            
             }
+            
             //Below Code is only for table validation (Start)
             //Loop through the entire form and check for table required
             //and then check if number of rows is zero then highlight the div and display the error message
@@ -222,6 +248,23 @@ function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {
                     errorMessages += "Atleast one " + $("#" + obj.id).data('message') + " required \n"; //Message Example : Atleast one address is required
                 }
             });
+
+            _.each($("#" + formId + " .dateCmp"),function(obj){
+                if($(obj).data('tocompare')!=undefined)
+                {
+                    if(($("#"+$(obj).data('tocompare')).val())!=""&&($(obj).val()!=""))
+                    {
+                        if(moment($("#"+$(obj).data('tocompare')).val()).isAfter($(obj).val()))
+                        {
+                            $("#" + obj.id).closest('.control-group').addClass('error');
+                            $("#" + obj.id).next().next('label').html($( '#' + formId + ' label[for=' + obj.id + ']' ).text().trim() + " should be greater than or equal to " + $( '#' + formId + ' label[for=' + $(obj).data('tocompare') + ']').text().trim()).attr('style', 'color:#b94a48');
+                            $("#" + obj.id).next().next('label').css('white-space','pre-wrap');
+                            errorMessages += $( '#' + formId + ' label[for=' + obj.id + ']' ).text().trim() + " should be greater than or equal to " + $( '#' + formId + ' label[for=' + $(obj).data('tocompare') + ']' ).text().trim();
+                        }
+                    }
+                }
+            });            
+
             //Code is only for table validation (End)
             if (!hasMultipleForms) {
                 alert(errorMessages);
@@ -231,6 +274,7 @@ function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {
                 //end
             }
             AnimateToRequiredDiv(formId);
+            RemoveErrorInTheDateField(formId);
         }
     });
 }
@@ -250,6 +294,28 @@ function AnimateToRequiredDiv(Id) {
         }
     }
 }
+
+//--------------------------------------------------------------------------
+//Function to remove error in the date fields
+//--------------------------------------------------------------------------
+function RemoveErrorInTheDateField(formId) {
+    $($("#"+formId+" .dateCmp")).on('change',function(obj){
+        var element="#"+obj.currentTarget.id;
+        if($(element).data('tocompare')!=undefined)
+          {
+              if(($("#"+$(element).data('tocompare')).val())!=""&&($(element).val()!=""))
+              {
+                  if(moment($(element).val()).isAfter($("#"+$(element).data('tocompare')).val()))
+                  {
+                      $(element).closest('.control-group').removeClass('error');
+                      $(element).next().next('label').html("");
+                      $(element).next().next('label').css('white-space','pre-wrap');
+                  }
+              }
+          }
+    });   
+}
+
 //--------------------------------------------------------------------------
 // Generic function to Append Html Templates
 //--------------------------------------------------------------------------
@@ -437,6 +503,51 @@ $.validator.addMethod("alphanumeric", function (value, element) {
     return this.optional(element) || value === "NA" ||
         value.match(/^[a-z0-9]*$/i);
 }, "Please enter a valid number, or 'NA'");
+
+//This method takes the Ids of Hire Date and Start Date fields from add employee popup in New Hire page(in 'param')
+//and checks the following:
+//1. End Date is >= Hire Date (if Start date is empty)  2. End Date is >= Start date (if Start Date is not empty)
+jQuery.validator.addMethod("greaterThanOrEqualToendDateOrStartDate", function (value, element, param) {
+    
+    var tempDate = param.split(',');
+    //IF in case , the start or end end is not a input control say "div" then data cannot be accessed with the val() function hence 
+    //a condition is added 
+    //Currently the data which is enclosed in the "div" is of format "dd-mmm-yyyy" hence it is converted to "mm-dd-yyyy" format
+    var endDate = $(tempDate[0])[0].tagName == 'INPUT' ?$(tempDate[0]).val():$(tempDate[0]).text() ; //Value for End Date
+    var startDate = $(tempDate[1])[0].tagName == 'INPUT' ?$(tempDate[1]).val(): $(tempDate[1]).text() ; //Value for Start Date
+    var endDateLabel = $("label[for='" + $(tempDate[0]).attr('id') + "']:not(.error)").text().trim();
+    var startDateLabel = $("label[for='" + $(tempDate[1]).attr('id') + "']:not(.error)").text().trim(); //get the label of end date    
+    var msg = endDateLabel + " must be greater than or equal to " + startDateLabel;
+    if (endDate !== "") {
+        if (value === "") { //if End date is empty
+            return true;
+        }
+        if (startDate === "") { //if start date is empty
+            if (!/Invalid|NaN/.test(new Date(value))) {
+                $.validator.messages.greaterThanOrEqualToendDateOrStartDate = msg;
+                return (moment(value).isSame(endDate) || moment(value).isAfter(endDate)); //End date >= Hire date ?
+            }
+        } else {        //if all three dates are not empty
+            if (!/Invalid|NaN/.test(new Date(value))) {               
+                var firstChk = (moment(value).isSame(endDate) || moment(value).isAfter(endDate)); //End date >= Hire date ?
+                if (!/Invalid|NaN/.test(new Date(startDate)) && firstChk == true) { //End date >= Hire date 
+                    $.validator.messages.greaterThanOrEqualToendDateOrStartDate = msg;                    
+                    return (moment(value).isSame(startDate) || moment(value).isAfter(startDate)); //End date >= Start date ?
+                }
+                else {
+                    $.validator.messages.greaterThanOrEqualToendDateOrStartDate = msg;
+                    return firstChk;            //End date < Hire date 
+                }
+            }
+            return (isNaN(value) && isNaN(endDate) && isNaN(startDate)) || ((Number(value) >= Number(endDate)) && (Number(value) >= Number(startDate)));
+        }
+    }
+    else {
+        return true;
+    }
+}, function (params, element) {
+    return $.validator.messages.greaterThanOrEqualToendDateOrStartDate; //Show appropriate message
+});
 
 //-----------------------------------------------------------------------------------------------------------------------
 //Function to Convert date to required format
@@ -644,50 +755,6 @@ jQuery.validator.addMethod("lessThanOrEqualToEndDate", function (value, element,
         || (Number(value) <= Number($(param).val()));
     }
 }, 'Must be less than or equal to {0}.');
-
-//This method takes the Ids of Hire Date and Start Date fields from add employee popup in New Hire page(in 'param')
-//and checks the following:
-//1. End Date is >= Hire Date (if Start date is empty)  2. End Date is >= Start date (if Start Date is not empty)
-jQuery.validator.addMethod("greaterThanOrEqualToendDateOrStartDate", function (value, element, param) {
-    var tempDate = param.split(',');
-    //IF in case , the start or end end is not a input control say "div" then data cannot be accessed with the val() function hence 
-    //a condition is added 
-    //Currently the data which is enclosed in the "div" is of format "dd-mmm-yyyy" hence it is converted to "mm-dd-yyyy" format
-    var endDate = $(tempDate[0])[0].tagName == 'INPUT' ?$(tempDate[0]).val():$(tempDate[0]).text() ; //Value for End Date
-    var startDate = $(tempDate[1])[0].tagName == 'INPUT' ?$(tempDate[1]).val(): $(tempDate[1]).text() ; //Value for Start Date
-    var endDateLabel = $("label[for='" + $(tempDate[0]).attr('id') + "']:not(.error)").text().trim();
-    var startDateLabel = $("label[for='" + $(tempDate[1]).attr('id') + "']:not(.error)").text().trim(); //get the label of end date    
-    var msg = endDateLabel + " must be greater than or equal to " + startDateLabel;
-    if (endDate !== "") {
-        if (value === "") { //if End date is empty
-            return true;
-        }
-        if (startDate === "") { //if start date is empty
-            if (!/Invalid|NaN/.test(new Date(value))) {
-                $.validator.messages.greaterThanOrEqualToendDateOrStartDate = msg;
-                return (moment(value).isSame(endDate) || moment(value).isAfter(endDate)); //End date >= Hire date ?
-            }
-        } else {        //if all three dates are not empty
-            if (!/Invalid|NaN/.test(new Date(value))) {               
-                var firstChk = (moment(value).isSame(endDate) || moment(value).isAfter(endDate)); //End date >= Hire date ?
-                if (!/Invalid|NaN/.test(new Date(startDate)) && firstChk == true) { //End date >= Hire date 
-                    $.validator.messages.greaterThanOrEqualToendDateOrStartDate = msg;                    
-                    return (moment(value).isSame(startDate) || moment(value).isAfter(startDate)); //End date >= Start date ?
-                }
-                else {
-                    $.validator.messages.greaterThanOrEqualToendDateOrStartDate = msg;
-                    return firstChk;            //End date < Hire date 
-                }
-            }
-            return (isNaN(value) && isNaN(endDate) && isNaN(startDate)) || ((Number(value) >= Number(endDate)) && (Number(value) >= Number(startDate)));
-        }
-    }
-    else {
-        return true;
-    }
-}, function (params, element) {
-    return $.validator.messages.greaterThanOrEqualToendDateOrStartDate; //Show appropriate message
-});
 
 //-----------------------------------------------------------------------------------------------------------------------
 // Fucntion to get the request status description

@@ -48,7 +48,8 @@ module.exports.connections = {
     ssl: {
       rejectUnauthorized: false
     },
-     url: 'mongodb://finpulse-usr:finpulse-pwd@oceanic.mongohq.com:10068/finpulse' 
+     //url: 'mongodb://finpulse-usr:finpulse-pwd@oceanic.mongohq.com:10068/finpulse' 
+     url: 'mongodb://strobe_user:strobe_pwd@ashoka.vmoksha.com/strobe-dev'
   },
 
   // PostgreSQL is another officially supported relational database. 

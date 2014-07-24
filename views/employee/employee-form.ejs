@@ -267,7 +267,11 @@
     }
     //function to setup popup on Edit an Employee
     function EmployeeForm_ModalShow_ForEdit(args)
-    {        
+    {       
+             //clear the previous values
+            ResetControls("modalEmployee");
+            //Reset Form
+            ResetForm("frmAddEmployee");
             //At first reset all role checkbox 
             $.each($(".vm-dummy-Role"), function () {
                 $(this).prop('checked', false);

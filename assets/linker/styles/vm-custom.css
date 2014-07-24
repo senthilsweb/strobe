@@ -18,3 +18,24 @@ background-color: #DFDFDB;
 .pr10 {
 padding-right: 10px;
 }
+.control-group.error input,
+.control-group.error select,
+/*Added border color for the select box -- By ranjitha*/
+.control-group.error .select2-choice,
+.control-group.error textarea {
+  border-color: #b94a48;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+}
+
+.control-group.error input:focus,
+.control-group.error select:focus,
+/*Added border color for the select box -- By ranjitha*/
+.control-group.error .select2-choice,
+.control-group.error textarea:focus {
+  border-color: #953b39;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+     -moz-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 6px #d59392;
+}

@@ -4,52 +4,94 @@ $(function () {
 //---------------------------------------------------------------------------------------------------------------------------------------
 //------ validate the controls in the given form(id padded as variable) diaplys the erroe alert and hignlights the controls which false data
 //------------------------------------------------------------------------------------------------------------------------------------------
-function FormValidation() {
+function FormValidation()
+{
     //get all the div which has to be validated
-    _.each($("div.validate"), function (frmObj) {
+    _.each( $( "div.validate" ), function ( frmObj )
+    {
         //Extract the FormId        
-        var formId = $(frmObj).parent().attr("Id"), formId_rules = {}, formId_msg = {};
+        var formId = $( frmObj ).parent().attr( "Id" ), formId_rules = {}, formId_msg = {};
         //Loop through each form which has to be validated
-        _.each($("#" + formId + " .required" + ", .dateCmp"), function (obj) {
-            formId_rules[(obj.id)] = { required: true };           
-            var lblName = _.str.isBlank($('#' + formId + ' label[for=' + obj.id + ']').text()) ? $('#' + obj.id).attr("placeholder") : $('#' + formId + ' label[for=' + obj.id + ']').text().trim();
-            //$('#' + formId + ' label[for=' + obj.id + ']').text().trim()
-            formId_msg[(obj.id)] = { required: lblName + " is required" }
+        _.each( $( "#" + formId + " .required" + ", .dateCmp" ), function ( obj )
+        {
+            if($(obj).hasClass('required'))
+            {
+                formId_rules[( obj.id )] = { required: true };
+                formId_msg[( obj.id )] = { required: $( '#' + formId + ' label[for=' + obj.id + ']' ).text().trim() + " is required" }
+            }
+
+            if(($(obj).attr('class')).indexOf('requiredbasedOnOther') > -1 )
+            {
+                var subtxt=($(obj).attr('class')).split('-');
+                //var values=subtxt[2].split(','); 
+                var values=subtxt[2];           
+                formId_rules[( obj.id )] = { required: function () {                                                
+                                                /*if (($("#"+subtxt[1]).val() == values[0])||($("#"+subtxt[1]).val() == values[1])){return true;} 
+                                                else {return false; }
+                                                }*/
+
+                                                if (((values.indexOf($("#"+subtxt[1]).val())) > -1)&&($("#"+subtxt[1]).val()!="")){return true;} 
+                                                else {return false; }
+                                                }
+                                            }
+                formId_msg[( obj.id )] = { required: $( '#' + formId + ' label[for=' + obj.id + ']' ).text().trim() + " is required" }
+            }
+
             //-------------RULES (Start)-------------//
             //checks for the class name ex: email. If exist then attaches the corresponding rule
-            obj.className.indexOf('email') != -1 ? formId_rules[(obj.id)].email = true : null;
+            obj.className.indexOf( 'email' ) != -1 ? formId_rules[( obj.id )].email = true : null;
+            obj.className.indexOf( 'minlength' ) != -1 ? formId_rules[( obj.id )].minlength = $( obj ).data( 'minlength' ) : null;
             //Modified on 26-Feb-2014 start
             //For alphanumeric class also it was taking the numeric class while checking index of
             //hence now checking for hasClass
             //$(obj).hasClass('numeric') == true ? formId_rules[(obj.id)].number = true : null;
             //Modified on 26-Feb-2014 end
             //obj.className.indexOf('numeric') != -1 ? formId_rules[(obj.id)].number = true : null;
-            obj.className.indexOf('pwd-confirm-cmp') != -1 ? formId_rules[(obj.id)].equalTo = "#" + $("#" + formId + " .required.pwd-cmp")[0].id : null;
+            obj.className.indexOf( 'pwd-confirm-cmp' ) != -1 ? formId_rules[( obj.id )].equalTo = "#" + $( "#" + formId + " .required.pwd-cmp" )[0].id : null;
+            
             //check if the control has calss starts with dateToCmp then apply the rule
-            var result = _.filter(obj.className.split(' '), function (val) {
-                if (val.indexOf('dateToCmp') != -1) {
+            var result = _.filter( obj.className.split( ' ' ), function ( val )
+            {
+                if ( val.indexOf( 'dateToCmp' ) != -1 )
+                {
                     return val;
                 }
-            });
-            result.length > 0 ? formId_rules[(obj.id)].greaterThanOrEqualToendDateOrStartDate = "#" + (obj.id) + "," + "#" + result[0].replace('dateToCmp-', '') : null;
+            } );
+
+            //check if the control has calss starts with monthYearToCmp then apply the rule
+            var resultmntYear = _.filter( obj.className.split( ' ' ), function ( val )
+            {
+                if ( val.indexOf( 'monthYearToCmp' ) != -1 )
+                {
+                    return val;
+                }
+            } );
+
+            resultmntYear.length > 0 ? formId_rules[( obj.id )].greaterThanOrEqualsFromMonthYear = "#" + ( obj.id ) + "," + "#" + resultmntYear[0].replace( 'monthYearToCmp-', '' ) : null;
+            if(result.length > 0)
+            {
+                formId_rules[( obj.id )]={greaterThanOrEqualTo:"#" + result[0].replace( 'dateToCmp-', '' )}
+                formId_msg[( obj.id )]={greaterThanOrEqualTo:"test"}
+            }
+            //result.length > 0 ? formId_rules[( obj.id )].greaterThanOrEqualTo = "#" + result[0].replace( 'dateToCmp-', '' ) : null;
+            //result.length > 0 ? formId_msg[( obj.id )].greaterThanOrEqualTo = "test" : null;
             // if the field in not required then dont make the field as required
             //this will happen in case of date comparision
-            formId_rules[(obj.id)].required = obj.className.indexOf('required') != -1 ? true : false;
-            //$(obj).data('dateToCmp') != null ? formId_rules[(obj.id)].greaterThanOrEqualToHireDateOrStartDate = "'" + (obj.id) + "," + $(obj).data('dateToCmp') + "'" : null;
-            //txtEndDate: { greaterThanOrEqualToHireDateOrStartDate: '#txtHireDate,#txtStartDate' }
+            //formId_rules[( obj.id )].required = $(obj).hasClass('required')==true ? true : false;           
             //-------------RULES (End)-------------//
 
             //-------------MESSAGES (Start)-------------//
-            obj.className.indexOf('email') != -1 ? formId_msg[(obj.id)].email = lblName + " is invalid" : null;
+            obj.className.indexOf( 'email' ) != -1 ? formId_msg[( obj.id )].email = $( '#' + formId + ' label[for=' + obj.id + ']' ).text().trim() + " is invalid" : null;
+            obj.className.indexOf( 'minlength' ) != -1 ? formId_msg[( obj.id )].minlength = $( '#' + formId + ' label[for=' + obj.id + ']' ).text().trim() + " should be " + $( obj ).data( 'minlength' ) + " characters" : null;
             //obj.className.indexOf('numeric') != -1 ? formId_msg[(obj.id)].number = $('#' + formId + ' label[for=' + obj.id + ']').text().trim() + " is invalid" : null;
             obj.className.indexOf('pwd-confirm-cmp') != -1 ? formId_msg[(obj.id)].equalTo = "Password Mismatch" : null;
             //-------------MESSAGES (End)-------------//
-        });
+        } );
+        debugger;
         //call validation wrapper
-        setTimeout(vmValidatorWrapper, 0, formId, formId_rules, formId_msg);
-    });
-}
-
+        setTimeout( vmValidatorWrapper, 0, formId, formId_rules, formId_msg );
+    } );
+};
 
     //---------------------------------------------------------------------------------------------------------
     //Modal Progress

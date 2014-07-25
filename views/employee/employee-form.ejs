@@ -6,7 +6,7 @@
                <div class="error validate">
                </div>
              <input type="hidden" id="hiddentxtEmployee"value="0"/>
-              <div class="modal-header">
+              <div class="modal-header vm-noty-placeholder">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3 id="modalEmployeeLabel">Add Employee</h3>
               </div>
@@ -263,7 +263,7 @@
             $(this).prop('checked', false);
         });
         $('#modalEmployee').modal('show');
-    return false;
+        return false;
     }
     //function to setup popup on Edit an Employee
     function EmployeeForm_ModalShow_ForEdit(args)
@@ -333,7 +333,7 @@
     //Function to save Employee on Add/Edit
     function EmployeeSave() {
 
-        $.Topic(vm_ui_events.ModalAction).publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "Initiated" });
+        $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "Initiated" });
         var request = {};
         request.firstname = $('#txtEmployeeFirstName').val();
         request.middlename = $('#txtEmployeeMiddleName').val();
@@ -370,35 +370,50 @@
         {
             Roles = $('#hdnChkRole').val();
         }
+        var id=$('#hiddentxtEmployee').val();
         // Pass comma seperated roles
         request.roles = Roles; 
-                debugger;
-                var id=$('#hiddentxtEmployee').val();
-                if($('#hiddentxtEmployee').val() != "0")
-                {
-                    request.id=id;
-                    var promiseAddEditEmployee = $.ajax({ url: location.origin + '<%=api%>/' + id,data: request, type:'PUT' });
-                }
-                else if($('#hiddentxtEmployee').val() == "0")
-                {
-                    var promiseAddEditEmployee = $.ajax({ url: location.origin + '<%=api%>', data: request, type:'POST' });
-                }
-        promiseAddEditEmployee.done(function () {
-        setTimeout(function () {
-        $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedSuccess" });
-        $('#modalEmployee').modal('hide');
-        noty({ "text": "Employee saved successfully", "layout": "top", "type": "success" });
-        }, 1000);
+        var where = {};
+        where.email = request.email;    
+        var promiseEmployeeExist = $.when($.ajax({ url: location.origin + "<%=api%>?where=" + JSON.stringify(where) })
+                                   .then(function (res) {
+                                       //if email does not exist 
+                                       if (res.length==0) {
+                                           if ($('#hiddentxtEmployee').val() == "0") {
+                                               var promiseAddEditEmployee = $.ajax({ url: location.origin + '<%=api%>', data: request, type: 'POST' });
+                                           }
+                                           else {
+                                               request.id = id;
+                                               var promiseAddEditEmployee = $.ajax({ url: location.origin + '<%=api%>/' + id, data: request, type: 'PUT' });
+                                           }
+                                           promiseAddEditEmployee.done(function (data) {
+                                               setTimeout(function () {
+                                                   $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedSuccess" });
+                                                   $('#modalEmployee').modal('hide');
+                                                   noty({ "text": "Employee saved successfully", "layout": "top", "type": "success" });
+                                               }, 1000);
+                                               setTimeout(EmployeeListMasterList, 0);
+                                               return false;
+                                           });
+                                           promiseAddEditEmployee.fail(function () {
+                                               $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedFailure" });
+                                               $('#modalEmployee').modal('hide');
+                                               noty({ "text": "Employee save failed", "layout": "top", "type": "error" });
+                                               console.log("from employee api fail")
+                                           });
+                                       }
+                                       //else if email exists there is a duplicate employee
+                                       else {
+                                           $("#btnSaveEmployee").removeAttr("disabled"); 
+                                           $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedFailure", "message":"Email already exist" });
+                                           //$('#modalEmployee').modal('hide');
+                                           //noty({ "text": "Email already exist", "layout": "top", "type": "error" });
+                                       }
 
-        setTimeout(EmployeeListMasterList, 0);
-        //setTimeout(EmployeeMasterCombo_Single, 1000);
-        return false;
-        })
-        promiseAddEditEmployee.fail(function(){
-            $('#modalEmployee').modal('hide');
-            noty({ "text": "Failed", "layout": "top", "type": "error" });
-            console.log("from employee api fail")
-        });
+
+                                   }, function (err) {
+                                       console.log("Something went wrong in checking for email")
+                                   }));
     return false;    
 
     }

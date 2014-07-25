@@ -6,7 +6,7 @@
                <div class="error validate">
                </div>
              <input type="hidden" id="hiddentxt<%=fnPrefix%>"value="0"/>
-              <div class="modal-header">
+              <div class="modal-header vm-noty-placeholder">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
                 <h3 id="modal<%=fnPrefix%>Label">Add <%=fnPrefix%></h3>
               </div>
@@ -116,7 +116,7 @@
 
     //Function to save Employee on Add/Edit
     function <%=fnPrefix%>Save() {
-            $.Topic(vm_ui_events.ModalAction).publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "Initiated" });
+            $.Topic("ModalAction").publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "Initiated" });
             var request = {};
             request.name = $('#txt<%=fnPrefix%>Name').val();
             request.status = $("#chkStatus<%=fnPrefix%>").is(":checked")== false ? 0 : 1;
@@ -133,18 +133,19 @@
             }
                     
             promiseAddEdit<%=fnPrefix%>.done(function () {
-            setTimeout(function () {
-            $.Topic("ModalAction").publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "CompletedSuccess" });
-            $('#modal<%=fnPrefix%>').modal('hide');
-            noty({ "text": "<%=fnPrefix%> saved successfully", "layout": "top", "type": "success" });
-            }, 1000);
+                setTimeout(function () {
+                $.Topic("ModalAction").publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "CompletedSuccess" });
+                $('#modal<%=fnPrefix%>').modal('hide');
+                noty({ "text": "<%=fnPrefix%> saved successfully", "layout": "top", "type": "success" });
+                }, 1000);
 
-            setTimeout(<%=fnPrefix%>ListMasterList, 0);
-            return false;
+                setTimeout(<%=fnPrefix%>ListMasterList, 0);
+                return false;
             })
             promiseAddEdit<%=fnPrefix%>.fail(function(){
-                $('#modal<%=fnPrefix%>').modal('hide');
-                noty({ "text": "Failed", "layout": "top", "type": "error" });
+                $.Topic("ModalAction").publish({ "body": "modal<%=fnPrefix%>Body", "footer": "modal-footer", "state": "CompletedFailure", "message": "<%=fnPrefix%> save failed"});
+                //$('#modal<%=fnPrefix%>').modal('hide');
+                //noty({ "text": "<%=fnPrefix%> save failed", "layout": "top", "type": "error" });
                 console.log("from master api fail")
             });    
       }

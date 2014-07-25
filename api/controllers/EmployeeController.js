@@ -34,7 +34,7 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
                     //Added by Paulomi: to decrypt the passowrd
                     //var decryptedPassword = easycrypto.decrypt(employee.password, sails.config.appsettings.strobePassKey);
                     //employee.password = decryptedPassword;
-                    
+
                     //Generate a random password
                     employee.password = _randString({ length: 10 });
                     var encryptpassword = easycrypto.encrypt(employee.password, sails.config.appsettings.strobePassKey);
@@ -80,6 +80,30 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
             }
         });
     },
+
+    /*employeeExist: function (req, res) {
+        var params = req.params.all();
+        var response = {};
+        Employee.findOne({ email: params.email }, function (err, employee) {
+            if (err) {
+                response.err = err;
+                response.status = false;
+                response.message = "Something went wrong";
+            } else {
+                if (employee === undefined) {
+                    response.status = false;
+                    response.message = "Email does not exist";
+                    res.send(response)
+                }
+                else {
+                    response.status = true;
+                    response.message = "Email already exist";
+                    res.send(response)
+                }
+            }
+        });
+
+    },*/
     /**
     * Overrides for the settings in `config/controllers.js`
     * (specific to CasestudyController)

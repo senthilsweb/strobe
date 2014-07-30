@@ -13,8 +13,14 @@
     //On change of the Search text bind the master list
     $( "#txt<%=fnPrefix%>SearchName" )
         .change(function() {
+
+        var myargs = {}
+        myargs.OnTableLoad = false;
+        myargs.isSearch = true;
+        
+
         //Publish  Search button click event so that the partialview(details, etc) is cleared and rebinded
-        $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").publish();
+        $.Topic("<%=fnPrefix%>_Master_SearchButtonClick").publish(myargs);
   })
 
 

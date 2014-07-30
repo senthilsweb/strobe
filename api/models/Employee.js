@@ -19,7 +19,7 @@ module.exports = {
         console.log("value = " + values.code);
         //Added by Paulomi: start
         var easycrypto = require('easycrypto').getInstance();
-        var encryptedPassword = easycrypto.encrypt(values.password, 'mypassword'); //"mypassword" -> is the password to be given during decryption        
+        var encryptedPassword = easycrypto.encrypt(values.password, sails.config.appsettings.strobePassKey); 
         values.password = encryptedPassword;
         values.confirmPassword = encryptedPassword;
         console.log("password = " + values.password);
@@ -28,7 +28,7 @@ module.exports = {
     }
     /*beforeCreate: function (obj, cb) {
          
-    var encryptedPassword = easycrypto.encrypt(obj.password, 'mypassword'); //"mypassword" -> is the password to be given during decryption
+    var encryptedPassword = easycrypto.encrypt(obj.password, sails.config.appsettings.strobePassKey); 
     obj.password = encryptedPassword
     obj.confirmPassword = encryptedPassword
     console.log("Employee before create")

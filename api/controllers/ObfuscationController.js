@@ -13,8 +13,8 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
         console.log("text is :" + params.text);
         console.log("action is :" + params.action);
         //to encrypt/decrypt the text
-        var encryptedORDecryptedText = params.action == "encrypt" ? easycrypto.encrypt(params.text, 'obfuscation')
-                                                                  : easycrypto.decrypt(params.text, 'obfuscation');
+        var encryptedORDecryptedText = params.action == "encrypt" ? easycrypto.encrypt(params.text, sails.config.appsettings.strobePassKey)
+                                                                  : easycrypto.decrypt(params.text, sails.config.appsettings.strobePassKey);
 
         console.log(encryptedORDecryptedText);
         response.encryptedORDecryptedText = encryptedORDecryptedText;

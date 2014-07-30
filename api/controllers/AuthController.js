@@ -12,7 +12,7 @@ module.exports = {
         //encrypt the password and then check
         var easycrypto = require('easycrypto').getInstance();
         //TODO : keep the encryption & decryption in common helper class & then bring the crypto password from confg file
-        var encryptedPassword = easycrypto.encrypt(params.password, 'mypassword');  //"mypassword" -> is the password to be given during decryption
+        var encryptedPassword = easycrypto.encrypt(params.password, sails.config.appsettings.strobePassKey);  
         //Paulomi: added console to check values
         console.log("email is :" + params.email + " password is :" + encryptedPassword);
         Employee.findOne({ email: params.email, password: encryptedPassword }, function (err, employee) {

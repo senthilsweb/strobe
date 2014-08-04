@@ -58,7 +58,8 @@ function addLoadEvent(func) {
 
   <body class="page blog">
     <%- partial('partials/navbar')%>
-    <%- partial('partials/breadcrumb')%>
+    <%- partial('partials/breadcrumb')%>  
+    <%- partial('partials/changePassword-form')%>
     <div class="container">
         <div class="row-fluid">
             <%- body %>
@@ -151,9 +152,9 @@ function addLoadEvent(func) {
   </body>
 </html>
 <script type="text/javascript">
-$(document).ready(function () {
-    console.log("Layout"); 
-    $.Topic("LoadingImage").subscribe(HandleLoadingImage);
-    $.Topic("ModalAction").subscribe(HandleModalProgress);  
-});
+    $(document).ready(function () {
+        console.log("Layout");
+        $.Topic("LoadingImage").subscribe(HandleLoadingImage);
+        $.Topic("ModalAction").subscribe(HandleModalProgress);
+    });
 </script>

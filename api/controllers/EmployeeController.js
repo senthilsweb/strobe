@@ -81,27 +81,64 @@ module.exports = _.merge(_.cloneDeep(require("../services/BaseController")), {
         });
     },
 
-    /*employeeExist: function (req, res) {
-        var params = req.params.all();
+    changePassword: function (req, res) {
+        var easycrypto = require('easycrypto').getInstance();
         var response = {};
-        Employee.findOne({ email: params.email }, function (err, employee) {
+        response.status = true;
+        var params = req.params.all();
+        var currentpwd = easycrypto.encrypt(params.currentPassword, sails.config.appsettings.strobePassKey)
+        Employee.findOne({ id: req.session.employee.id, password: currentpwd }, function (err, employee) {
             if (err) {
+                return console.log(err);
                 response.err = err;
                 response.status = false;
-                response.message = "Something went wrong";
-            } else {
+                response.message = "Error in finding Employee";
+            }
+            else {
                 if (employee === undefined) {
                     response.status = false;
-                    response.message = "Email does not exist";
-                    res.send(response)
-                }
-                else {
+                    response.message = "Employee not found....!!!!";
+                    res.send(500, response);
+                } else {
+                    employee.password = easycrypto.encrypt(params.newPassword, sails.config.appsettings.strobePassKey);
+                    employee.confirmPassword = easycrypto.encrypt(params.newPassword, sails.config.appsettings.strobePassKey);
+                    //save the updated value
+                    employee.save(function (err) {
+                        if (err) return res.serverError(err);
+                    });
+                    delete employee.password;
+                    delete employee.confirmPassword;
+                    req.session.employee = employee;
                     response.status = true;
-                    response.message = "Email already exist";
-                    res.send(response)
+                    response.message = "Password changed successfully";
+                    res.send(200, response);
                 }
+
             }
         });
+    },
+
+    /*employeeExist: function (req, res) {
+    var params = req.params.all();
+    var response = {};
+    Employee.findOne({ email: params.email }, function (err, employee) {
+    if (err) {
+    response.err = err;
+    response.status = false;
+    response.message = "Something went wrong";
+    } else {
+    if (employee === undefined) {
+    response.status = false;
+    response.message = "Email does not exist";
+    res.send(response)
+    }
+    else {
+    response.status = true;
+    response.message = "Email already exist";
+    res.send(response)
+    }
+    }
+    });
 
     },*/
     /**

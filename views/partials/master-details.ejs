@@ -26,7 +26,7 @@
              $.Topic("LoadingImage").publish({ progress: "show", container: "<%=fnPrefix%>pc-master-details" });  
              setTimeout(function () {
                     var promiseMasterDetails = $.ajax({ url: location.origin +  '<%=api%>/'  + args.id , type:'GET' });
-                    promiseMasterDetails.done(function (data) { debugger;
+                    promiseMasterDetails.done(function (data) { 
                         $("#<%=fnPrefix%>pc-master-details").html("");
                         //Add class for status dynamically                        
                         data.statusClass = data.status == "1" 

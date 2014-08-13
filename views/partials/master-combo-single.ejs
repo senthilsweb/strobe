@@ -23,12 +23,16 @@
                             });
                             
                              var sortedRes = _.sortBy(data, "name");
-                            _.each(data, function (item, i) {
-                                            //this is to specify only add active items to dropdown                     
-                                            if(item.status === undefined || item.status ) 
-                                            {  
-                                                options.append($("<option id="+ item.id + "/>").val(item.code).text(item.name));
-                                            }
+                            _.each(data, function (item, i) {                        
+                                    // "optCodeProp" : The value property of code 
+                                    //if property is passed code of option is  optIdProp else it is master code column     
+                                    <%if( typeof optCodeProp != 'undefined'){%>
+                                        options.append($("<option id="+ item.id + "/>").val(item.<%=optCodeProp%>).text(item.name));
+                                    <%}
+                                    else{%>
+                                        options.append($("<option id="+ item.id + "/>").val(item.code).text(item.name));
+                                    <%}%>
+
                                 });
 
                      //Attach change event of combo           

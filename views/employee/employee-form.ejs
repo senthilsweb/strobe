@@ -331,7 +331,7 @@
     }
 
     //Function to save Employee on Add/Edit
-    function EmployeeSave() {
+    function EmployeeSave() {debugger;
 
         $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "Initiated" });
         var request = {};
@@ -350,7 +350,7 @@
         request.status = ($("#chkstatusEmployee").is(":checked")== false) ? 0 : 1;
         request.password = $('#txtEmployeePassword').val();
         request.confirmPassword = $('#txtEmployeeConPassword').val();
-        request.empNo = $('#txtEmployeeNo').val();
+        request.empNo = $('#txtEmployeeNo').val().toUpperCase();
         request.doj = $('#txtDateofJoining').val();
         request.location = $('#cboEmployeeLocation option:selected').val() == "" ? null : $('#cboEmployeeLocation option:selected').val();
     
@@ -376,7 +376,7 @@
         var where = {};
         where.email = request.email;    
         var promiseEmployeeExist = $.when($.ajax({ url: location.origin + "<%=api%>?where=" + JSON.stringify(where) })
-                                   .then(function (res) {
+                                   .then(function (res) {debugger;
                                        //if email does not exist 
                                        if (res.length==0) {
                                            if ($('#hiddentxtEmployee').val() == "0") {
@@ -386,7 +386,7 @@
                                                request.id = id;
                                                var promiseAddEditEmployee = $.ajax({ url: location.origin + '<%=api%>/' + id, data: request, type: 'PUT' });
                                            }
-                                           promiseAddEditEmployee.done(function (data) {
+                                           promiseAddEditEmployee.done(function (data) {debugger;
                                                setTimeout(function () {
                                                    $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedSuccess" });
                                                    $('#modalEmployee').modal('hide');
@@ -395,7 +395,7 @@
                                                setTimeout(EmployeeListMasterList, 0);
                                                return false;
                                            });
-                                           promiseAddEditEmployee.fail(function () {
+                                           promiseAddEditEmployee.fail(function () {debugger;
                                                $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedFailure" });
                                                $('#modalEmployee').modal('hide');
                                                noty({ "text": "Employee save failed", "layout": "top", "type": "error" });

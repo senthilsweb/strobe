@@ -8,11 +8,6 @@ h3 .fa {margin-top: 5px;}
 .vm-fa-statusgreen{color: #78cd51}
 .dropdown-width{width:100%;}
 .label-bold{font-weight: bold;}
-/*.active-menu > a,  .active-menu > a:hover, .active-menu > a:focus {
-color: #000000;
-background-color: #DFDFDB;
-}*/
-/*Z-index is for the popup */
 .datepicker {z-index:1051 !important}
 .controls label.error {}
 .pr10 {
@@ -20,7 +15,6 @@ padding-right: 10px;
 }
 .control-group.error input,
 .control-group.error select,
-/*Added border color for the select box -- By ranjitha*/
 .control-group.error .select2-choice,
 .control-group.error textarea {
   border-color: #b94a48;
@@ -31,7 +25,6 @@ padding-right: 10px;
 
 .control-group.error input:focus,
 .control-group.error select:focus,
-/*Added border color for the select box -- By ranjitha*/
 .control-group.error .select2-choice,
 .control-group.error textarea:focus {
   border-color: #953b39;
@@ -47,11 +40,12 @@ padding-right: 10px;
 .attendance-red {color: #D14836}
 .attendance-blue {color: #67C2EF}
 .attendance-yellow {color: #FABB3D}
-.attendance-pink {color: #ff8080}
+.attendance-pink {color: #b94a48}
 
 .vm-status {background-color: #fb5;color:#fff}
 
- a {
-color: #226AC1;
-text-decoration: none;
+ a,a:hover {
+text-decoration: none !important;
+cursor: pointer;
+cursor: hand;
 }

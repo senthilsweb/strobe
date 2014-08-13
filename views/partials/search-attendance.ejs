@@ -1,16 +1,16 @@
 <div class="box widget">
     <h3>
-        <i class="fa fa-list vm-fa-white"></i>&nbsp;Search</h3>
+        <i class="fa fa-sort-amount-desc vm-fa-white"></i>&nbsp;Search</h3>
 </div>
 <div class="row-fluid">
-    <%- partial('../partials/master-combo-single', {'fnPrefix' : 'Employee','api':'/Employee','ph': 'Employee'})%>
+    <%- partial('../partials/master-combo-single', {'fnPrefix' : 'Employee','api':'/Employee','ph': 'Employee','validation': 'required', 'optCodeProp':'empNo'})%>
 </div>
 <div>&nbsp;</div>
 <div class="row-fluid">
     <div class="span6">
-        <input id="radio_button_week" type="radio" name="search" value="Week">Week</div>
+        <input id="radio_button_week" type="radio" name="search" value="Week">By Week</div>
     <div class="span6">
-        <input id="radio_button_month" type="radio" name="search" value="Month" checked="checked">Month</div>
+        <input id="radio_button_month" type="radio" name="search" value="Month" checked="checked">By Month</div>
 </div>
 <div>&nbsp;</div>
 <div class="row-fluid">
@@ -35,7 +35,7 @@
 </div>
 <div class="box widget" id="divGageTitle">
     <h3>
-        <i class="fa fa-list vm-fa-white"></i>&nbsp;Hours Clocked</h3>
+        <i class="fa fa-clock-o vm-fa-white"></i>&nbsp;Hours Clocked</h3>
 </div>
 <div class="row-fluid" id="divAttendanceJustGage">
     <div class="span12">
@@ -58,12 +58,17 @@
             $(this).blur();
             $(this).datepicker('hide');
         });
+        $("#cboEmployee").change(function () {
+            $("#txtsearchAttendanceDate").val("");
+            $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage,#divAttendanceGrid,#divWeek").hide();
+        });
         $('input[type="radio"]').on("click", function () {
             $("#txtsearchAttendanceDate").val("");
-            $("#attendanceDetails,#divGageTitle,#divAttendanceJustGage,#divAttendanceGrid,#divWeek").hide();
+            $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage,#divAttendanceGrid,#divWeek").hide();
         });
         $("#txtsearchAttendanceDate").change(function (e) {
             if ($('#radio_button_month').is(':checked')) {
+                $("#divAttendanceGrid").show();
                 var args = {};
                 var monthselected = moment($("#txtsearchAttendanceDate").val().split('/')[0] + "-01-" + $("#txtsearchAttendanceDate").val().split('/')[1]).format("DD-MMM-YYYY");
                 args.monthStart = moment(monthselected).startOf('month').format("DD-MMM-YYYY")
@@ -73,6 +78,7 @@
                 $.Topic("Attendance_Details_Monthly").publish(args);
             }
             else {
+                $("#divAttendanceGrid").show();
                 $("#divWeek").show();
                 Search_AttendanceDate();
             }

@@ -1,6 +1,6 @@
 <div id="divAttendanceGrid">
 </div>
-<div id="attendanceDetails">
+<div id="divattendanceDetails">
 <div class="box widget">	
         <h3 id="headerAttendanceReport"></h3>
     </div>
@@ -16,13 +16,13 @@
            <th></th>
        </tr>
    </thead>
-    <tbody id="attendanceWeekView">
+    <tbody id="attendanceView">
     </tbody>       
 </table>
 </div>
 
 
-<script id="tpl-attendanceWeekView-list" type="text/x-jquery-tmpl">
+<script id="tpl-attendanceView-list" type="text/x-jquery-tmpl">
     <tr>
     <td>
             <i class="fa fa-pencil-square-o hide" data-id="${id}" data-action="edit" style="cursor:pointer"></i>
@@ -42,7 +42,7 @@
     <%=fnPrefix%>List = function() {
 
     //Hide the attendance report details
-    $("#attendanceDetails,#divGageTitle,#divAttendanceJustGage,#divAttendanceGrid").hide();
+    $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage").hide();
 
     $.Topic("Attendance_Details_Monthly").subscribe(<%=fnPrefix%>_List_BindData);
     $.Topic("Attendance_Details_Weekly").subscribe(<%=fnPrefix%>_List_BindData);
@@ -51,14 +51,14 @@
     }
 
     var <%=fnPrefix%>_List_BindData = function <%=fnPrefix%>_List_BindData(args){
-
+     //For Progress bar during ajax call      
+     $.Topic("LoadingImage").publish({ progress: "show", container: "divAttendanceGrid" }); 
       setTimeout(function () {
                     //form the where criteria
                     var where = {};
-                    where.EmpId = "VM/2385";//TO DO Map Emp Id in dropdown and then publish the value
+                    where.EmpId = $("#cboEmployee").val();
                     //form the with criteria
-                    var urlwithCriteria = location.origin + "<%=api%>?where=" + JSON.stringify(where);
-      
+                    var urlwithCriteria = location.origin + "<%=api%>?where=" + JSON.stringify(where);    
                     //Initiate ajax
                     //var promiseWeekViewList = $.ajax({ url: location.origin + '<%=api%>' });
                     var promiseWeekViewList = $.ajax({ url: location.origin + "<%=api%>?where=" + JSON.stringify(where) });
@@ -124,39 +124,32 @@
 
                     //Show the attendance report details if 
                     if( filteredResult.length > 0 ){
-                                    $("#attendanceDetails,#divGageTitle,#divAttendanceJustGage").show();
+                                    $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage").show();
                                     $("#divAttendanceGrid").hide();
    
                     }
                     else{
-                                    $("#attendanceDetails,#divGageTitle,#divAttendanceJustGage").hide();
+                                    $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage").hide();
                                     $("#divAttendanceGrid").show();
                                     $("#divAttendanceGrid").html("Records not found");
                     }
 
                     //before appending the template empty it
-                    $("#attendanceWeekView").empty();        
-                    $("#tpl-attendanceWeekView-list").tmpl(filteredResult).appendTo("#attendanceWeekView");                   
-                   
+                    $("#attendanceView").empty();        
+                    $("#tpl-attendanceView-list").tmpl(filteredResult).appendTo("#attendanceView");
 
                     //hide the progress bar
-                    $.Topic("LoadingImage").publish({ progress: "hide", container: "attendanceWeekView" });
-                    //Attach event handlers
-                    $("#attendanceWeekView").on("click", 'i, a', function (args) {
-                            args.action = $(this).data( "action" );
-                            args.id = $(this).data("id");
-                            $.Topic("attendanceWeekView-row-click_"+args.action).publish(args);
-                            //console.log($(this).data( "id" ) + ' ' + $(this).data( "action" ));  
-                        })
+                    $.Topic("LoadingImage").publish({ progress: "hide", container: "divAttendanceGrid" });
+                   
                     }); 
                     //callback failure
-                    promiseWeekViewList.fail(function () { debugger    
+                    promiseWeekViewList.fail(function () {    
                      //hide the progress bar
-                     $.Topic("LoadingImage").publish({ progress: "hide", container: "attendanceWeekView" });
-                    console.log("Something went wrong in attendanceWeekView")
+                     $.Topic("LoadingImage").publish({ progress: "hide", container: "divAttendanceGrid" });
+                    console.log("Something went wrong in attendanceView")
                     //TODO: Show noty
                     });    
-         },100);//End of setTimeout
+         },1000);//End of setTimeout
 
     }
     addLoadEvent(<%=fnPrefix%>List);

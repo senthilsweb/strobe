@@ -69,7 +69,6 @@
                     var totalHrs = 0;              
                     if(args.action == "weekly")
                     {
-
                         //Render text for header
                         var headerReportText = "<i class='fa fa-list vm-fa-white'></i>" + " Report for " + moment( args.weekStartToEnd[0]).format("DD-MMM-YYYY") + " to " + moment( args.weekStartToEnd[1]).format("DD-MMM-YYYY") 
                         $("#headerAttendanceReport").empty();
@@ -82,7 +81,6 @@
                         filteredResult = filtedDataByWeek;
                     }
                     else{
-
                         //Render text for header
                         var headerReportText = "<i class='fa fa-list vm-fa-white'></i>" + " Report for " + moment(args.monthselected).format("MMMM") + "-" + moment(args.monthselected).format("YYYY");
                         $("#headerAttendanceReport").empty();

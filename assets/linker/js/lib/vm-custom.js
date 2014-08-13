@@ -132,14 +132,14 @@ function ResetForm(id) {
 //Instead of that do in the form itself in submit click button
 //ex:  var employeeErrorlist = $("#frmEmployeeGeneralDetails").validate().errorList; //this will list the errors in the form
 //run through the error list and display the alert at the end
-function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {
+function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {debugger;
     // hook up the form, the validation rules, and messages with jQuery validate.
     var showErrorMessage = false;
     var validator = $("#" + formId).validate({
         ////Elements to ignore when validating, simply filtering them out.
         ignore: "input:hidden",
         onchange: true,
-        errorPlacement: function (error, element) {
+        errorPlacement: function (error, element) {debugger;
             //Modified On 4th feb 2013 By Ranjitha
             //Reason:If any element has any Image attached to it,then error class was getting created between the image and the element
             //To avoid this, error class is added below the span
@@ -166,16 +166,16 @@ function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {
         //map with specific messages for each rule can be used. 
         messages: messages,
         //Highlights an invalid element by fading it out and in again.
-        highlight: function (label) {
+        highlight: function (label) {debugger;
             $(label).closest('.control-group').addClass('error');     
         	 AnimateToRequiredDiv(formId)
             return false;
         },
-        success: function (label) {
+        success: function (label) {debugger;
             $(label).closest('.control-group').removeClass('error');
         },      
         //Callback for handling the actual submit when the form is valid
-        submitHandler: function (form) {
+        submitHandler: function (form) {debugger;
             //Table validation(start) Added By ranjitha on 20-01-2014
             var errorMessages = "";            
             _.each($("#" + formId + " div.tablerequired"), function (obj) {

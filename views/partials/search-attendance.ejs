@@ -1,16 +1,32 @@
+<form id="frmSearchEmployeeAttendance" class="validate" action="#" style="margin-bottom: 0px">
+<div class="error validate">
+</div>
 <div class="box widget">
     <h3>
         <i class="fa fa-sort-amount-desc vm-fa-white"></i>&nbsp;Search</h3>
 </div>
+    <div class="well">
 <div class="row-fluid">
-    <%- partial('../partials/master-combo-single', {'fnPrefix' : 'Employee','api':'/Employee','ph': 'Employee','validation': 'required', 'optCodeProp':'empNo'})%>
+    <div class="span12">
+            <div class="control-group">
+                <label class="control-label label-bold" for="cboEmployeeAttendance">
+                    Employee</label>
+                <div class="controls">
+                    <%- partial('../partials/master-combo-single', {'fnPrefix' : 'EmployeeAttendance','api':'/Employee','ph':
+                    'Employee','validation': 'required', 'optCodeProp':'empNo'})%>
+                </div>
+            </div>
+        </div>
 </div>
-<div>&nbsp;</div>
+<div class="row-fluid">
+        <div class="span12">
+            <label class="control-label label-bold" for="txtsearchAttendanceDate">
+                View By</label></div></div>
 <div class="row-fluid">
     <div class="span6">
-        <input id="radio_button_week" type="radio" name="search" value="Week">By Week</div>
+        <input id="radio_button_week" type="radio" name="search" value="Week">Week</div>
     <div class="span6">
-        <input id="radio_button_month" type="radio" name="search" value="Month" checked="checked">By Month</div>
+        <input id="radio_button_month" type="radio" name="search" value="Month" checked="checked">Month</div>
 </div>
 <div>&nbsp;</div>
 <div class="row-fluid">
@@ -33,6 +49,18 @@
         </table>
     </div>
 </div>
+<div class="row-fluid hide">
+    <div class="span3">
+    </div>
+    <div class="span3">
+        <button type="submit" class="btn btn-danger" id="btnAttendanceSearch">
+            Search</button>
+    </div>
+    <div class="span3">
+    </div>
+</div>
+</div>
+
 <div class="box widget" id="divGageTitle">
     <h3>
         <i class="fa fa-clock-o vm-fa-white"></i>&nbsp;Hours Clocked</h3>
@@ -41,7 +69,7 @@
     <div class="span12">
     </div>
 </div>
-
+</form>
 
 <script id="tpl-attendanceSearch-list" type="text/x-jquery-tmpl">
     <tr>
@@ -53,12 +81,11 @@
     function SearchAttendance_Load() {
         //For Date plugin to display only month
         //$('.vm-month').datepicker({ format: "mm/yyyy", viewMode: 1, minViewMode: 1 });
-
         $('#txtsearchAttendanceDate').datepicker({ format: "mm/yyyy", viewMode: 1, minViewMode: 1 }).on('changeDate', function (ev) {
             $(this).blur();
             $(this).datepicker('hide');
         });
-        $("#cboEmployee").change(function () {
+        $("#cboEmployeeAttendance").change(function () {
             $("#txtsearchAttendanceDate").val("");
             $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage,#divAttendanceGrid,#divWeek").hide();
         });
@@ -67,25 +94,29 @@
             $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage,#divAttendanceGrid,#divWeek").hide();
         });
         $("#txtsearchAttendanceDate").change(function (e) {
-            if ($('#radio_button_month').is(':checked')) {
-                $("#divAttendanceGrid").show();
-                var args = {};
-                var monthselected = moment($("#txtsearchAttendanceDate").val().split('/')[0] + "-01-" + $("#txtsearchAttendanceDate").val().split('/')[1]).format("DD-MMM-YYYY");
-                args.monthStart = moment(monthselected).startOf('month').format("DD-MMM-YYYY")
-                args.monthEnd = moment(monthselected).endOf('month').format("DD-MMM-YYYY")
-                args.action = "monthly";
-                args.maxhrs = 180;
-                $.Topic("Attendance_Details_Monthly").publish(args);
-            }
-            else {
-                $("#divAttendanceGrid").show();
-                $("#divWeek").show();
-                Search_AttendanceDate();
-            }
+            FormValidation();
+            $.Topic(vm_ui_events.FormSubmitClick + "_frmSearchEmployeeAttendance").subscribe(SearchEmployeeAttendance);
+            $("#frmSearchEmployeeAttendance").submit();
         });
-
     }
-
+    function SearchEmployeeAttendance() {
+        if ($('#radio_button_month').is(':checked')) {
+            $("#divAttendanceGrid").show();
+            var args = {};
+            var monthselected = moment($("#txtsearchAttendanceDate").val().split('/')[0] + "-01-" + $("#txtsearchAttendanceDate").val().split('/')[1]).format("DD-MMM-YYYY");
+            args.monthselected = monthselected;
+            args.monthStart = moment(monthselected).startOf('month').format("DD-MMM-YYYY")
+            args.monthEnd = moment(monthselected).endOf('month').format("DD-MMM-YYYY")
+            args.action = "monthly";
+            args.maxhrs = 180;
+            $.Topic("Attendance_Details_Monthly").publish(args);
+        }
+        else {
+            $("#divAttendanceGrid").show();
+            $("#divWeek").show();
+            Search_AttendanceDate();
+        }
+    }
     function Search_AttendanceDate() {
         //Empty the existing data source
         data = [];
@@ -107,13 +138,11 @@
         }
         //get the weeks based on year
         var data = GetWeeksBasedOnMonthAndYear(selYear, selMonth);
-
         //Bind the data to the datatable depending on the criteria
         //Format of setTimeout is (functionname,delay,parameters if any)  
         setTimeout(Search_AttendanceDate_BindData, 0, data);
         return false;
     }
-
     function Search_AttendanceDate_BindData(data) {
         var details = [];
         _.each(data, function (item) {
@@ -149,9 +178,9 @@
         //before appending the template empty it
         $("#attendance_WeeklySearch").empty();
         $("#tpl-attendanceSearch-list").tmpl(details).appendTo("#attendance_WeeklySearch");
-
         //Attach event handlers                    
         $("#attendance_WeeklySearch").on("click", 'a', function () {
+            $("#frmSearchEmployeeAttendance").submit();
             var args = {};
             args.weekStartToEnd = ($(this)[0].text.split('-'));
             args.action = "weekly";
@@ -159,7 +188,6 @@
             $.Topic("Attendance_Details_Weekly").publish(args);
         });
     }
-
 
     addLoadEvent(SearchAttendance_Load);
 </script>

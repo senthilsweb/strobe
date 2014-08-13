@@ -1,0 +1,164 @@
+<div id="divAttendanceGrid">
+</div>
+<div id="attendanceDetails">
+<div class="box widget">	
+        <h3 id="headerAttendanceReport"></h3>
+    </div>
+<table class="table table-condensed" >   
+   <thead>
+       <tr>
+           <th></th>
+           <th>Date</th>
+           <th style=" text-align: right;">First In</th>
+           <th style=" text-align: right;">Last Out</th>
+           <th style=" text-align: right;">Total Hours</th>
+           <th style=" text-align: right;">Over/Deviation Time</th>
+           <th></th>
+       </tr>
+   </thead>
+    <tbody id="attendanceWeekView">
+    </tbody>       
+</table>
+</div>
+
+
+<script id="tpl-attendanceWeekView-list" type="text/x-jquery-tmpl">
+    <tr>
+    <td>
+            <i class="fa fa-pencil-square-o hide" data-id="${id}" data-action="edit" style="cursor:pointer"></i>
+            <i class="fa fa-trash-o vm-fa-red hide" data-id="${id}" data-action="delete" style="cursor:pointer"></i>
+        </td>
+    <td><a href="#" data-id="${id}" data-action="view">${date} &nbsp;</a></td>
+    <td style="text-align:right;"><a href="#" data-id="${id}" data-action="view">${firstin} &nbsp;</a></td>
+    <td style="text-align:right;"><a href="#" data-id="${id}" data-action="view">${lastout} &nbsp;</a></td>
+    <td style="text-align:right;"><a href="#" data-id="${id}" data-action="view">${totalHrs} &nbsp;</a></td>
+    <td style="text-align:right;"><a href="#" data-id="${id}" data-action="view" class="${deviationClass}">${overOrDeviationtime} &nbsp;</a></td>
+    <td><span class="${statusClass} vm-dummy-trunk8 label label-info" style="float: none; position: static;">${status}</span></td>       
+    </tr>
+    
+</script>
+
+<script type="text/javascript">
+    <%=fnPrefix%>List = function() {
+
+    //Hide the attendance report details
+    $("#attendanceDetails,#divGageTitle,#divAttendanceJustGage,#divAttendanceGrid").hide();
+
+    $.Topic("Attendance_Details_Monthly").subscribe(<%=fnPrefix%>_List_BindData);
+    $.Topic("Attendance_Details_Weekly").subscribe(<%=fnPrefix%>_List_BindData);
+    //Bind master list on page load and also on Search  
+    //eval('<%=fnPrefix%>_List_BindData'+'()');
+    }
+
+    var <%=fnPrefix%>_List_BindData = function <%=fnPrefix%>_List_BindData(args){
+
+      setTimeout(function () {
+                    //form the where criteria
+                    var where = {};
+                    where.EmpId = "VM/2385";//TO DO Map Emp Id in dropdown and then publish the value
+                    //form the with criteria
+                    var urlwithCriteria = location.origin + "<%=api%>?where=" + JSON.stringify(where);
+      
+                    //Initiate ajax
+                    //var promiseWeekViewList = $.ajax({ url: location.origin + '<%=api%>' });
+                    var promiseWeekViewList = $.ajax({ url: location.origin + "<%=api%>?where=" + JSON.stringify(where) });
+                    //callback success
+                    promiseWeekViewList.done(function (data) { 
+
+                    var filteredResult = [];
+                    var totalHrs = 0;              
+                    if(args.action == "weekly")
+                    {
+
+                        //Render text for header
+                        var headerReportText = "<i class='fa fa-list vm-fa-white'></i>" + " Report for " + moment( args.weekStartToEnd[0]).format("DD-MMM-YYYY") + " to " + moment( args.weekStartToEnd[1]).format("DD-MMM-YYYY") 
+                        $("#headerAttendanceReport").empty();
+                        $("#headerAttendanceReport").append(headerReportText);
+
+                        var filtedDataByWeek = _.filter( data, function( item ){
+                            return (moment(moment(item.AttendanceDate).format("DD-MMM-YYYY")).isAfter(moment( args.weekStartToEnd[0]).add('days',-1).format("DD-MMM-YYYY"))
+                                   && moment(moment(item.AttendanceDate).format("DD-MMM-YYYY")).isBefore(moment( args.weekStartToEnd[1]).add('days',1).format("DD-MMM-YYYY")) );
+                        });
+                        filteredResult = filtedDataByWeek;
+                    }
+                    else{
+
+                        //Render text for header
+                        var headerReportText = "<i class='fa fa-list vm-fa-white'></i>" + " Report for " + moment(args.monthselected).format("MMMM") + "-" + moment(args.monthselected).format("YYYY");
+                        $("#headerAttendanceReport").empty();
+                        $("#headerAttendanceReport").append(headerReportText);
+
+                        var filtedDataByMonth = _.filter( data, function( item ){
+                                            return (moment(moment(item.AttendanceDate).format("DD-MMM-YYYY")).isAfter(moment( args.monthStart).format("DD-MMM-YYYY"))
+                                                   && moment(moment(item.AttendanceDate).format("DD-MMM-YYYY")).isBefore(moment( args.monthEnd).format("DD-MMM-YYYY")) );
+                        });
+                        filteredResult = filtedDataByMonth;
+                    }
+
+                    //Add class for status dynamically
+                    _.each( filteredResult, function ( item )
+                    {
+                        item.date = moment(item.AttendanceDate).format("ddd, DD-MMM-YYYY");
+                        item.firstin = item.InTime;
+                        item.lastout = item.OutTime;
+                        item.totalHrs = item.Duration;
+                        item.overOrDeviationtime = (_.str.numberFormat(parseFloat(item.Duration.replace(':','.'))-9, 2) ).replace('.',':');
+                        item.deviationClass = (parseFloat(item.Duration.replace(':','.'))-9)>0 ? "vm-fa-green" : "vm-fa-red";
+                        item.statusClass = parseFloat(item.Duration.replace(':','.'))==0 ? "vm-status" : "";
+                        item.status = parseFloat(item.Duration.replace(':','.'))==0 ? "Leave" : "";
+                        totalHrs += parseFloat(item.Duration.replace(':','.'));			
+                    }); 
+        
+                     //Just Gauge start
+                    totalHrs = _.str.numberFormat(totalHrs,2);
+                    
+                    var gageParams = { "width": "200px", "height": "120px", 'id': "attendanceTotalHrs",
+                        "info": "Requests", "alert": "success", "value": totalHrs,
+                        "min": 0, "max": args.maxhrs, "title": " ", "levelColors": ["green"], //title is passed as blank space
+                        "containerTable": false //if containerTable is set to true then the gage will be enclosed inside the table 
+                    }
+                    $("#divAttendanceJustGage").show();
+                    $("#divAttendanceJustGage").vmGage(gageParams);
+                    //Just Gauge end
+
+
+                    //Show the attendance report details if 
+                    if( filteredResult.length > 0 ){
+                                    $("#attendanceDetails,#divGageTitle,#divAttendanceJustGage").show();
+                                    $("#divAttendanceGrid").hide();
+   
+                    }
+                    else{
+                                    $("#attendanceDetails,#divGageTitle,#divAttendanceJustGage").hide();
+                                    $("#divAttendanceGrid").show();
+                                    $("#divAttendanceGrid").html("Records not found");
+                    }
+
+                    //before appending the template empty it
+                    $("#attendanceWeekView").empty();        
+                    $("#tpl-attendanceWeekView-list").tmpl(filteredResult).appendTo("#attendanceWeekView");                   
+                   
+
+                    //hide the progress bar
+                    $.Topic("LoadingImage").publish({ progress: "hide", container: "attendanceWeekView" });
+                    //Attach event handlers
+                    $("#attendanceWeekView").on("click", 'i, a', function (args) {
+                            args.action = $(this).data( "action" );
+                            args.id = $(this).data("id");
+                            $.Topic("attendanceWeekView-row-click_"+args.action).publish(args);
+                            //console.log($(this).data( "id" ) + ' ' + $(this).data( "action" ));  
+                        })
+                    }); 
+                    //callback failure
+                    promiseWeekViewList.fail(function () { debugger    
+                     //hide the progress bar
+                     $.Topic("LoadingImage").publish({ progress: "hide", container: "attendanceWeekView" });
+                    console.log("Something went wrong in attendanceWeekView")
+                    //TODO: Show noty
+                    });    
+         },100);//End of setTimeout
+
+    }
+    addLoadEvent(<%=fnPrefix%>List);
+    
+</script>

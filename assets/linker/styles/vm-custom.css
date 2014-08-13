@@ -42,3 +42,16 @@ padding-right: 10px;
 .navbar .nav li.dropdown.open>.dropdown-toggle .vm-menu-setting, .navbar .nav li.dropdown.active>.dropdown-toggle .vm-menu-setting, .navbar .nav li.dropdown.open.active>.dropdown-toggle .vm-menu-setting{
   color: #ffffff,
 }
+
+.attendance-green {color: #78CD51}
+.attendance-red {color: #D14836}
+.attendance-blue {color: #67C2EF}
+.attendance-yellow {color: #FABB3D}
+.attendance-pink {color: #ff8080}
+
+.vm-status {background-color: #fb5;color:#fff}
+
+ a {
+color: #226AC1;
+text-decoration: none;
+}

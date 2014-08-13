@@ -186,3 +186,59 @@ function FormValidation()
                                        console.log("Something went wrong in retrieval of csrf token")
                                    }));
     }
+
+
+    function GetWeeksBasedOnMonthAndYear(year, month) {
+    //declare array to hold week periods for a selected year and month
+    var weekPeriods = [];
+    //declare array to hold all days which are sundays
+    var days = [];
+    //get the start date of a particular month  in  a year where week starts from Sunday
+    var date = new Date(year, month, 1);
+    //check whether the day is not sunday
+    while (date.getDay() != 0) {
+        //add 1 to date to go for next day
+        date.setDate(date.getDate() + 1);
+    }
+    //the loop should run until the the year matches with user selected year
+    while (date.getFullYear() == year && date.getMonth() == month) {
+        //get month of the date
+        var m = date.getMonth() + 1;
+        //get date of the date
+        var d = date.getDate();
+        //push the date to an array
+        days.push(
+          year + '-' +
+          (m < 10 ? '0' + m : m) + '-' +
+          (d < 10 ? '0' + d : d)
+        );
+        //add 7 days to date and set the date
+        date.setDate(date.getDate() + 7);
+    }
+    //declare variable to hold all months three letter code
+    var monthname = new Array("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec");
+    //loop for each date in an array and get the week period
+    for (var d in days) {
+        //set the start date 
+        var startDt = new Date(days[d]);
+        //set the end date as start date
+        var endDt = new Date(days[d]);
+        //get the year of start date
+        var stYear = startDt.getFullYear().toString();
+        //declare variable to hold Week Start Date in the format ddMMMYY
+        var weekBeginDt = ((startDt.getDate() < 10) ? '0' + startDt.getDate() : startDt.getDate()) + monthname[startDt.getMonth()] + stYear.substring(2);
+        //set the date of End Date
+        endDt.setDate(endDt.getDate() + 6);
+        //get the year of End Date
+        var endYear = endDt.getFullYear().toString();
+        //declare variable to hold Week End Date in the format ddMMMYY
+        var weekEndDt = ((endDt.getDate() < 10) ? '0' + endDt.getDate() : endDt.getDate()) + monthname[endDt.getMonth()] + endYear.substring(2);
+        var weekIndex = parseInt(d) + 1;
+        //push the Week period in to Array
+        //push Week name, Week period, index
+        weekPeriods.push(["W" + weekIndex, weekBeginDt + "-" + weekEndDt, d, startDt, endDt]);
+    }
+
+    //return WeekPeriods
+    return weekPeriods;
+}

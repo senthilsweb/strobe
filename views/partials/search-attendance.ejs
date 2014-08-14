@@ -185,7 +185,9 @@
             args.weekStartToEnd = ($(this)[0].text.split('-'));
             args.action = "weekly";
             args.maxhrs = 45;
-            $.Topic("Attendance_Details_Weekly").publish(args);
+            if ($("#txtsearchAttendanceDate").val() != "") {
+                $.Topic("Attendance_Details_Weekly").publish(args);
+            }
         });
     }
     addLoadEvent(SearchAttendance_Load);

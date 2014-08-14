@@ -56,7 +56,7 @@
       setTimeout(function () {
                     //form the where criteria
                     var where = {};
-                    where.EmpId = $("#cboEmployee").val();
+                    where.EmpId = $("#cboEmployeeAttendance").val();
                     //form the with criteria
                     var urlwithCriteria = location.origin + "<%=api%>?where=" + JSON.stringify(where);    
                     //Initiate ajax

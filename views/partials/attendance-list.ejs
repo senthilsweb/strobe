@@ -1,9 +1,10 @@
 <div id="divAttendanceGrid">
 </div>
-<div id="divattendanceDetails">
+<div class="row-fluid" id="divattendanceDetails">
 <div class="box widget">	
         <h3 id="headerAttendanceReport"></h3>
     </div>
+<div id="scrollDivAttendance" class="pr10">
 <table class="table table-condensed" >   
    <thead>
        <tr>
@@ -20,6 +21,37 @@
     </tbody>       
 </table>
 </div>
+</div>
+
+<div>&nbsp;</div>
+
+<div class="row-fluid" id="divWidgets">
+    <div class="span4">
+        <div class="box widget" id="divGageTitle">
+            <h3 class="widgetHeader">
+                <i class="fa fa-clock-o vm-fa-white"></i>&nbsp;Hours Clocked</h3>
+        </div>
+        <div class="well" id="divAttendanceJustGage">
+            <div class="span12">
+            </div>
+        </div>        
+    </div>
+    <div class="span4">
+        <div class="box widget" id="divSummary">
+            <h3 class="widgetHeader">
+                <i class="fa fa-list vm-fa-white"></i>&nbsp;Summary</h3>
+        </div>
+        <div class="well">
+            <ul class="atlist">
+                <li><span class="label label-info" style="float:left;background-color: #fb5;color: #000">Leaves</span><span id="spnLeave" style="float:right; color: #fb5">00:00 Hrs</span></li>
+                <li><span class="label label-info" style="float:left;background-color: #0094ff;color: #000">Present</span><span id="spnPresent" style="float:right;color:#0094ff">00:00 Hrs</span></li>
+                <li><span class="label label-info" style="float:left;background-color: #78CD51;color: #000">Over Time</span><span id="spnOverTime" style="float:right;color:#78CD51">00:00 Hrs</span></li>
+                <li><span class="label label-info" style="float:left;background-color: #ea1d1d;color: #000">Deviation</span><span id="spnDeviation" style="float:right;color:#ea1d1d">00:00 Hrs</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 
 
 <script id="tpl-attendanceView-list" type="text/x-jquery-tmpl">
@@ -42,10 +74,15 @@
     <%=fnPrefix%>List = function() {
 
     //Hide the attendance report details
-    $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage").hide();
+    $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage,#divWidgets").hide();
 
     $.Topic("Attendance_Details_Monthly").subscribe(<%=fnPrefix%>_List_BindData);
     $.Topic("Attendance_Details_Weekly").subscribe(<%=fnPrefix%>_List_BindData);
+
+     $('#scrollDivAttendance').slimscroll({
+        height: '230px',
+        width: '740px'
+    });
     //Bind master list on page load and also on Search  
     //eval('<%=fnPrefix%>_List_BindData'+'()');
     }
@@ -115,19 +152,19 @@
                         "min": 0, "max": args.maxhrs, "title": " ", "levelColors": ["green"], //title is passed as blank space
                         "containerTable": false //if containerTable is set to true then the gage will be enclosed inside the table 
                     }
-                    $("#divAttendanceJustGage").show();
+                    $("#divAttendanceJustGage,#divWidgets").show();
                     $("#divAttendanceJustGage").vmGage(gageParams);
                     //Just Gauge end
 
 
                     //Show the attendance report details if 
                     if( filteredResult.length > 0 ){
-                                    $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage").show();
+                                    $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage,#divWidgets").show();
                                     $("#divAttendanceGrid").hide();
    
                     }
                     else{
-                                    $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage").hide();
+                                    $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage,#divWidgets").hide();
                                     $("#divAttendanceGrid").show();
                                     $("#divAttendanceGrid").html("Records not found");
                     }

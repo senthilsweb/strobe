@@ -1,7 +1,9 @@
 <%- console.log(title)%>
-<div class="row-fluid">
+<div class="row">
     <!-- Modal for Employee add starts -->
-    <div  class="modal hide fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-labelledby="modalEmployeeLabel" aria-hidden="false" id="modalEmployee">
+    <div  class="modal fade" tabindex="-1" data-keyboard="false" data-backdrop="static" role="dialog" aria-labelledby="modalEmployeeLabel" aria-hidden="false" id="modalEmployee">
+        <div class="modal-dialog">
+       <div class="modal-content">
          <form id="frmAddEmployee" class="validate" action="#" style="margin-bottom:0px">
                <div class="error validate">
                </div>
@@ -12,36 +14,36 @@
               </div>
               <div class="modal-body">
                   <div id="modalEmployeeBody" class="modalEmployeeBody validate pr10">
-                      <div class="row-fluid">
-                          <div class="span4">
-                                <div class="control-group">
+                      <div class="row">
+                          <div class="col-md-4">
+                                <div class="form-group">
                                     <label class="control-label label-bold" for="txtEmployeeFirstName">
                                         First Name</label>
                                     <div class="controls">
-                                        <input type="text" class="span12 required" id="txtEmployeeFirstName" name="txtEmployeeFirstName" placeholder="First Name"></div>
+                                        <input type="text" class="col-md-12 required form-control" id="txtEmployeeFirstName" name="txtEmployeeFirstName" placeholder="First Name"></div>
                                 </div>
                             </div>
-                          <div class="span4">
-                                <div class="control-group">
+                          <div class="col-md-4">
+                                <div class="form-group">
                                     <label class="control-label label-bold" for="txtEmployeeMiddleName">
                                         Middle Name</label>
                                     <div class="controls">
-                                        <input type="text" class="span12" id="txtEmployeeMiddleName" name="txtEmployeeMiddleName" placeholder="Middle Name"></div>
+                                        <input type="text" class="col-md-12 form-control" id="txtEmployeeMiddleName" name="txtEmployeeMiddleName" placeholder="Middle Name"></div>
                                 </div>
                             </div>
-                          <div class="span4">
-                                <div class="control-group">
+                          <div class="col-md-4">
+                                <div class="form-group">
                                     <label class="control-label label-bold" for="txtEmployeeLastName">
                                         Last Name</label>
                                     <div class="controls">
-                                        <input type="text" class="span12 required" id="txtEmployeeLastName" name="txtEmployeeLastName" placeholder="Last Name"></div>
+                                        <input type="text" class="col-md-12 required form-control" id="txtEmployeeLastName" name="txtEmployeeLastName" placeholder="Last Name"></div>
                                 </div>
                             </div>
                        </div>
 
-                      <div class="row-fluid">
-                          <div class="span4">
-                                <div class="control-group">
+                      <div class="row">
+                          <div class="col-md-4">
+                                <div class="form-group">
                                      <label class="control-label label-bold" for="cboEmployeeGender">
                                             Gender
                                        </label>
@@ -52,21 +54,24 @@
                                     </div>
                                 </div>
                             </div>
-                          <div class="span4">
-                                <div class="input-append date">
-                                    <label class="control-label label-bold">
-                                        Date of Birth</label>
-                                    <input type="text" class="input-small vm-date" id="txtDateofBirth" placeholder="DOB">
-                                    <span class="add-on"><i class="icon-th"></i></span>
-                                </div>
-                            </div>
-                          <div class="span4" id="divIsActive">
-                                    <div class="span12">
-                                        <div class="row-fluid">
+                          <div class="col-md-4">                                
+                                <div class="form-group">
+                                        <label class="control-label" for="txtDateofBirth">
+                                            Date Of Birth</label>
+                                        <div class="input-group date">
+                                            <input type="text" class="form-control input-small vm-date" id="txtDateofBirth" name="txtDateofBirth" placeholder="DOB">
+                                            <span class="input-group-addon"><i class="fa fa-th"></i></span>
+                                        </div>
+                                    </div>
+                            </div>                        
+                          
+                          <div class="col-md-4" id="divIsActive">
+                                    <div class="col-md-12">
+                                        <div class="row">
                                             <label class="label-bold">
                                                 Status</label>
                                         </div>
-                                        <div class="row-fluid">
+                                        <div class="row">
                                             <div class="lightblue">
                                                 <div id="divIsActiveStatus" class="but-switch vm-dummy-swith-button">
                                                     <!-- switch-large, switch-small or switch-mini -->
@@ -74,62 +79,65 @@
                                                 </div>
                                             </div>
                                         </div>
+                                 
                                     </div>
-                                </div>                         
+                                </div>                     
                         </div>
 
-                      <div class="row-fluid">
-                          <div class="span4">
-                                <div class="control-group">
+                      <div class="row">
+                          <div class="col-md-4">
+                                <div class="form-group">
                                     <label class="control-label label-bold" for="txtEmployeeNo">
                                         Emp #.</label>
                                     <div class="controls">
-                                        <input type="text" class="span12 required" id="txtEmployeeNo" name="txtEmployeeNo" placeholder="Emp #."></div>
+                                        <input type="text" class="col-md-12 required form-control" id="txtEmployeeNo" name="txtEmployeeNo" placeholder="Emp #."></div>
                                 </div>
                             </div>
-                           <div class="span8">
-                                <div class="control-group">
+                           <div class="col-md-8">
+                                <div class="form-group">
                                     <label class="control-label label-bold" for="txtEmployeeEmail">
                                        Email</label>
                                     <div class="controls">
-                                        <input type="text" class="span12 required email" id="txtEmployeeEmail" name="txtEmployeeEmail" placeholder="Email"></div>
+                                        <input type="text" class="col-md-12 required email form-control" id="txtEmployeeEmail" name="txtEmployeeEmail" placeholder="Email"></div>
                                 </div>
                             </div>
                        </div>
                       
-                      <div class="row-fluid">
-                          <div class="span6">
-                                <div class="control-group">
+                      <div class="row">
+                          <div class="col-md-6">
+                                <div class="form-group">
                                     <label class="control-label label-bold" for="txtEmployeePhoneNumber">
                                         Phone</label>
                                     <div class="controls">
-                                        <input type="text" class="span12 phoneNo" id="txtEmployeePhoneNumber" name="txtEmployeePhoneNumber" placeholder="Phone"></div>
+                                        <input type="text" class="col-md-12 phoneNo form-control" id="txtEmployeePhoneNumber" name="txtEmployeePhoneNumber" placeholder="Phone"></div>
                                 </div>
                             </div>
-                           <div class="span6">
-                                <div class="control-group">
+                           <div class="col-md-6">
+                                <div class="form-group">
                                     <label class="control-label label-bold" for="txtEmployeeMobileNumber">
                                         Mobile
                                     </label>
                                     <div class="controls">
-                                        <input class="input-medium span12 phoneNo" type="text" id="txtEmployeeMobileNumber" name="txtEmployeeMobileNumber"
+                                        <input class="input-medium col-md-12 phoneNo form-control" type="text" id="txtEmployeeMobileNumber" name="txtEmployeeMobileNumber"
                                             placeholder="Mobile" /></div>
                                 </div>
                             </div>                      
                           
                         </div>
 
-                      <div class="row-fluid">
-                          <div class="span4">
-                                <div class="input-append date">
-                                    <label class="control-label label-bold">
-                                        Date of Joining</label>
-                                    <input type="text" class="input-small vm-date" id="txtDateofJoining" placeholder="DOJ">
-                                    <span class="add-on"><i class="icon-th"></i></span>
-                                </div>
+                      <div class="row">
+                          <div class="col-md-4">
+                                <div class="form-group">
+                                        <label class="control-label" for="txtDateofJoining">
+                                            Date of Joining</label>
+                                        <div class="input-group date">
+                                            <input type="text" class="form-control input-small vm-date" id="txtDateofJoining" name="txtDateofJoining" placeholder="DOJ">
+                                            <span class="input-group-addon"><i class="fa fa-th"></i></span>
+                                        </div>
+                                    </div>
                             </div>
-                          <div class="span4">
-                                <div class="control-group">
+                          <div class="col-md-4">
+                                <div class="form-group">
                                     <label class="control-label label-bold" for="cboEmployeeLocation">
                                         Location</label>
                                     <div class="controls">                                        
@@ -137,8 +145,8 @@
                                     </div>
                                 </div>
                             </div>
-                          <div class="span4">
-                                <div class="control-group">
+                          <div class="col-md-4">
+                                <div class="form-group">
                                     <label class="control-label label-bold" for="cboEmployeeManager">
                                         Manager</label>
                                     <div class="controls">                                        
@@ -148,29 +156,31 @@
                             </div>
                         </div>
 
-                      <div id="divEmployeeCredentials" class="row-fluid">                        
-
-                          <div class="span4">
-                                <div class="control-group">
+                      <div id="divEmployeeCredentials" class="row">
+                          <div class="col-md-4">
+                                <div class="form-group">
                                     <label class="control-label label-bold" for="txtEmployeePassword">
                                         Password</label>
                                     <div class="controls">
-                                        <input type="password" class="span12 required pwd-cmp" id="txtEmployeePassword" name="txtEmployeePassword" placeholder="Password"></div>
+                                        <input type="password" class="col-md-12 required pwd-cmp form-control" id="txtEmployeePassword" name="txtEmployeePassword" placeholder="Password"></div>
                                 </div>
                             </div>
-                          <div class="span4">
-                                <div class="control-group">
+                          <div class="col-md-4">
+                                <div class="form-group">
                                     <label class="control-label label-bold" for="txtEmployeeConPassword">
                                        Confirm Password</label>
                                     <div class="controls">
-                                        <input type="password" class="span12 required pwd-confirm-cmp" id="txtEmployeeConPassword" name="txtEmployeeConPassword" placeholder="Confirm Password"></div>
+                                        <input type="password" class="col-md-12 required pwd-confirm-cmp form-control" id="txtEmployeeConPassword" name="txtEmployeeConPassword" placeholder="Confirm Password"></div>
                                 </div>
                             </div>
-                          
                         </div>                      
 
-                      <div class="row-fluid">
+                      <div class="row">
+                          <div class="col-md-12">
+                              <div class="form-group">
                           <%- partial('../partials/master-checkbox', {'fnPrefix' : 'Role','api':'/role'})%>
+                              </div>
+                          </div>
                       </div>
                        
                   </div>
@@ -178,7 +188,7 @@
               <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" id="btnSaveEmployee">Save</button>
               </div>
-           </form>
+           </form> </div> </div>
     </div>
     <!-- Modal for dept ends-->
 </div>
@@ -331,7 +341,7 @@
     }
 
     //Function to save Employee on Add/Edit
-    function EmployeeSave() {debugger;
+    function EmployeeSave() {
 
         $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "Initiated" });
         var request = {};
@@ -376,7 +386,7 @@
         var where = {};
         where.email = request.email;    
         var promiseEmployeeExist = $.when($.ajax({ url: location.origin + "<%=api%>?where=" + JSON.stringify(where) })
-                                   .then(function (res) {debugger;
+                                   .then(function (res) {
                                        //if email does not exist 
                                        if (res.length==0) {
                                            if ($('#hiddentxtEmployee').val() == "0") {
@@ -386,7 +396,7 @@
                                                request.id = id;
                                                var promiseAddEditEmployee = $.ajax({ url: location.origin + '<%=api%>/' + id, data: request, type: 'PUT' });
                                            }
-                                           promiseAddEditEmployee.done(function (data) {debugger;
+                                           promiseAddEditEmployee.done(function (data) {
                                                setTimeout(function () {
                                                    $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedSuccess" });
                                                    $('#modalEmployee').modal('hide');
@@ -395,7 +405,7 @@
                                                setTimeout(EmployeeListMasterList, 0);
                                                return false;
                                            });
-                                           promiseAddEditEmployee.fail(function () {debugger;
+                                           promiseAddEditEmployee.fail(function () {
                                                $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedFailure" });
                                                $('#modalEmployee').modal('hide');
                                                noty({ "text": "Employee save failed", "layout": "top", "type": "error" });

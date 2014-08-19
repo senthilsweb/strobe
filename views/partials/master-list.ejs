@@ -3,10 +3,10 @@
 <div class="box widget">    
     <h3>
         <i class="fa fa-list vm-fa-white"></i>&nbsp;<%=title%>
-        <button type="submit" class="btn btn-mini pull-right" style="margin-top: 1px;" id="<%=fnPrefix%>_Add_master"><i class="ion-plus"></i>&nbsp;Add</button>
+        <button type="submit" class="btn btn-xs pull-right" style="margin-top: 1px;" id="<%=fnPrefix%>_Add_master"><i class="ion-plus"></i>&nbsp;Add</button>
     </h3>  
     <!--Search panel(start)-->
-    <div class="row-fluid" id="<%=fnPrefix%>_Search">
+    <div class="row" id="<%=fnPrefix%>_Search">
         <%- partial('../partials/subpartials/master-search', {'fnPrefix' : fnPrefix, 'showComponent':'true'}) %>                   
    </div>
 <!--Search panel(End)-->

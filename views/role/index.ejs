@@ -1,19 +1,19 @@
-<div class="row-fluid">
-     <div class="span3">
-        <div class="row-fluid">
+<div class="row">
+     <div class="col-md-3">
+       
             <%- partial('../partials/master-list', {'title': 'Roles','fnPrefix' : 'RoleList','api':'/role','limit': '5'})%>
-        </div>
+      
        
     </div>
-    <div class="span9">        
-        <div class="row-fluid">
+    <div class="col-md-9">        
+        
             <%- partial('../partials/master-details', {'title': 'Role Details','fnPrefix' : 'RoleDetails','api':'/role'})%>
-        </div>
+        
     </div>
 </div>
 <div>&nbsp;</div>
-<div class="row-fluid">
-    <div class="span3">
+<div class="row">
+    <div class="col-md-3">
         <div class="box widget">	
         <h3><i class="fa fa-list vm-fa-white"></i>&nbsp;Sample Dropdown</h3>
     </div>
@@ -21,15 +21,15 @@
     </div>
 </div>
 <div>&nbsp;</div>
-<div class="row-fluid">
-    <div class="span3">
+<div class="row">
+    <div class="col-md-3">
          <div class="box widget">	
         <h3><i class="fa fa-list vm-fa-white"></i>&nbsp;Sample Multiselect</h3>
     </div>
     <%- partial('../partials/master-combo-multi', {'fnPrefix' : 'Rolemulti','api':'/role', 'ph' : 'Role'})%>
     </div>
 </div>
-<div class="row-fluid">
+<div class="row">
     <%- partial('../partials/master-form', {'title': 'Add Roles','fnPrefix' : 'Role','api':'/role'})%>
 </div>
 <script type="text/javascript">

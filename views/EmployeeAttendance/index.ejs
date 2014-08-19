@@ -1,14 +1,10 @@
-<div class="row-fluid">    
-    <div class="span3">
-          <div class="row-fluid">
-              <%- partial('../partials/search-attendance', {'title': 'searchAttendance','fnPrefix' : 'searchAttendance'})%>
-          </div>        
+<div class="row">    
+    <div class="col-md-3">
+              <%- partial('../partials/search-attendance', {'title': 'searchAttendance','fnPrefix' : 'searchAttendance'})%>            
     </div>
 
-    <div class="span9">
-        <div class="row-fluid">
-           <%- partial('../partials/attendance-list', {'title': 'attendanceList','fnPrefix' : 'attendanceList','api':'/employeeattendance','limit': '5'})%>
-        </div>
+    <div class="col-md-9">
+           <%- partial('../partials/attendance-list', {'title': 'attendanceList','fnPrefix' : 'attendanceList','api':'/employeeattendance','limit': '5'})%>      
     </div>
 </div>
 <script type="text/javascript">    

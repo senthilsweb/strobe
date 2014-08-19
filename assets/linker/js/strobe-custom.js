@@ -5,15 +5,15 @@ $(function () {
 //------ validate the controls in the given form(id padded as variable) diaplys the erroe alert and hignlights the controls which false data
 //------------------------------------------------------------------------------------------------------------------------------------------
 function FormValidation()
-{debugger;
+{
     //get all the div which has to be validated
     _.each( $( "div.validate" ), function ( frmObj )
-    {debugger;
+    {
         //Extract the FormId        
         var formId = $( frmObj ).parent().attr( "Id" ), formId_rules = {}, formId_msg = {};
         //Loop through each form which has to be validated
         _.each( $( "#" + formId + " .required" + ", .dateCmp" ), function ( obj )
-        {debugger;
+        {
             if($(obj).hasClass('required'))
             {
                 formId_rules[( obj.id )] = { required: true };

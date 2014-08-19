@@ -132,14 +132,14 @@ function ResetForm(id) {
 //Instead of that do in the form itself in submit click button
 //ex:  var employeeErrorlist = $("#frmEmployeeGeneralDetails").validate().errorList; //this will list the errors in the form
 //run through the error list and display the alert at the end
-function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {debugger;
+function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {
     // hook up the form, the validation rules, and messages with jQuery validate.
     var showErrorMessage = false;
     var validator = $("#" + formId).validate({
         ////Elements to ignore when validating, simply filtering them out.
         ignore: "input:hidden",
         onchange: true,
-        errorPlacement: function (error, element) {debugger;
+        errorPlacement: function (error, element) {
             //Modified On 4th feb 2013 By Ranjitha
             //Reason:If any element has any Image attached to it,then error class was getting created between the image and the element
             //To avoid this, error class is added below the span
@@ -166,17 +166,17 @@ function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {debugger
         //map with specific messages for each rule can be used. 
         messages: messages,
         //Highlights an invalid element by fading it out and in again.
-        highlight: function (label) {debugger;
-            $(label).closest('.control-group').addClass('error');     
+        highlight: function (label) {
+            $(label).closest('.form-group').addClass('error');     
         	 AnimateToRequiredDiv(formId)
             return false;
         },
-        success: function (label) {debugger;
-            $(label).closest('.control-group').removeClass('error');
+        success: function (label) {
+            $(label).closest('.form-group').removeClass('error');
         },      
         //Callback for handling the actual submit when the form is valid
-        submitHandler: function (form) {debugger;
-            //Table validation(start) Added By ranjitha on 20-01-2014
+        submitHandler: function (form) {
+            //Table validation
             var errorMessages = "";            
             _.each($("#" + formId + " div.tablerequired"), function (obj) {
                 if ($("#" + obj.id + " table tbody tr").length == 0) {
@@ -193,7 +193,7 @@ function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {debugger
                     {
                         if(moment($("#"+$(obj).data('tocompare')).val()).isAfter($(obj).val()))
                         {
-                            $("#" + obj.id).closest('.control-group').addClass('error');
+                            $("#" + obj.id).closest('.form-group').addClass('error');
                             $("#" + obj.id).next().next('label').html($( '#' + formId + ' label[for=' + obj.id + ']' ).text().trim() + " should be greater than or equal to " + $( '#' + formId + ' label[for=' + $(obj).data('tocompare') + ']').text().trim()).attr('style', 'color:#b94a48');
                             $("#" + obj.id).next().next('label').css('white-space','pre-wrap');
                             errorMessages += $( '#' + formId + ' label[for=' + obj.id + ']' ).text().trim() + " should be greater than or equal to " + $( '#' + formId + ' label[for=' + $(obj).data('tocompare') + ']' ).text().trim();
@@ -224,7 +224,7 @@ function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {debugger
         },
         //Displays a message , indicating how many fields are invalid when the user tries to submit an invalid form.
         invalidHandler: function (form, validator,label) {
-            $("#"+formId +" .control-group.error").removeClass('error'); 
+            $("#"+formId +" .form-group.error").removeClass('error'); 
             var errorMessages = "";
             for (var i = 0; i < validator.errorList.length; i++) { 
                 /*if($(validator.errorList[i].element).hasClass('vm-dummy-date'))
@@ -256,7 +256,7 @@ function vmValidatorWrapper(formId, rules, messages, hasMultipleForms) {debugger
                     {
                         if(moment($("#"+$(obj).data('tocompare')).val()).isAfter($(obj).val()))
                         {
-                            $("#" + obj.id).closest('.control-group').addClass('error');
+                            $("#" + obj.id).closest('.form-group').addClass('error');
                             $("#" + obj.id).next().next('label').html($( '#' + formId + ' label[for=' + obj.id + ']' ).text().trim() + " should be greater than or equal to " + $( '#' + formId + ' label[for=' + $(obj).data('tocompare') + ']').text().trim()).attr('style', 'color:#b94a48');
                             $("#" + obj.id).next().next('label').css('white-space','pre-wrap');
                             errorMessages += $( '#' + formId + ' label[for=' + obj.id + ']' ).text().trim() + " should be greater than or equal to " + $( '#' + formId + ' label[for=' + $(obj).data('tocompare') + ']' ).text().trim();
@@ -286,8 +286,8 @@ function AnimateToRequiredDiv(Id) {
     //scroll back to the required field
     $(".modal").each(function () { if ($(this).attr('aria-hidden') == 'false') { isModalVisible = true; } });
     if (isModalVisible == false) {//If modal is hidden(else for modal validation, background window will scroll everytime for an error)
-        if ($(".control-group.error").length >= 1) {
-            var scrollPos3 = $(".control-group.error").first().offset().top - 50;
+        if ($(".form-group.error").length >= 1) {
+            var scrollPos3 = $(".form-group.error").first().offset().top - 50;
             $('html,body').animate({
                 scrollTop: scrollPos3
             }, 0);
@@ -307,7 +307,7 @@ function RemoveErrorInTheDateField(formId) {
               {
                   if(moment($(element).val()).isAfter($("#"+$(element).data('tocompare')).val()))
                   {
-                      $(element).closest('.control-group').removeClass('error');
+                      $(element).closest('.form-group').removeClass('error');
                       $(element).next().next('label').html("");
                       $(element).next().next('label').css('white-space','pre-wrap');
                   }

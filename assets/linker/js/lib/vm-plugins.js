@@ -131,7 +131,7 @@ $("#phChart").gauge(myGaugeOptions);
                     align: 'center',
                     useHTML: true, // If false, HTML tags will not work as expected
                     formatter: function () {
-                        return '<span>' + this.y + '</span>';
+                        return '<col-md->' + this.y + '</col-md->';
                     }
                 }
             }]
@@ -191,7 +191,7 @@ $("#phChart").gauge(myPieOptions);
 (function ($) {
     $.fn.pie = function (config) {        
             var tableHTML;
-            tableHTML = '<div class="row-fluid">';
+            tableHTML = '<div class="row">';
             tableHTML += '<table class="table table-bordered table-condensed">';
             tableHTML += '<tr class="'+config.alert +'">';
             tableHTML += '<td>';
@@ -334,7 +334,7 @@ $(function() {$("#phStatBox").statBox(dataSource);});
         this.each(function () {
             var spnStatBox = '<ul class="site-stats">';
             jQuery.each(config, function (key, value) {
-                spnStatBox += '<li style="padding:1px;"><i class="' + value.Icon + '"></i>&nbsp;<strong style="padding:0px">' + value.Count + '</strong> <span class="text-info">' + value.Title + '</span></li>';
+                spnStatBox += '<li style="padding:1px;"><i class="' + value.Icon + '"></i>&nbsp;<strong style="padding:0px">' + value.Count + '</strong> <col-md- class="text-info">' + value.Title + '</col-md-></li>';
             });
             $(this).html(spnStatBox);
         });
@@ -347,7 +347,7 @@ Container
 ---------------------------------------------------------------------------------
 /*Example Usage:
 #1.  Initialise Container
-     ex:  <div id="divContainer" class="span3">            
+     ex:  <div id="divContainer" class="col-md-3">            
      </div>
 #2. Datasource
      ex:-var datasource={
@@ -371,9 +371,9 @@ $(function() {$("#divContainer").container(datasource));
     $.fn.container = function (config) {
         this.each(function () {
             var html = '<table class="table table-bordered table-condensed"><tbody ><tr class="'+ config.Alert +'">';
-                html+='<td>'+config.Title + '&nbsp;&nbsp;<span class="badge badge-inverse">'+config.List.length+'</span></td></tr><tr><td><div>';
+                html+='<td>'+config.Title + '&nbsp;&nbsp;<col-md- class="badge badge-inverse">'+config.List.length+'</col-md-></td></tr><tr><td><div>';
                 jQuery.each(config.List, function (key, item) {    
-                    html +='<div class="row-fluid" id="'+ config.Id +'"><div class="span12"><i class="' + item.icon + '"></i>&nbsp;<a class="vm-dummy-ReqContainer" href="'+item.href+'"><span>'+item.number+'</span></a>';
+                    html +='<div class="row" id="'+ config.Id +'"><div class="col-md-12"><i class="' + item.icon + '"></i>&nbsp;<a class="vm-dummy-ReqContainer" href="'+item.href+'"><col-md->'+item.number+'</col-md-></a>';
                     html+= '&nbsp;&nbsp;' + item.date +'</div>';
             });
             //Modified by Swetha on 11-Jul-2013 to make it IE8 compatible
@@ -406,7 +406,7 @@ Example:
         m.sectiontitle({ classname: "vm-frm-title-blue", title: m.data("title"), link: m.data("link") });
 Prerequisite:
 1) Should have a dom element like below
-<div id="titleReq2" class="span12 vm-dummy-title" data-title="<b>Sam</b>" data-link-title="" data-link="" data-link-click="" data-link-id=""></div>
+<div id="titleReq2" class="col-md-12 vm-dummy-title" data-title="<b>Sam</b>" data-link-title="" data-link="" data-link-click="" data-link-id=""></div>
 */
 (function($) {
 $.fn.sectiontitle = function(config) {
@@ -480,7 +480,7 @@ var g = new JustGage({
             {
             var html = '<table class="table table-bordered table-condensed"><tbody><tr><td><div>';
               jQuery.each(config.ds.Forms, function (key, item) {
-                html += '<div class="row-fluid"><div class="span12">&nbsp;<a href="' + item.link + '"><span>' + item.acronym + '</span></a>';
+                html += '<div class="row"><div class="col-md-12">&nbsp;<a href="' + item.link + '"><col-md->' + item.acronym + '</col-md-></a>';
             });
             html += '</div></td></tr></tbody></table>';
             $(this).html(html);
@@ -491,7 +491,7 @@ var g = new JustGage({
             var html = '<table class="table table-bordered table-condensed"><tbody><tr class="'+ config.style.classname +'">';
                 html+='<td style="text-align:center;">'+config.style.caption + '&nbsp;&nbsp;</td></tr><tr><td><div>';
                  jQuery.each(config.ds.Forms, function (key, item) {
-                html += '<div class="row-fluid"><div class="span12">&nbsp;<a href="' + item.link + '"><span>' + item.acronym + '</span></a>';
+                html += '<div class="row"><div class="col-md-12">&nbsp;<a href="' + item.link + '"><col-md->' + item.acronym + '</col-md-></a>';
             });
             html += '</div></td></tr></tbody></table>';
             $(this).html(html);
@@ -533,10 +533,10 @@ $(function() {$("#event").eventList({ "ds": event_details, "color": "maroon" });
     $.fn.eventList = function(config) {
     var html ='<table class="table  table-condensed"><div id="term-body">';
         jQuery.each(config.ds.event, function (key, item) {
-                html += '<tr><td><div class="row-fluid"><div class="span2"><div style="font-size: .65em;padding: 5px 5px;border-left: 1px solid;border-bottom: 1px solid;border-right: 1px solid;color: white;text-align:center;font-weight: bold;line-height: 1;background: '+config.color+';border-color :'+config.color+';">'+ item.Month+'</div>';
+                html += '<tr><td><div class="row"><div class="col-md-2"><div style="font-size: .65em;padding: 5px 5px;border-left: 1px solid;border-bottom: 1px solid;border-right: 1px solid;color: white;text-align:center;font-weight: bold;line-height: 1;background: '+config.color+';border-color :'+config.color+';">'+ item.Month+'</div>';
                 html += '<div style="background-color: white;border: 1px solid;font-size: 1em;color: #333;background: #fff;padding: 5px 5px;color: black;padding-top: 2px;text-align:center;font-weight: bold;line-height: 1;border-color :'+config.color+';">'+item.Day+'</div></div>';
-                html +='<div class="span10"><span style="line-height: 1em;"><strong>'+ item.Name + '</strong></span><br /><span class="vm-text-stat" >'+ item.Description +'</span><br />';
-                html +='<span class="vm-text-stat" style="line-height: 0.72em;">'+ item.Place + '</span></div></div></td></tr>';
+                html +='<div class="col-md-10"><col-md- style="line-height: 1em;"><strong>'+ item.Name + '</strong></col-md-><br /><col-md- class="vm-text-stat" >'+ item.Description +'</col-md-><br />';
+                html +='<col-md- class="vm-text-stat" style="line-height: 0.72em;">'+ item.Place + '</col-md-></div></div></td></tr>';
            })   ;
     html += '</div></table>';
     $(this).html(html);  

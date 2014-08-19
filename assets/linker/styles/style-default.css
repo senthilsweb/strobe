@@ -17,7 +17,6 @@ Luminus - WordPress Theme is distributed under the terms of the GNU GPL
 
 @import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700); 
 @import url(bootstrap/css/bootstrap.min.css);
-@import url(bootstrap/css/bootstrap-responsive.min.css);
  /* GLOBAL STYLES
     -------------------------------------------------- */
     /* Padding below the footer and lighter body text */
@@ -813,9 +812,7 @@ p.attachment img.alignleft{}
     line-height: 25px !important;
 }
 
-.navbar .nav .dropdown-toggle .caret{
-    margin-top: 12px !important;
-}
+
 .dropdown-submenu > a:after{
     margin-top: 8px !important;
 }

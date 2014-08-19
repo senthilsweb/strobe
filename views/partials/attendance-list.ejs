@@ -1,6 +1,6 @@
 <div id="divAttendanceGrid">
 </div>
-<div class="row-fluid" id="divattendanceDetails">
+<div class="row" id="divattendanceDetails">
 <div class="box widget">	
         <h3 id="headerAttendanceReport"></h3>
     </div>
@@ -25,18 +25,18 @@
 
 <div>&nbsp;</div>
 
-<div class="row-fluid" id="divWidgets">
-    <div class="span4">
+<div class="row" id="divWidgets">
+    <div class="col-md-4">
         <div class="box widget" id="divGageTitle">
             <h3 class="widgetHeader">
                 <i class="fa fa-clock-o vm-fa-white"></i>&nbsp;Hours Clocked</h3>
         </div>
         <div class="well" id="divAttendanceJustGage">
-            <div class="span12">
+            <div class="col-md-12">
             </div>
         </div>        
     </div>
-    <div class="span4">
+    <div class="col-md-4">
         <div class="box widget" id="divSummary">
             <h3 class="widgetHeader">
                 <i class="fa fa-list vm-fa-white"></i>&nbsp;Summary</h3>
@@ -147,7 +147,7 @@
                      //Just Gauge start
                     totalHrs = _.str.numberFormat(totalHrs,2);
                     
-                    var gageParams = { "width": "200px", "height": "120px", 'id': "attendanceTotalHrs",
+                    var gageParams = { "width": "200px", "height": "90px", 'id': "attendanceTotalHrs",
                         "info": "Requests", "alert": "success", "value": totalHrs,
                         "min": 0, "max": args.maxhrs, "title": " ", "levelColors": ["green"], //title is passed as blank space
                         "containerTable": false //if containerTable is set to true then the gage will be enclosed inside the table 

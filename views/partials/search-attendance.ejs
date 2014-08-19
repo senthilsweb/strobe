@@ -67,15 +67,17 @@
 
 <script id="tpl-attendanceSearch-list" type="text/x-jquery-tmpl">
     <tr>
-    <td><i class="${icon}"></i><span class="${weekColor}">${weekCode}</span></td>
-    <td><a class ='View' href='#' id="${weekId}">${weekValue}</a></td>   
+    <td>
+    <i class="${icon}"></i><span class="${weekColor}">${weekCode}</span>
+    <a class ='View' href='#' id="${weekId}">${weekValue}</a>
+    </td>   
     </tr>    
 </script>
 <script type="text/javascript">
     function SearchAttendance_Load() {
+        $.Topic(vm_ui_events.FormSubmitClick + "_frmSearchEmployeeAttendance").subscribe(SearchEmployeeAttendance);
         //For Date plugin to display only month
         $('.vm-month').datepicker({ format: "mm/yyyy", viewMode: 1, minViewMode: 1 });
-        //$('#txtsearchAttendanceDate').datepicker({ format: "mm/yyyy", viewMode: 1, minViewMode: 1 });
         $("#cboEmployeeAttendance").change(function () {
             $("#txtsearchAttendanceDate").val("");
             $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage,#divAttendanceGrid,#divWeek,#divWidgets").hide();
@@ -87,10 +89,10 @@
         $("#txtsearchAttendanceDate").on('changeDate', function (e) {
             $(this).blur();
             $(this).datepicker('hide');
-            FormValidation();
-            $.Topic(vm_ui_events.FormSubmitClick + "_frmSearchEmployeeAttendance").subscribe(SearchEmployeeAttendance);
             $("#frmSearchEmployeeAttendance").submit();
         });
+
+        $.Topic("week-list-row-click").subscribe(Week_list_RowClick);
     }
     function SearchEmployeeAttendance() {
         if ($('#radio_button_month').is(':checked')) {
@@ -175,15 +177,23 @@
         $("#tpl-attendanceSearch-list").tmpl(details).appendTo("#attendance_WeeklySearch");
         //Attach event handlers                    
         $("#attendance_WeeklySearch").on("click", 'a', function () {
-            $("#frmSearchEmployeeAttendance").submit();
+            //$("#frmSearchEmployeeAttendance").submit();   
             var args = {};
             args.weekStartToEnd = ($(this)[0].text.split('-'));
             args.action = "weekly";
             args.maxhrs = 45;
-            if ($("#txtsearchAttendanceDate").val() != "") {
-                $.Topic("Attendance_Details_Weekly").publish(args);
-            }
+            $.Topic("week-list-row-click").publish(args);
+            //if ($("#txtsearchAttendanceDate").val() != "") {
+            //$.Topic("Attendance_Details_Weekly").publish(args);
+            //}
         });
+    }
+
+    function Week_list_RowClick(args) {
+        //$("#frmSearchEmployeeAttendance").submit();
+        if ($("#txtsearchAttendanceDate").val() != "") {
+            $.Topic("Attendance_Details_Weekly").publish(args);
+        }
     }
     addLoadEvent(SearchAttendance_Load);
 </script>

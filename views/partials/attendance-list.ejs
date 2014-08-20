@@ -50,6 +50,18 @@
             </ul>
         </div>
     </div>
+
+    <div class="col-md-4">
+        <!--My Draft Starts-->
+        <div class="row">
+            <div id="divMyDraftsGrid">
+            </div>
+            <div class="col-md-12 WFWidget" id="SummaryWidget" data-api="/Inbox/MyDrafts/" data-routeurl="/Draft/"
+                data-progress="divMyDraftsGrid" data-object="MyDrafts" data-title="Summary" data-widgetcolor="default" data-badgecolor="inverse">
+            </div>
+        </div>
+        <!--My Draft Ends-->
+    </div>
 </div>
 
 
@@ -70,21 +82,51 @@
     
 </script>
 
+<script id="SummaryMyWidgetstable-template" type="text/x-jquery-tmpl">
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <h3 class="panel-title"><i class="fa fa-list vm-fa-white"></i>
+            ${Title}<span class="badge badge-info"></span></h3>
+    </div>
+    <div class="panel-body" style="padding-right: 0px;">
+        <table class="col-md-12">
+           {{each(i, sumDet) SummaryDetails}}
+            <tr>     
+                <td>
+                     {{if sumDet.name == "Leave"}}
+                                     <span class="label label-info" style="float:left;background-color: #fb5;color: #000">${name}</span><span id="spnLeave" style="float:right; color: #fb5">${value} Hrs</span>                     
+    
+                     {{else sumDet.name == "Present"}}
+                                     <span class="label label-info" style="float:left;background-color: #0094ff;color: #000">${name}</span><span id="spnPresent" style="float:right;color:#0094ff">${value} Hrs</span>
+   
+                     {{else sumDet.name == "Over Time"}}
+                                    <span class="label label-info" style="float:left;background-color: #78CD51;color: #000">${name}</span><span id="spnOverTime" style="float:right;color:#78CD51">${value} Hrs</span>
+    
+                     {{else sumDet.name == "Deviation"}}
+                                    <span class="label label-info" style="float:left;background-color: #ea1d1d;color: #000">${name}</span><span id="spnDeviation" style="float:right;color:#ea1d1d">${value} Hrs</span>
+                     {{/if}}
+                     
+                </td>
+            </tr>
+            {{/each}}
+        </table>
+    </div>
+</div>
+</script>
+
 <script type="text/javascript">
     <%=fnPrefix%>List = function() {
 
-    //Hide the attendance report details
-    $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage,#divWidgets").hide();
+        //Hide the attendance report details
+        $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage,#divWidgets").hide();
 
-    $.Topic("Attendance_Details_Monthly").subscribe(<%=fnPrefix%>_List_BindData);
-    $.Topic("Attendance_Details_Weekly").subscribe(<%=fnPrefix%>_List_BindData);
+        $.Topic("Attendance_Details_Monthly").subscribe(<%=fnPrefix%>_List_BindData);
+        $.Topic("Attendance_Details_Weekly").subscribe(<%=fnPrefix%>_List_BindData);
 
-     $('#scrollDivAttendance').slimscroll({
-        height: '230px',
-        width: '740px'
-    });
-    //Bind master list on page load and also on Search  
-    //eval('<%=fnPrefix%>_List_BindData'+'()');
+         $('#scrollDivAttendance').slimscroll({
+            height: '230px',
+            width: '740px'
+        });
     }
 
     var <%=fnPrefix%>_List_BindData = function <%=fnPrefix%>_List_BindData(args){
@@ -176,6 +218,8 @@
                     //hide the progress bar
                     $.Topic("LoadingImage").publish({ progress: "hide", container: "divAttendanceGrid" });
                    
+                        //Bind Widget
+                        setTimeout(function () {BindWidget(filteredResult);},100);
                     }); 
                     //callback failure
                     promiseWeekViewList.fail(function () {    
@@ -184,9 +228,58 @@
                     console.log("Something went wrong in attendanceView")
                     //TODO: Show noty
                     });    
-         },1000);//End of setTimeout
-
+         },10);//End of setTimeout
     }
+
+    function BindWidget(filteredResult)
+    {    
+         var present = 0, leaves = 0, overtime = 0, deviation = 0; 
+         _.each( filteredResult, function ( item )
+         {
+                    present += parseFloat(item.Duration.replace(':','.'))
+                    if( ( parseFloat(item.Duration.replace(':','.')) )<0 )
+                    {
+                            leaves += parseFloat(item.Duration.replace(':','.'));
+                    }
+                    if( ( parseFloat(item.Duration.replace(':','.')) )>9 )
+                    {
+                            overtime += parseFloat( parseFloat(item.Duration.replace(':','.') - 9).toFixed(2) ) ;
+                    }
+                    if( ( parseFloat(item.Duration.replace(':','.')) )<9 )
+                    {
+                            deviation += parseFloat( parseFloat(item.Duration.replace(':','.') - 9).toFixed(2) ) ;
+                    }    
+        }); 
+
+        SummaryDetails = [];
+        var myObject = { "Title": "Summary", "SummaryDetails": []}
+        leavedetail = {};
+        leavedetail.name = "Leave";
+        leavedetail.value = _.str.numberFormat(leaves,2).replace('.',':');
+        SummaryDetails.push(leavedetail);
+
+        presentdetail = {};
+        presentdetail.name = "Present";
+        presentdetail.value = _.str.numberFormat(present,2).replace('.',':');
+        SummaryDetails.push(presentdetail);
+
+        overtimedetail = {};
+        overtimedetail.name = "Over Time";
+        overtimedetail.value = _.str.numberFormat(overtime,2).replace('.',':');
+        SummaryDetails.push(overtimedetail);
+
+        deviationdetail = {};
+        deviationdetail.name = "Deviation";
+        deviationdetail.value = _.str.numberFormat(deviation,2).replace('.',':');
+        SummaryDetails.push(deviationdetail);
+
+        myObject.SummaryDetails = SummaryDetails;
+
+        //before appending the template empty it
+        $("#SummaryWidget").empty();        
+        $("#SummaryMyWidgetstable-template").tmpl(myObject).appendTo("#SummaryWidget");
+    }
+
     addLoadEvent(<%=fnPrefix%>List);
     
 </script>

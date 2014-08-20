@@ -129,6 +129,7 @@
         });
     }
 
+    //function to bind the attendance list (either weely or monthly)
     var <%=fnPrefix%>_List_BindData = function <%=fnPrefix%>_List_BindData(args){
      //For Progress bar during ajax call      
      $.Topic("LoadingImage").publish({ progress: "show", container: "divAttendanceGrid" }); 
@@ -231,6 +232,7 @@
          },10);//End of setTimeout
     }
 
+    //function to bind the Summary widget (call the template panel with filteredResult) 
     function BindWidget(filteredResult)
     {    
          var present = 0, leaves = 0, overtime = 0, deviation = 0; 

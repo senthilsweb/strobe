@@ -76,7 +76,7 @@
 <script type="text/javascript">
     function SearchAttendance_Load() {
         $.Topic(vm_ui_events.FormSubmitClick + "_frmSearchEmployeeAttendance").subscribe(SearchEmployeeAttendance);
-        //For Date plugin to display only month
+
         $('.vm-month').datepicker({ format: "mm/yyyy", viewMode: 1, minViewMode: 1 });
         $("#cboEmployeeAttendance").change(function () {
             $("#txtsearchAttendanceDate").val("");
@@ -94,6 +94,8 @@
 
         $.Topic("week-list-row-click").subscribe(Week_list_RowClick);
     }
+
+    //function to decide the attendance list bind criteria(either monthly or weekly)
     function SearchEmployeeAttendance() {
         if ($('#radio_button_month').is(':checked')) {
             $("#divAttendanceGrid").show();
@@ -114,6 +116,7 @@
             Search_AttendanceDate();
         }
     }
+    //function to set up the weeks of month selected
     function Search_AttendanceDate() {
         //Empty the existing data source
         data = [];
@@ -140,6 +143,8 @@
         setTimeout(Search_AttendanceDate_BindData, 0, data);
         return false;
     }
+
+    //function to bind the list of weeks for a month
     function Search_AttendanceDate_BindData(data) {
         var details = [];
         _.each(data, function (item) {
@@ -189,6 +194,7 @@
         });
     }
 
+    //function on row click of a week
     function Week_list_RowClick(args) {
         //$("#frmSearchEmployeeAttendance").submit();
         if ($("#txtsearchAttendanceDate").val() != "") {

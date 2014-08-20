@@ -49,9 +49,9 @@
                         data.status=data.status == "1" ? "Active" : "Disable";  
                         data.iconGender = data.gender.toLowerCase() == 'male' ? 'fa fa-male' : 'fa fa-female';
                         data.dateOfJoining = data.doj == "" ? "": moment(data.doj).local().fromNow();
-                       
+                        debugger;
                         var otherRoles = "";
-                        if (data.roles != "") {
+                        if (data.roles != "" && data.roles!= undefined) {
                             var allRoles = data.roles == "" ? "" : (data.roles).split(",");
                             for (var i = 0; i < allRoles.length; i++) {
                                 // take the first role seperately and all other roles seperately

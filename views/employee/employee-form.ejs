@@ -13,6 +13,7 @@
                 <h3 id="modalEmployeeLabel">Add Employee</h3>
               </div>
               <div class="modal-body">
+                <div id="scrollDivEmployee" class="pr10">
                   <div id="modalEmployeeBody" class="modalEmployeeBody validate pr10">
                       <div class="row">
                           <div class="col-md-4">
@@ -183,6 +184,7 @@
                       </div>
                        
                   </div>
+                </div>
               </div>
               <div class="modal-footer">
                 <button type="submit" class="btn btn-primary" id="btnSaveEmployee">Save</button>
@@ -253,6 +255,11 @@
        
        // });
 
+            $('#scrollDivEmployee').slimscroll({
+                height: '300px',
+                width: '580px'
+            });
+
     }
 
     //function to setup popup on Add New Employee
@@ -310,7 +317,7 @@
             $('#cboEmployeeLocation').select2("val", data.location);
             $('#divEmployeeCredentials').hide();
             var employeeRole=[];
-            if (data.roles != "")
+            if (data.roles != "" && data.roles!= undefined)
             {
             var Roles = (data.roles).split(",");
             $.each(Roles, function (i,item) {
@@ -412,14 +419,34 @@
                                            });
                                        }
                                        //else if email exists there is a duplicate employee
-                                       else {
-                                           $("#btnSaveEmployee").removeAttr("disabled"); 
-                                           $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedFailure", "message":"Email already exist" });
-                                           //$('#modalEmployee').modal('hide');
-                                           //noty({ "text": "Email already exist", "layout": "top", "type": "error" });
+                                       else {debugger;
+                                            if ($('#hiddentxtEmployee').val() != "0")
+                                            {
+                                                       request.id = id;   
+                                                       var promiseEditEmployee = $.ajax({ url: location.origin + '<%=api%>/' + id, data: request, type: 'PUT' });
+                                                       promiseEditEmployee.done(function (data) {
+                                                           setTimeout(function () {
+                                                               $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedSuccess" });
+                                                               $('#modalEmployee').modal('hide');
+                                                               noty({ "text": "Employee saved successfully", "layout": "top", "type": "success" });
+                                                           }, 1000);
+                                                           setTimeout(EmployeeListMasterList, 0);
+                                                           return false;
+                                                       });
+                                                       promiseEditEmployee.fail(function () {
+                                                           $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedFailure" });
+                                                           $('#modalEmployee').modal('hide');
+                                                           noty({ "text": "Employee save failed", "layout": "top", "type": "error" });
+                                                           console.log("from employee api fail")
+                                                       });
+
+                                            }
+                                            else{
+                                                 $("#btnSaveEmployee").removeAttr("disabled"); 
+                                                 $.Topic("ModalAction").publish({ "body": "modalEmployeeBody", "footer": "modal-footer", "state": "CompletedFailure", "message":"Email already exist" });
+                                          
+                                            }
                                        }
-
-
                                    }, function (err) {
                                        console.log("Something went wrong in checking for email")
                                    }));

@@ -51,39 +51,6 @@ padding-right: 10px;
 }
 
 
-.atlist {
-    padding: 0px;
-    list-style: none;
-}
-
-.atlist li {
-    padding: 10px 0;
-    margin: 0px;
-    width: 100%;
-    font-size: 13px;
-}
-
-.box.widget h3.widgetHeader{
-    height: 25px;
-    padding-bottom: 10px;
-    padding-top: 0px;
-    font-size: 11pt;
-    font-family: inherit;    
-    border-radius: 4px;
-    background: #106e8d;
-}
-
-.panel-info > .panel-heading {
-    background-color: #106e8d;
-    border-color:#106e8d;
-    color: #ffffff;
-    height: 25px;
-    padding-top: 1px;
-}
-
-.panel-title{
-    font-size: 11pt;
-}
 
 
 

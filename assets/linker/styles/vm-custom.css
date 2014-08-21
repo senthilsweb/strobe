@@ -73,5 +73,17 @@ padding-right: 10px;
     background: #106e8d;
 }
 
+.panel-info > .panel-heading {
+    background-color: #106e8d;
+    border-color:#106e8d;
+    color: #ffffff;
+    height: 25px;
+    padding-top: 1px;
+}
+
+.panel-title{
+    font-size: 11pt;
+}
+
 
 

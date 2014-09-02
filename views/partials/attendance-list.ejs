@@ -113,62 +113,89 @@
         });
     }
 
-    //function to bind the attendance list (either weely or monthly)
-    var <%=fnPrefix%>_List_BindData = function <%=fnPrefix%>_List_BindData(args){
-     //For Progress bar during ajax call      
-     $.Topic("LoadingImage").publish({ progress: "show", container: "divAttendanceGrid" }); 
-      setTimeout(function () {
-                    //form the where criteria
-                    var where = {};
-                    where.EmpId = $("#cboEmployeeAttendance").val();
-                    //form the with criteria
-                    var urlwithCriteria = location.origin + "<%=api%>?where=" + JSON.stringify(where);    
-                    //Initiate ajax
-                    //var promiseWeekViewList = $.ajax({ url: location.origin + '<%=api%>' });
-                    var promiseWeekViewList = $.ajax({ url: location.origin + "<%=api%>?where=" + JSON.stringify(where) });
-                    //callback success
-                    promiseWeekViewList.done(function (data) { 
 
-                    var filteredResult = [];
-                    var totalHrs = 0;              
+
+    //function to bind the attendance list (either weely or monthly)
+    var <%=fnPrefix%>_List_BindData = function <%=fnPrefix%>_List_BindData(args){debugger;
+           $.Topic("LoadingImage").publish({ progress: "show", container: "divAttendanceGrid" }); 
+            var myargs = {};
+            var request = {};
+
+    request.sort = [];
+    var obj = {};
+    obj.AttendanceDate = {};
+    obj.AttendanceDate['order'] = "asc";
+    request.sort.push(obj);
+
+            request.query = {};
+            request.query.filtered = {};
+
+            var filtered = {};
+            filtered.filter = {};
+            filtered.filter.range = {};
+            filtered.filter.range.AttendanceDate = {};
+            filtered.filter.range.AttendanceDate['gte'] = args.action == "weekly" ? moment( args.weekStartToEnd[0]).format("MM/DD/YYYY") : moment(args.monthStart).format("MM/DD/YYYY");
+            filtered.filter.range.AttendanceDate['lte'] = args.action == "weekly" ? moment( args.weekStartToEnd[1]).format("MM/DD/YYYY") : moment(args.monthEnd).format("MM/DD/YYYY"); 
+     
+         
+            filtered.query = {};
+            filtered.query.bool = {};
+            filtered.query.bool.must = [];
+                var obj = {};
+                obj.match = {};
+                obj.match['EmpId'] = $("#cboEmployeeAttendance").val();
+            filtered.query.bool.must.push(obj);
+            request.query.filtered = filtered;
+
+            request.aggs = {};
+            var obj = {};
+            obj.terms = {};
+            obj.terms['field'] = "EmpId"; 
+            request.aggs['EmpId'] = obj;
+
+            myargs.Criteria = request;
+       
+        setTimeout(function () {
+                  
+                    var params = JSON.stringify(myargs.Criteria);
+                    var promiseAttendanceList = $.ajax({ url: 'http://ashoka.vmokshagroup.com:9200/' + 'strobe_dev_attendence/_search?size=20',           
+                                                    data: params, type:'POST'});
+
+                    //Initiate ajax
+                    //var promiseWeekViewList = $.ajax({ url: location.origin + "<%=api%>?where=" + JSON.stringify(where) });
+                    //callback success
+                    promiseAttendanceList.done(function (data) {
                     if(args.action == "weekly")
                     {
                         //Render text for header
                         var headerReportText = "<i class='fa fa-list vm-fa-white'></i>" + " Report for " + moment( args.weekStartToEnd[0]).format("DD-MMM-YYYY") + " to " + moment( args.weekStartToEnd[1]).format("DD-MMM-YYYY") 
                         $("#headerAttendanceReport").empty();
                         $("#headerAttendanceReport").append(headerReportText);
-
-                        var filtedDataByWeek = _.filter( data, function( item ){
-                            return (moment(moment(item.AttendanceDate).format("DD-MMM-YYYY")).isAfter(moment( args.weekStartToEnd[0]).add('days',-1).format("DD-MMM-YYYY"))
-                                   && moment(moment(item.AttendanceDate).format("DD-MMM-YYYY")).isBefore(moment( args.weekStartToEnd[1]).add('days',1).format("DD-MMM-YYYY")) );
-                        });
-                        filteredResult = filtedDataByWeek;
                     }
                     else{
                         //Render text for header
                         var headerReportText = "<i class='fa fa-list vm-fa-white'></i>" + " Report for " + moment(args.monthselected).format("MMMM") + "-" + moment(args.monthselected).format("YYYY");
                         $("#headerAttendanceReport").empty();
                         $("#headerAttendanceReport").append(headerReportText);
-
-                        var filtedDataByMonth = _.filter( data, function( item ){
-                                            return (moment(moment(item.AttendanceDate).format("DD-MMM-YYYY")).isAfter(moment( args.monthStart).format("DD-MMM-YYYY"))
-                                                   && moment(moment(item.AttendanceDate).format("DD-MMM-YYYY")).isBefore(moment( args.monthEnd).format("DD-MMM-YYYY")) );
-                        });
-                        filteredResult = filtedDataByMonth;
                     }
 
-                    //Add class for status dynamically
-                    _.each( filteredResult, function ( item )
+                    var filteredResult = [];
+                    var totalHrs = 0;
+                     //Add class for status dynamically
+                    _.each( data.hits.hits, function ( item )
                     {
-                        item.date = moment(item.AttendanceDate).format("ddd, DD-MMM-YYYY");
-                        item.firstin = item.InTime;
-                        item.lastout = item.OutTime;
-                        item.totalHrs = item.Duration;
-                        item.overOrDeviationtime = (_.str.numberFormat(parseFloat(item.Duration.replace(':','.'))-9, 2) ).replace('.',':');
-                        item.deviationClass = (parseFloat(item.Duration.replace(':','.'))-9)>0 ? "vm-fa-green" : "vm-fa-red";
-                        item.statusClass = parseFloat(item.Duration.replace(':','.'))==0 ? "vm-status" : "";
-                        item.status = parseFloat(item.Duration.replace(':','.'))==0 ? "Leave" : "";
-                        totalHrs += parseFloat(item.Duration.replace(':','.'));			
+                        var itemData = item._source;
+                        item.date = moment(itemData.AttendanceDate).format("ddd, DD-MMM-YYYY");
+                        item.firstin = itemData.InTime;
+                        item.lastout = itemData.OutTime;
+                        item.totalHrs = itemData.Duration;
+                        item.Duration = itemData.Duration;
+                        item.overOrDeviationtime = (_.str.numberFormat(parseFloat(itemData.Duration.replace(':','.'))-9, 2) ).replace('.',':');
+                        item.deviationClass = (parseFloat(itemData.Duration.replace(':','.'))-9)>0 ? "vm-fa-green" : "vm-fa-red";
+                        item.statusClass = parseFloat(itemData.Duration.replace(':','.'))==0 ? "vm-status" : "";
+                        item.status = parseFloat(itemData.Duration.replace(':','.'))==0 ? "Leave" : "";
+                        totalHrs += parseFloat(itemData.Duration.replace(':','.'));	
+                        filteredResult.push(item);		
                     }); 
         
                      //Just Gauge start
@@ -182,9 +209,7 @@
                     $("#divAttendanceJustGage,#divWidgets").show();
                     $("#divAttendanceJustGage").vmGage(gageParams);
                     //Just Gauge end
-
-
-                    //Show the attendance report details if 
+                   //Show the attendance report details if 
                     if( filteredResult.length > 0 ){
                                     $("#divattendanceDetails,#divGageTitle,#divAttendanceJustGage,#divWidgets").show();
                                     $("#divAttendanceGrid").hide();
@@ -195,26 +220,28 @@
                                     $("#divAttendanceGrid").show();
                                     $("#divAttendanceGrid").html("Records not found");
                     }
-
+        
                     //before appending the template empty it
                     $("#attendanceView").empty();        
                     $("#tpl-attendanceView-list").tmpl(filteredResult).appendTo("#attendanceView");
-
+                    
                     //hide the progress bar
                     $.Topic("LoadingImage").publish({ progress: "hide", container: "divAttendanceGrid" });
                    
                         //Bind Widget
                         setTimeout(function () {BindWidget(filteredResult);},100);
+
                     }); 
                     //callback failure
-                    promiseWeekViewList.fail(function () {    
+                    promiseAttendanceList.fail(function () {debugger;
                      //hide the progress bar
                      $.Topic("LoadingImage").publish({ progress: "hide", container: "divAttendanceGrid" });
                     console.log("Something went wrong in attendanceView")
                     //TODO: Show noty
                     });    
-         },10);//End of setTimeout
+         },10);//End of setTimeout        
     }
+
 
     //function to bind the Summary widget (call the template panel with filteredResult) 
     function BindWidget(filteredResult)

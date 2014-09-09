@@ -32,20 +32,95 @@
 
 
 
-<script type="text/javascript"> 
+<script type="text/javascript">
     function attendanceGridster() {
         $("#divAttendanceGridster").show();
         $(".gridster ul").gridster({
             widget_margins: [0, 5],
             widget_base_dimensions: [210, 65]
         });
+        setTimeout(function () { Dashboard_LoadAttendance(); }, 0);
 
-        //setTimeout(function () { Dashboard_LoadAttendance(); }, 0); 
+        $.Topic('AttendanceCount').subscribe(PopulateAttendanceGridster);
     }
 
-    function Dashboard_LoadAttendance()
-    {
-        //var promiseEmployeeCount = $.ajax({ url: location.origin + '/user/count' });
+    function Dashboard_LoadAttendance() {
+        debugger
+
+        var myargs = {};
+        var request = {};
+
+        request.sort = [];
+        var obj = {};
+        obj.AttendanceDate = {};
+        obj.AttendanceDate['order'] = "asc";
+        request.sort.push(obj);
+
+        request.query = {};
+        request.query.filtered = {};
+
+        var filtered = {};
+        filtered.filter = {};
+        filtered.filter.range = {};
+        filtered.filter.range.AttendanceDate = {};
+        filtered.filter.range.AttendanceDate['gte'] = moment("07/06/2014").format("MM/DD/YYYY");
+        filtered.filter.range.AttendanceDate['lte'] = moment("07/12/2014").format("MM/DD/YYYY");
+        request.query.filtered = filtered;
+
+        request.aggs = {};
+        request.aggs.Employee = {};
+
+        var obj = {};
+        obj.terms = {};
+        obj.terms.order = {};
+        obj.terms['field'] = "EmpId";
+        obj.terms.order['Duration.avg'] = "desc";
+        request.aggs.Employee['terms'] = obj.terms;
+
+        var obj1 = {};
+        obj1.aggs = {};
+        obj1.aggs.Duration = {};
+        obj1.aggs.Duration.stats = {};
+        obj1.aggs.Duration.stats['field'] = "Duration";
+        request.aggs.Employee['aggs'] = obj1.aggs;
+
+        debugger
+        myargs.Criteria = request;
+        debugger;
+        setTimeout(function () {
+            var params = JSON.stringify(myargs.Criteria);
+            var promiseQueryList = $.ajax({ url: 'http://ashoka.vmokshagroup.com:9200/' + 'strobe_dev_attendence/_search?size=20',
+                data: params, type: 'POST'
+            });
+
+            //callback success
+            promiseQueryList.done(function (data) {
+                debugger;
+                var employeeResult = [];
+                _.each(data.aggregations.Employee.buckets, function (employee) {
+                    employee.key = employee.key;
+                    employee.avgDuration = (employee.Duration.avg / 3600000);
+                    employeeResult.push(employee);
+                });
+
+                var filteredovertime = _.filter(employeeResult, function (item) { return item.avgDuration > 9 });
+
+                var filteredDeviatedtime = _.filter(employeeResult, function (item) { return item.avgDuration < 8 });
+                $.Topic('AttendanceCount').publish(filteredovertime, filteredDeviatedtime);
+                debugger;
+
+            });
+
+            //callback failure
+            promiseQueryList.fail(function (data) {
+                debugger;
+            });
+        }, 10); //End of setTimeout 
+    }
+
+    function PopulateAttendanceGridster(overtime, deviatedtime) {
+        $("#spnOvertime_Count").text(overtime.length);
+        $("#spnDeviation_Count").text(deviatedtime.length);
     }
 
     addLoadEvent(attendanceGridster);

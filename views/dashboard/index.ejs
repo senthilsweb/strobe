@@ -3,10 +3,13 @@
     </div>
     <div class="col-md-9"></div>
 </div>
-<script type="text/javascript">    
-    console.log("Casestudy");
-    function Casestudy() {
-        //alert("Casestudy");
+<div class="row">
+           <div class="col-md-12">
+                <%- partial('../partials/attendanceGridster', {'title': 'AttendanceGridster','fnPrefix' : 'attendanceGridster'})%>     
+            </div>
+        </div>
+<script type="text/javascript"> 
+    function Dashboard() {
     }
-    addLoadEvent(Casestudy);
+    addLoadEvent(Dashboard);
 </script>

@@ -1,0 +1,52 @@
+<style type="text/css">    
+    .infobox {
+        width: 200px;
+    }
+</style>
+<div>
+    <div id="divuserGridsterProgress">
+    </div>
+    <div class="gridster" id="divAttendanceGridster">
+        <ul style="list-style-type: none; height: 225px; position: relative;">
+            <li data-row="1" data-col="1" data-sizex="1" data-sizey="1" class="gs-w">
+                <div class="infobox infobox-red infobox-dark">                    
+                    <div class="infobox-data">
+                        <span class="infobox-data-number" id="spnDeviation_Count">0</span>
+                        <div class="infobox-content">
+                            Deviation</div>
+                    </div>
+                </div>
+            </li>
+            <li data-row="2" data-col="1" data-sizex="1" data-sizey="1" class="gs-w">
+                <div class="infobox infobox-green infobox-dark">                    
+                    <div class="infobox-data">
+                        <span class="infobox-data-number" id="spnOvertime_Count">0</span>
+                        <div class="infobox-content">
+                            Overtime</div>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+
+<script type="text/javascript"> 
+    function attendanceGridster() {
+        $("#divAttendanceGridster").show();
+        $(".gridster ul").gridster({
+            widget_margins: [0, 5],
+            widget_base_dimensions: [210, 65]
+        });
+
+        //setTimeout(function () { Dashboard_LoadAttendance(); }, 0); 
+    }
+
+    function Dashboard_LoadAttendance()
+    {
+        //var promiseEmployeeCount = $.ajax({ url: location.origin + '/user/count' });
+    }
+
+    addLoadEvent(attendanceGridster);
+</script>

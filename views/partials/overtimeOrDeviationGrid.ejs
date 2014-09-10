@@ -1,0 +1,46 @@
+<table class="table table-condensed" >   
+   <thead>
+       <tr>
+           <th style=" text-align: left;">Id</th>
+           <th style=" text-align: left;">Name</th>
+           <th style=" text-align: center;">Range </th>
+           <th id="thoverOrDeviated" style=" text-align: right;"></th>
+           <th></th>
+       </tr>
+   </thead>
+    <tbody id="attendOverTimeView">
+    </tbody>       
+</table>
+<script id="tpl-attendOvertime-list" type="text/x-jquery-tmpl">
+    <tr>
+    <td style="text-align:left;"><a href="#" data-id="${id}" data-action="view">${empid} &nbsp;</a></td>
+    <td style="text-align:left;"><a href="#" data-id="${id}" data-action="view">${empname} &nbsp;</a></td>
+    <td style="text-align:center;"><a href="#" data-id="${id}" data-action="view">${range} &nbsp;</a></td>
+    <td style="text-align:right;"><a href="#" data-id="${id}" data-action="view">${avgoverOrdeviatedtime} &nbsp;</a></td>         
+    </tr>
+    
+</script>
+
+<script type="text/javascript">
+    function overtimeOrDeviationLoad() {
+        $.Topic('OnOvertimeGridSterClick').subscribe(BindOvertimeOrDeviatedGrid);
+        $.Topic('OnDeviatedGridSterClick').subscribe(BindOvertimeOrDeviatedGrid);
+    }
+
+    function BindOvertimeOrDeviatedGrid(args, action) {
+            var overorDeviatedtimeresult = [];
+            _.each(args, function (item) {
+                item.empid = item.key;
+                item.empname = "Paulomi Deb Roy";
+                item.range = moment("07/06/2014").format("ddd, DD-MMM-YYYY") + " - " + moment("07/12/2014").format("ddd, DD-MMM-YYYY");
+                item.avgoverOrdeviatedtime = item.avgDuration.toFixed(2);
+                overorDeviatedtimeresult.push(item);
+            });
+            (action == "overtime") ? $("#thoverOrDeviated").text("OverTime") : $("#thoverOrDeviated").text("DeviatedTime");
+             $("#divoverOrDeviatedTimeGrid").show();
+             $("#attendOverTimeView").empty();
+             $("#tpl-attendOvertime-list").tmpl(overorDeviatedtimeresult).appendTo("#attendOverTimeView");
+
+    }
+    addLoadEvent(overtimeOrDeviationLoad);
+</script>

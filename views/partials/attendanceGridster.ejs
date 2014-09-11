@@ -50,6 +50,7 @@
     }
 
     function Dashboard_LoadAttendance() {
+        debugger;
         var myargs = {};
         var request = {};
 
@@ -60,8 +61,8 @@
         filtered.filter = {};
         filtered.filter.range = {};
         filtered.filter.range.AttendanceDate = {};
-        filtered.filter.range.AttendanceDate['gte'] = moment("07/06/2014").format("MM/DD/YYYY");
-        filtered.filter.range.AttendanceDate['lte'] = moment("07/12/2014").format("MM/DD/YYYY");
+        filtered.filter.range.AttendanceDate['gte'] = moment(Date()).subtract( 'months', 1 ).startOf('month').format("MM/DD/YYYY");
+        filtered.filter.range.AttendanceDate['lte'] = moment(Date()).subtract( 'months', 1 ).endOf('month').format("MM/DD/YYYY");
         request.query.filtered = filtered;
 
         request.aggs = {};

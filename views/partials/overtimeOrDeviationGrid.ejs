@@ -38,7 +38,8 @@
         _.each(args, function (item) {
             item.empid = item.key;
             item.empname = item.employeename;
-            item.range = moment("07/06/2014").format("ddd, DD-MMM-YYYY") + " - " + moment("07/12/2014").format("ddd, DD-MMM-YYYY");
+            item.range = moment(Date()).subtract( 'months', 1 ).startOf('month').format("ddd, DD-MMM-YYYY") + " - " 
+                         + moment(Date()).subtract( 'months', 1 ).endOf('month').format("ddd, DD-MMM-YYYY");
             item.avgoverOrdeviatedtime = item.avgDuration.toFixed(2);
             overorDeviatedtimeresult.push(item);
         });

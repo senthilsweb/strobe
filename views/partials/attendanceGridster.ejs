@@ -35,7 +35,7 @@
 
 
 <script type="text/javascript">
-    function attendanceGridster() {        
+    function attendanceGridster() {
         $("#divoverOrDeviatedTimeGrid").hide();
         $("#divAttendanceGridster").show();
         $(".gridster ul").gridster({
@@ -52,12 +52,6 @@
     function Dashboard_LoadAttendance() {
         var myargs = {};
         var request = {};
-
-        request.sort = [];
-        var obj = {};
-        obj.AttendanceDate = {};
-        obj.AttendanceDate['order'] = "asc";
-        request.sort.push(obj);
 
         request.query = {};
         request.query.filtered = {};
@@ -77,16 +71,19 @@
         obj.terms = {};
         obj.terms.order = {};
         obj.terms['field'] = "EmpId";
-        obj.terms['size'] = 999999;
+        obj.terms['size'] = 0;
         obj.terms.order['Duration.avg'] = "desc";
         request.aggs.Employee['terms'] = obj.terms;
 
-        var obj1 = {};
-        obj1.aggs = {};
-        obj1.aggs.Duration = {};
-        obj1.aggs.Duration.stats = {};
-        obj1.aggs.Duration.stats['field'] = "Duration";
-        request.aggs.Employee['aggs'] = obj1.aggs;
+        var obj2 = {};
+        obj2.aggs = {};
+        obj2.aggs.EmployeeName = {};
+        obj2.aggs.EmployeeName.terms = {};
+        obj2.aggs.EmployeeName.terms['field'] = "EmpName";
+        obj2.aggs.Duration = {};
+        obj2.aggs.Duration.stats = {};
+        obj2.aggs.Duration.stats['field'] = "Duration";
+        request.aggs.Employee['aggs'] = obj2.aggs;
 
 
         myargs.Criteria = request;
@@ -99,11 +96,11 @@
 
             //callback success
             promiseQueryList.done(function (data) {
-                
                 var employeeResult = [];
                 _.each(data.aggregations.Employee.buckets, function (employee) {
                     employee.key = employee.key;
-                    employee.avgDuration = (employee.Duration.avg / 3600000);
+                    employee.employeename = (employee.EmployeeName.buckets[0].key != undefined) ? (employee.EmployeeName.buckets[0].key) : "";
+                    employee.avgDuration = (employee.Duration.avg / (1000 * 60 * 60));
                     employeeResult.push(employee);
                 });
 
@@ -122,7 +119,7 @@
     }
 
     function PopulateAttendanceGridster(overtime, deviatedtime) {
-       
+
         $("#spnOvertime_Count").text(overtime.length);
         $("#spnOvertime_Count").data('overtime', overtime);
 
@@ -130,12 +127,11 @@
         $("#spnDeviation_Count").data('deviation', deviatedtime);
     }
 
-    function OnOvertimeGridSterClick() {      
+    function OnOvertimeGridSterClick() {
         $.Topic('OnOvertimeGridSterClick').publish($("#spnOvertime_Count").data('overtime'), "overtime");
     }
 
-    function OnDeviationGridSterClick()
-    {
+    function OnDeviationGridSterClick() {
         $.Topic('OnDeviatedGridSterClick').publish($("#spnDeviation_Count").data('deviation'), "deviated");
     }
     addLoadEvent(attendanceGridster);

@@ -1,0 +1,38 @@
+
+<div class="col-md-3" id="divSummaryAttendanceChart" style="height:150px;"class="pull-left"></div>
+
+<script type="text/javascript">
+    function EmployeeStatusChartLoad() {
+        setTimeout(function () { LoadEmployeeStatusData(); }, 0);
+    }
+
+    function LoadEmployeeStatusData() {
+        setTimeout(function () {
+            var promiseEmployeeList = $.ajax({ url: location.origin + '/employee' });
+            promiseEmployeeList.done(function (data) {
+                var activeEmployees = _.filter(data, function (item) { return item.status == "1" });
+                var disabledEmployees = _.filter(data, function (item) { return item.status == "0" });
+                LoadEmployeeStatusChart(activeEmployees,disabledEmployees);
+            });
+            promiseEmployeeList.fail(function (data) {
+
+            });
+        }, 10);
+    }
+
+    function LoadEmployeeStatusChart(activeEmployees,disabledEmployees) {
+        var empstatusSummary = [{ label: "Active", value: activeEmployees.length },
+                              { label: "Inactive", value: disabledEmployees.length }
+                                      ];
+        //Populate Employee Status Summary
+        Morris.Donut({
+            element: 'divSummaryAttendanceChart',
+            data: empstatusSummary,
+            colors: ['#50C150', '#626265'],
+            //backgroundColor: '#ccc',
+            //labelColor: '#0b62a4',  
+            formatter: function (x) { return x + "%" }
+        });
+    }
+    addLoadEvent(EmployeeStatusChartLoad);
+</script>

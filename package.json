@@ -14,7 +14,8 @@
     "sails-disk": "~0.10.0",
     "sails-mongo": "^0.10.0-rc5",
     "mailgun-js": "0.4.15",
-    "q":"1.0.1"
+    "q": "1.0.1",
+    "skipper-gridfs": "~0.5.3"
   },
   "scripts": {
     "start": "node app.js",

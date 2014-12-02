@@ -29,7 +29,7 @@ module.exports = {
     )
   },
   upload: function  (req, res) {
-    var blobAdapter = require('skipper-gridfs')({uri: 'mongodb://finpulse-usr:finpulse-pwd@oceanic.mongohq.com:10068/finpulse.file' });
+    var blobAdapter = require('skipper-gridfs')({uri:sails.config.connections.mongodb.url + '.' + sails.config.appsettings.fileStore });
     var receiving = blobAdapter.receive();  
     req.file('avatar').upload(
     receiving

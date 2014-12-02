@@ -5,6 +5,6 @@ module.exports.appsettings = {
       domain: 'sandbox45333.mailgun.org',
       from: 'noreply@strobe-io.in'
     },
-
+    fileStore : 'docsBucket',
     strobePassKey: 'strobePassword'
 };

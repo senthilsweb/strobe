@@ -15,6 +15,7 @@ module.exports = {
         var encryptedPassword = easycrypto.encrypt(params.password, sails.config.appsettings.strobePassKey);  
         //Paulomi: added console to check values
         console.log("email is :" + params.email + " password is :" + encryptedPassword);
+        console.log("Connection string =  " + sails.config.connections.mongodb.url);
         Employee.findOne({ email: params.email, password: encryptedPassword }, function (err, employee) {
             if (err) {
                 return console.log(err);

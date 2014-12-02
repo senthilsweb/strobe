@@ -48,8 +48,6 @@ module.exports.connections = {
     ssl: {
       rejectUnauthorized: false
     },
-     //url: 'mongodb://finpulse-usr:finpulse-pwd@oceanic.mongohq.com:10068/finpulse' 
-     //url: 'mongodb://strobe_user:strobe_pwd@ashoka.vmoksha.com/strobe-dev'
      url: 'mongodb://localhost:27017/strobeDB' 
   },
 
